@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>movement_util</name>
+  <version>0.0.0</version>
+  <description>General porpouse libraries</description>
+  <license>BSD</license>
+  <author email="murilomend92@gmail.com">Murilo Mendonca</author>
+  <maintainer email="murilomend92@gmail.com">Murilo Mendonca</maintainer>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>roscpp</depend>
+  
+  <export></export>
+</package>
+
+

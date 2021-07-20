@@ -1,0 +1,7 @@
+uint8 write
+uint16[20] data
+uint16[20] vel
+uint8 read 
+---
+
+uint16[] result

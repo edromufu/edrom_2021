@@ -1,0 +1,12 @@
+#!/bin/bash
+
+cd ~/edrom
+rm -r ros_lib 
+cd 
+rm -r $PWD/.arduino15/packages/OpenCM904/hardware/OpenCM904/1.4.2/libraries/ros_lib
+cd ~/edrom
+rosrun rosserial_arduino make_libraries.py . && echo "finished"
+rm $PWD/ros_lib/ArduinoHardware.h
+cd 
+mv $PWD/edrom/ros_lib $PWD/.arduino15/packages/OpenCM904/hardware/OpenCM904/1.4.2/libraries/
+cp ~/edrom/src/tools/Rosserial-helper/ArduinoHardware.h $PWD/.arduino15/packages/OpenCM904/hardware/OpenCM904/1.4.2/libraries/ros_lib

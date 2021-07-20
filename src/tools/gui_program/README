@@ -1,0 +1,7 @@
+Para usar o programa, é necessário instalar a biblioteca boost:
+sudo apt-get install libboost-all-dev
+
+Para compilar este programa, você deve escrever os seguintes comandos:
+
+sudo qmake -o Makefile Parameters.pro
+make

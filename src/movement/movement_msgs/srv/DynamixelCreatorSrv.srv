@@ -1,0 +1,7 @@
+bool[] torque
+string wish 
+
+---
+float64[20] feedbackPosition
+bool[20] feedbackTorque
+float64[20] feedbackVcc
