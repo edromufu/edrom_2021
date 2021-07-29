@@ -20,30 +20,30 @@ class Controller(object):
         self.timeStep = int(self.natasha.getBasicTimeStep())
 
         #Inicilização dos outros controladores
-        self.movement = movement_controller.ControllerMovement(self.natasha)
+        #self.movement = movement_controller.ControllerMovement(self.natasha)
         self.vision = vision_controller.ControllerVision(self.natasha)
-        self.supervisor = supervisor.SupervisorNatasha(self.natasha)
+        #self.supervisor = supervisor.SupervisorNatasha(self.natasha)
 
         #Inicialização das mensagens e tópicos do ROS
-        self.accel_msg = Vector3()
+        #self.accel_msg = Vector3()
 
-        self.pubAccel = rospy.Publisher('/webots_natasha/behaviour_controller', Vector3, queue_size = 100)
+        #self.pubAccel = rospy.Publisher('/webots_natasha/behaviour_controller', Vector3, queue_size = 100)
         
     #Start, define o comandos a serem enviados, além do loop do código
     def start(self):
         self.natasha.step(self.timeStep)
 
         #Definição e ativação do Acelerômetro
-        self.accel_sensor = self.natasha.getDevice('Accelerometer')
-        self.accel_sensor.enable(self.timeStep)
+        #self.accel_sensor = self.natasha.getDevice('Accelerometer')
+        #self.accel_sensor.enable(self.timeStep)
 
         while self.natasha.step(self.timeStep) != -1 and not rospy.is_shutdown():
-            self.sensorAccelerometer()
-            self.movement.loop()
+            #self.sensorAccelerometer()
+            #self.movement.loop()
             self.vision.loop()
             #Chama o loop de verificação da entrada no teclado e garante que a posição dos motores esteja nula, caso seja para a posição inicial
-            if(self.supervisor.loop() == 'repositionedToStart'):
-                self.movement.dataArray = [0]*20
+            #if(self.supervisor.loop() == 'repositionedToStart'):
+                #self.movement.dataArray = [0]*20
     
     ###########################FUNÇÕES DO WEBOTS###########################
     

@@ -1,0 +1,35 @@
+#VRML_SIM R2021b utf8
+WorldInfo {
+  coordinateSystem "NUE"
+}
+Viewpoint {
+  orientation -0.2552908460127651 0.9550857548421324 0.15045858180815255 1.1057631462100213
+  position 5.088772763089617 2.2805893738639074 2.3688378927684486
+}
+Floor {
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+RobocupSoccerBall {
+  translation -0.268108 0.06987585276653877 -0.45313669146560187
+  rotation 0.9999999999999999 0 0 1.4437476349779181
+}
+Robot {
+  translation 0 0.48 0
+  children [
+    Camera {
+      translation -0.027967 0.039494 0.053955
+      rotation 0 -1 0 3.14159
+      name "Camera"
+      fieldOfView 1.0123
+      width 416
+      height 416
+      focus Focus {
+      }
+    }
+  ]
+  controller "<extern>"
+  supervisor TRUE
+}
