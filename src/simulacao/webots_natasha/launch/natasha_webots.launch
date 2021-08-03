@@ -5,6 +5,6 @@
   <include file="$(find webots_natasha)/launch/webots.launch">
     <arg name="mode" value="realtime"/>
     <arg name="no-gui" value="$(arg no-gui)"/>
-    <arg name="world" value="$(find webots_natasha)/worlds/vision_world.wbt"/>
+    <arg name="world" value="$(find webots_natasha)/worlds/kid.wbt"/>
   </include>
 </launch>

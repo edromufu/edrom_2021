@@ -11,10 +11,10 @@ import cv2
 class Listener():
     def __init__(self):
         fourcc = cv2.VideoWriter_fourcc(*'XVID')
-        self.escritor = cv2.VideoWriter(os.path.join(os.path.expanduser('~'), 'edrom/src/vision/robocup_videos/') + 'film.avi', fourcc, 30.0, (416, 416))
+        self.escritor = cv2.VideoWriter(os.path.join(os.path.expanduser('~'), 'edrom/src/vision/robocup_videos/') + 'film.avi', fourcc, 5.0, (416, 416))
 
         rospy.init_node('recebeImagemWebots', anonymous = True)
-        rospy.Subscriber(topicos[index_topico_camera], TipoMensagemImagem, self.callback)  
+        rospy.Subscriber("/webots_natasha/vision_controller", TipoMensagemImagem, self.callback)  
         
         rospy.spin()
 
@@ -26,7 +26,7 @@ class Listener():
         cv2.imshow("Camera", self.frame)
         self.escritor.write(self.frame)
 
-        if cv2.waitKey(1) == 27:
+        if cv2.waitKey(1) == ord("q"):
             self.excluir()
 
     def excluir(self):
@@ -34,7 +34,7 @@ class Listener():
         cv2.destroyAllWindows()
         rospy.signal_shutdown("Tudo desligado!")
 
-# Obtendo todos os serviços em funcionamento no momento
+"""# Obtendo todos os serviços em funcionamento no momento
 servicos = subprocess.check_output("rosservice list", shell = True)
 servicos = servicos.decode('ascii')
 servicos = servicos.split("\n")
@@ -68,7 +68,7 @@ for topico in topicos:
         index_topico_camera = ind
     ind += 1
 print("Subscrevendo no tópico da câmera:")
-print(topicos[index_topico_camera])
+print(topicos[index_topico_camera])"""
 
 if __name__ == '__main__':
     escutador = Listener()

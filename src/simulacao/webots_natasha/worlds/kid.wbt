@@ -8,8 +8,8 @@ WorldInfo {
   basicTimeStep 16
 }
 Viewpoint {
-  orientation 0.5921633988593603 0.5193675086203262 0.6161167909096826 1.916824701447578
-  position 1.9357898948788255 -0.5522886289324361 0.6721657276137917
+  orientation 0.8756383401805663 0.2708666801658551 0.39986089929093016 1.3168817056169293
+  position 2.0844382549705402 -3.0932492612843303 1.954362947614878
 }
 TexturedBackground {
   texture "stadium"
@@ -21,11 +21,14 @@ RobocupSoccerField {
   size "kid"
 }
 RobocupSoccerBall {
-  translation 0 -0.00010683713196138433 0.07993792603208447
-  rotation 1 0 0 0.0015257660657066773
+  hidden linearVelocity_0 0 -6.550562845949273e-06 -3.249312979270198e-11
+  hidden angularVelocity_0 9.348226701830707e-05 0 0
+  translation 0 -0.00010768159928410073 0.07993792602923916
+  rotation 1 0 0 0.0015378298888901072
 }
 Robot {
-  translation -0.42 0 0.46
+  translation -0.433325679207406 -0.0010272406755811557 0.4482258084011582
+  rotation -0.0053036687944326925 -0.9940827598105405 -0.10849579597744037 0.07965444927335456
   children [
     Transform {
       rotation 1 0 0 1.57
@@ -37,6 +40,7 @@ Robot {
             }
             HingeJointWithBacklash {
               jointParameters HingeJointParameters {
+                position -3.234825474152103e-08
                 axis -1 0 0
                 anchor 0.1318 0.0615 0.013
                 dampingConstant 0.81
@@ -53,12 +57,14 @@ Robot {
                 }
               ]
               endPoint DEF LARM_0 Solid {
-                translation 0.0968 0.0615 0.013
+                translation 0.0967999225597027 0.06149370676857435 0.012999962281150412
+                rotation 0.9999999344624806 0.0003069032256610064 -0.0001920558376416325 0.00948567099112983
                 children [
                   Natasha_LARM_0_linkMesh {
                   }
                   HingeJointWithBacklash {
                     jointParameters HingeJointParameters {
+                      position 1.6920064623883173e-07
                       axis 0 0 1
                       anchor 0.033843 -0.023623 0.030932
                       dampingConstant 0.81
@@ -75,13 +81,14 @@ Robot {
                       }
                     ]
                     endPoint DEF LARM_1 Solid {
-                      translation 0.033843 -0.023623 0.030932
-                      rotation -1 0 0 0.005579
+                      translation 0.033842972070905086 -0.023629842827545322 0.030929718289351482
+                      rotation -0.6401540016454519 -0.002623304410214396 0.7682421313956207 0.008714305497858956
                       children [
                         Natasha_LARM_1_linkMesh {
                         }
                         HingeJointWithBacklash {
                           jointParameters HingeJointParameters {
+                            position 6.584989195593507e-08
                             axis -1 0 0
                             anchor -0.0307 -0.1135 -0.0308
                             dampingConstant 0.81
@@ -98,8 +105,8 @@ Robot {
                             }
                           ]
                           endPoint DEF LARM_2 Solid {
-                            translation -0.0307 -0.1135 -0.0308
-                            rotation 1 0 0 0.003735
+                            translation -0.03069960975917939 -0.11350600473686667 -0.030800070840019622
+                            rotation -0.9999998299090052 -7.111198111839336e-05 0.0005788998592272224 0.007027361901977492
                             children [
                               Natasha_LARM_2_linkMesh_red {
                               }
@@ -200,6 +207,7 @@ Robot {
             }
             HingeJointWithBacklash {
               jointParameters HingeJointParameters {
+                position 3.6578459290258824e-08
                 anchor -0.1318 0.0615 0.013
                 dampingConstant 0.81
                 staticFriction 2.55
@@ -215,12 +223,14 @@ Robot {
                 }
               ]
               endPoint DEF RARM_0 Solid {
-                translation -0.0968 0.0615 0.013
+                translation -0.09679986948652018 0.061493285881500104 0.01299986522761687
+                rotation 0.9999985553580558 0.0007802169448045624 0.0015101467876962572 0.0025427354085430023
                 children [
                   Natasha_RARM_0_linkMesh {
                   }
                   HingeJointWithBacklash {
                     jointParameters HingeJointParameters {
+                      position -1.809246345938721e-07
                       axis 0 0 1
                       anchor -0.033843 -0.023796 0.0308
                       dampingConstant 0.81
@@ -237,13 +247,14 @@ Robot {
                       }
                     ]
                     endPoint DEF RARM_1 Solid {
-                      translation -0.033843 -0.023796 0.0308
-                      rotation 0 0 1 0.007823
+                      translation -0.03384253502485686 -0.023803044174135257 0.0307974806908074
+                      rotation -0.00043183259132171734 0.004219571709158462 -0.9999910043271412 0.0017365512346902174
                       children [
                         Natasha_RARM_1_linkMesh {
                         }
                         HingeJointWithBacklash {
                           jointParameters HingeJointParameters {
+                            position 6.639882280838331e-08
                             axis 0.999969 -0.007823 0
                             anchor 0.0307 -0.1135 -0.0308
                             dampingConstant 0.81
@@ -260,8 +271,8 @@ Robot {
                             }
                           ]
                           endPoint DEF RARM_2 Solid {
-                            translation 0.0307 -0.1135 -0.0308
-                            rotation 1 0 0 0.017899
+                            translation 0.030700073523652727 -0.11350496685326483 -0.03080003076382526
+                            rotation 0.9999715703831028 0.007539965547613879 -8.570351136102411e-05 0.009329297966048629
                             children [
                               Natasha_RARM_2_linkMesh_red {
                               }
@@ -362,6 +373,7 @@ Robot {
             }
             HingeJointWithBacklash {
               jointParameters HingeJointParameters {
+                position 4.635121043232142e-07
                 axis 0 1 0
                 anchor 0.052 -0.1028 -0.002
                 dampingConstant 0.81
@@ -378,12 +390,14 @@ Robot {
                 }
               ]
               endPoint DEF LLEG_0 Solid {
-                translation 0.052 -0.1028 -0.002
+                translation 0.051999897925247555 -0.10278135679088946 -0.001998717399252614
+                rotation -6.204035112919267e-05 0.9999995767593929 0.0009179499060246978 0.008355263949050475
                 children [
                   Natasha_LLEG_0_linkMesh {
                   }
                   HingeJointWithBacklash {
                     jointParameters HingeJointParameters {
+                      position 1.4716963068037197e-06
                       axis 2.6e-05 0 1
                       anchor 0 -0.0312 -0.0535
                       dampingConstant 0.81
@@ -400,13 +414,14 @@ Robot {
                       }
                     ]
                     endPoint DEF LLEG_1 Solid {
-                      translation 0 -0.0312 -0.0535
-                      rotation 0 1 0 2.599999424366558e-05
+                      translation 1.633272056697499e-07 -0.031181578107386365 -0.05349334219800861
+                      rotation -0.0002567298606089236 0.0034998978142654195 0.999993842383576 0.005355262675510609
                       children [
                         Natasha_LLEG_1_linkMesh {
                         }
                         HingeJointWithBacklash {
                           jointParameters HingeJointParameters {
+                            position 6.172302585969085e-07
                             axis -1 2.6e-05 0
                             anchor 0.031 0 0.075
                             dampingConstant 0.81
@@ -423,12 +438,14 @@ Robot {
                             }
                           ]
                           endPoint DEF LLEG_2 Solid {
-                            translation 0.031 0 0.075
+                            translation 0.03099994774170619 9.595032252840419e-06 0.07500018341575182
+                            rotation 0.9999999946553537 -0.00010307628177431822 -8.035699686231664e-06 0.07224767447387496
                             children [
                               Natasha_LLEG_2_linkMesh {
                               }
                               HingeJointWithBacklash {
                                 jointParameters HingeJointParameters {
+                                  position 7.777077748676057e-07
                                   axis 1 -2.6e-05 0
                                   anchor -0.0608 -0.131 0
                                   dampingConstant 0.81
@@ -445,12 +462,14 @@ Robot {
                                   }
                                 ]
                                 endPoint DEF LLEG_3 Solid {
-                                  translation -0.0608 -0.131 0
+                                  translation -0.06079998365541592 -0.13097916717650368 -2.2345977007676154e-07
+                                  rotation -0.999999321947335 0.0011191350801176697 0.0003219340656495137 0.0026549580009370705
                                   children [
                                     Natasha_LLEG_3_linkMesh {
                                     }
                                     HingeJointWithBacklash {
                                       jointParameters HingeJointParameters {
+                                        position 8.515629670346096e-07
                                         axis 0 0 1
                                         anchor 0.0323 -0.089 -0.0308
                                         dampingConstant 0.81
@@ -467,12 +486,14 @@ Robot {
                                         }
                                       ]
                                       endPoint DEF LLEG_4 Solid {
-                                        translation 0.0323 -0.089 -0.0308
+                                        translation 0.03230003997129838 -0.08897446361024246 -0.030798807495029557
+                                        rotation -0.00023651940445939865 0.0005050105953847023 -0.999999844511423 0.003586674304655321
                                         children [
                                           Natasha_LLEG_4_linkMesh {
                                           }
                                           HingeJointWithBacklash {
                                             jointParameters HingeJointParameters {
+                                              position -8.464031587753094e-07
                                               axis 1 -2.6e-05 0
                                               anchor -0.0308 -0.056473 0.0308
                                               dampingConstant 0.81
@@ -489,7 +510,8 @@ Robot {
                                               }
                                             ]
                                             endPoint DEF LFOOT Solid {
-                                              translation -0.0308 -0.056473 0.0308
+                                              translation -0.03080006416321169 -0.05644494170383952 0.030799774933262136
+                                              rotation 0.9999999919572602 -7.827186820844093e-05 9.97947608552877e-05 0.00845594960281828
                                               children [
                                                 Natasha_LFOOT_linkMesh {
                                                 }
@@ -639,6 +661,7 @@ Robot {
             }
             HingeJointWithBacklash {
               jointParameters HingeJointParameters {
+                position 1.2039653807177755e-07
                 axis 0 1 0
                 anchor -0.052 -0.1028 -0.002
                 dampingConstant 0.81
@@ -655,12 +678,14 @@ Robot {
                 }
               ]
               endPoint DEF RLEG_0 Solid {
-                translation -0.052 -0.1028 -0.002
+                translation -0.05199983627450905 -0.10278458361261866 -0.002000576345780214
+                rotation 1.01390946477672e-06 0.9999995760174352 0.0009208495653404551 0.008341312127221223
                 children [
                   Natasha_RLEG_0_linkMesh {
                   }
                   HingeJointWithBacklash {
                     jointParameters HingeJointParameters {
+                      position 8.258836351713849e-07
                       axis 0 0 1
                       anchor 0 -0.0312 -0.0535
                       dampingConstant 0.81
@@ -677,12 +702,14 @@ Robot {
                       }
                     ]
                     endPoint DEF RLEG_1 Solid {
-                      translation 0 -0.0312 -0.0535
+                      translation 4.537740179791361e-07 -0.03118480579981059 -0.05349519471908504
+                      rotation -0.00014700233404663286 -0.0013560379486645543 0.9999990697752651 0.00542897797561993
                       children [
                         Natasha_RLEG_1_linkMesh {
                         }
                         HingeJointWithBacklash {
                           jointParameters HingeJointParameters {
+                            position -5.716140923844719e-07
                             axis -1 0 0
                             anchor 0.031 0 0.075
                             dampingConstant 0.81
@@ -699,12 +726,14 @@ Robot {
                             }
                           ]
                           endPoint DEF RLEG_2 Solid {
-                            translation 0.031 0 0.075
+                            translation 0.031000230069672504 1.0093029470525927e-05 0.07499887849724052
+                            rotation 0.9999999965111763 -8.3194553945536e-05 -7.50422281534191e-06 0.06276112715190561
                             children [
                               Natasha_RLEG_2_linkMesh {
                               }
                               HingeJointWithBacklash {
                                 jointParameters HingeJointParameters {
+                                  position -5.773156786676412e-07
                                   axis -1 0 0
                                   anchor 0.0004 -0.130989 0.001433
                                   dampingConstant 0.81
@@ -721,12 +750,14 @@ Robot {
                                   }
                                 ]
                                 endPoint DEF RLEG_3 Solid {
-                                  translation 0.0004 -0.130989 0.001433
+                                  translation 0.0004002572333529908 -0.1309715662017848 0.0014311936008505888
+                                  rotation 0.9999999688052951 0.00024168555531054253 -6.306743493421894e-05 0.00893382492365604
                                   children [
                                     Natasha_RLEG_3_linkMesh {
                                     }
                                     HingeJointWithBacklash {
                                       jointParameters HingeJointParameters {
+                                        position 6.4612240148573e-07
                                         axis 0 0 1
                                         anchor -0.0288 -0.089 -0.0308
                                         dampingConstant 0.81
@@ -743,12 +774,14 @@ Robot {
                                         }
                                       ]
                                       endPoint DEF RLEG_4 Solid {
-                                        translation -0.0288 -0.089 -0.0308
+                                        translation -0.028799691225714998 -0.08897784712302662 -0.030800438812325137
+                                        rotation -0.00016290445406999583 0.0003953632032740188 -0.999999908575034 0.003924730041010898
                                         children [
                                           Natasha_RLEG_4_linkMesh {
                                           }
                                           HingeJointWithBacklash {
                                             jointParameters HingeJointParameters {
+                                              position 7.483279661137662e-07
                                               axis -1 0 0
                                               anchor 0.0308 -0.056473 0.0308
                                               dampingConstant 0.81
@@ -765,7 +798,8 @@ Robot {
                                               }
                                             ]
                                             endPoint DEF RFOOT Solid {
-                                              translation 0.0308 -0.056473 0.0308
+                                              translation 0.030800202356791893 -0.05644829564825058 0.03079812390894393
+                                              rotation 0.9999999892438727 -9.435125432940474e-05 -0.00011229468139848303 0.006700229337325668
                                               children [
                                                 Natasha_RFOOT_linkMesh {
                                                 }
@@ -915,6 +949,7 @@ Robot {
             }
             HingeJointWithBacklash {
               jointParameters HingeJointParameters {
+                position 6.605494782582953e-08
                 axis 0 1 0
                 anchor 0 0.1398 0.013
                 dampingConstant 0.81
@@ -931,12 +966,14 @@ Robot {
                 }
               ]
               endPoint DEF HEAD_0 Solid {
-                translation 0 0.1398 0.013
+                translation -1.3694325752535916e-06 0.13980023492173582 0.013001555466504777
+                rotation 0.0026271442864542905 0.9999003073392742 -0.013873481744785119 0.002501817587047527
                 children [
                   Natasha_HEAD_0_linkMesh {
                   }
                   HingeJointWithBacklash {
                     jointParameters HingeJointParameters {
+                      position -5.5303563506470255e-08
                       axis -1 0 0
                       anchor 0.028004 0.0472 0.006983
                       dampingConstant 0.81
@@ -953,7 +990,8 @@ Robot {
                       }
                     ]
                     endPoint DEF HEAD_1 Solid {
-                      translation 0.028004 0.0472 0.006983
+                      translation 0.028023379093339348 0.04728156042032605 0.0070900868402064
+                      rotation 0.999996665001989 0.00010941175292295424 -0.0025803127655643927 0.2754828203183424
                       children [
                         Natasha_HEAD_1_linkMesh {
                         }
@@ -1104,7 +1142,25 @@ Robot {
       -3.10184e-07 -4.622968e-07 -7.625482e-06
     ]
   }
+  controller ""
+  selfCollision TRUE
+  linearVelocity -0.11591455771635377 -0.004076937462242132 -0.00507073561094946
+  angularVelocity 0.010523951670630777 -0.28284642381122344 -0.00015253500491619652
+}
+Robot {
+  translation 0 0.48 0.57
+  children [
+    Camera {
+      translation -0.027967 0.039494 0.053955
+      rotation 0 -1 0 3.14159
+      name "Camera"
+      fieldOfView 1.0123
+      width 416
+      height 416
+      focus Focus {
+      }
+    }
+  ]
   controller "<extern>"
   supervisor TRUE
-  selfCollision TRUE
 }

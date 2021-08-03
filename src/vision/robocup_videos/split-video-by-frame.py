@@ -14,7 +14,7 @@ import numpy as np
 import os
 
 # Playing video from file:
-nome_do_video = "film7"
+nome_do_video = "film1"
 cap = cv2.VideoCapture(nome_do_video + '.avi')
 
 try:
