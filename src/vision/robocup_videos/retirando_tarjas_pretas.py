@@ -21,8 +21,8 @@ while(cap.isOpened()):
   if ret == True:
 
     # Display the resulting frame
-    crop_img = frame[0:479, 80:559]
-    final_frame = cv2.resize(crop_img,(416, 416))
+    frame = frame[0:479, 80:559] #COMENTAR ESSA LINHA SE NÃO HOUVEREM BARRAS PRETAS
+    final_frame = cv2.resize(frame,(416, 416))
     #cv2.imshow('Frame',final_frame)
 
     fator = 20
