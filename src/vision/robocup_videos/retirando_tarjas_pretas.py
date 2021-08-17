@@ -6,8 +6,8 @@ import os
 # If the input is the camera, pass 0 instead of the video file name
 
 
-nomePasta = 'film2'
-cap = cv2.VideoCapture('videos editados 2021/film 2/Film 2 cortado.mp4')
+nomePasta = 'film5'
+cap = cv2.VideoCapture('videos editados 2021/film 5/film5_Parte12.mp4')
 
 # Check if camera opened successfully
 if (cap.isOpened()== False): 
@@ -18,16 +18,18 @@ currentFrame = 0
 while(cap.isOpened()):
   # Capture frame-by-frame
   ret, frame = cap.read()
+
   if ret == True:
 
     # Display the resulting frame
-    frame = frame[0:479, 80:559] #COMENTAR ESSA LINHA SE NÃO HOUVEREM BARRAS PRETAS
-    final_frame = cv2.resize(frame,(416, 416))
+    #frame = frame[0:479, 80:559] #COMENTAR ESSA LINHA SE NÃO HOUVEREM BARRAS PRETAS
+    #final_frame = cv2.resize(frame,(416, 416))
     #cv2.imshow('Frame',final_frame)
 
     fator = 20
+    fator = 40
     if (currentFrame%fator == 0):
-        cv2.imwrite(nomePasta+'/frame'+str(int(currentFrame/fator))+'.jpg',final_frame)
+        cv2.imwrite(nomePasta+'_12/frame'+str(int(currentFrame/fator))+'.jpg',frame)
     
     currentFrame += 1
 
