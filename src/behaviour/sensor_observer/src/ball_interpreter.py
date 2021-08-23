@@ -1,15 +1,20 @@
 #!/usr/bin/env python3
 #coding=utf-8
 
-from vision_msgs.msg import Ball
+import rospy
+from vision_msgs.msg import Webotsmsg
 
-vision2BhvTopic = '/webots_natasha/vision_inference/ball' #String do topico associado as infos da bola da visao
+vision2BhvTopic = '/webots_natasha/vision_inference' #String do topico associado as infos da bola da visao
 firstSearch = 'Left' #Sentido preferencial de busca com o corpo
 
 #Parametros de configuracao da camera e seus quadrantes
 [cameraWidth, cameraHeight] = [416, 416]
-[xCenterLeftLimit, xCenterRightLimit] = [cameraWidth/4, 3*cameraWidth/4]
-[yCenterBottomLimit, yCenterTopLimit] = [2*cameraHeight/3, cameraHeight/3]
+
+[settingCenterLeftConstant, settingCenterRightConstant] = [cameraWidth*0, cameraWidth*0] #Aumenta a regiao central horizontalmente quanto maior o número
+[settingCenterBottomConstant, settingCenterTopLimit] = [cameraHeight*0, cameraHeight*0] #Aumenta a regiao central verticalmente quanto maior o número
+
+[xCenterLeftLimit, xCenterRightLimit] = [cameraWidth/4 - settingCenterLeftConstant, 3*cameraWidth/4 + settingCenterRightConstant]
+[yCenterBottomLimit, yCenterTopLimit] = [2*cameraHeight/3 + settingCenterBottomConstant, cameraHeight/3 - settingCenterTopLimit]
 
 [close_width, close_height] = [75, 75] #Parametro de definicao da proximidade da bola
 timesSecurity = 7 #Numero de vezes para verificacoes de seguranca no codigo
@@ -24,7 +29,7 @@ class BallInterpreter():
         """    
 
         #Variaveis do ROS
-        rospy.Subscriber(vision2BhvTopic, Ball, self.callback_vision)
+        rospy.Subscriber(vision2BhvTopic, Webotsmsg, self.callback_vision)
 
         #Variaveis de código
         self.ballRelativePosition = firstSearch
@@ -42,23 +47,26 @@ class BallInterpreter():
             - ballClose: Interpretacao da proximidade da bola
             - ballFound: Se False, bola perdida ha muito tempo
         """
-        return self.ballRelativePosition, self.ballClose, self.ballFound    
+        return self.ballRelativePosition, self.ballClose, self.ballFound   
 
     #Callback do tópico de infos da bola do ROS
-    def callback_vision(self, msg):    
+    def callback_vision(self, general):    
         """
         -> Funcao:
         Avaliar a bola atraves de:
-            - Recebe os dados da bola da visao no msg
+            - Recebe os dados da bola da visao no campo ball do argumento general
             - Interpreta o x e y retornando a posicao relativa da bola
             - Interpreta o width e height retornando a proximidade da bola
             - Realiza resets das variaveis booelanas baseado em contador
             * Os dados só são interpretados, ou seja, a posicao relativa só é atualizada
             * se a bola estiver sendo encontrada (para ter uma especie de 'visto por ultimo')  
         -> Input:
-            - msg: Variavel associada a mensagem recebida no topico do ROS, contem as
-            informacoes da bola    
+            - general: Variavel associada a mensagem recebida no topico do ROS, contem as
+            informacoes de todos os objetos, é separada somente para a bola nesse caso.   
         """
+
+        #Captura das informacoes da bola de dentro da mensagem completa
+        msg = general.ball
 
         #Contador para informar que a bola foi perdida apos um numero de vezes sem encontra-la
         self.countFound += 1
@@ -81,18 +89,31 @@ class BallInterpreter():
                 self.ballClose = True
 
             #Módulo de verificacao da posicao relativa da bola
-            #Casos não centralizado
+            #Interpretacao horizontal
             if(msg.x < xCenterLeftLimit):
-                analysis = 'Left'
+                analysisX = 'Left'
             elif(msg.x > xCenterRightLimit):
-                analysis = 'Right' 
-            #Casos centralizados horizontalmente, mas nao verticalmente
-            elif(msg.y > yCenterBottomLimit): #Deve ser maior por conta da referencia do Yolo
-                analysis = 'Bottom'
-            elif(msg.y < yCenterTopLimit):
-                analysis = 'Top'
+                analysisX = 'Right' 
             else:
+                analysisX = 'Center'
+            
+            #Interpretacao vertical
+            if(msg.y > yCenterBottomLimit): #Deve ser maior por conta da referencia do Yolo
+                analysisY = 'Bottom'
+            elif(msg.y < yCenterTopLimit):
+                analysisY = 'Top'
+            else:
+                analysisY = 'Center'
+
+            #Junção das interpretações em cada eixo
+            if(analysisX == 'Center' and analysisY == 'Center'):
                 analysis = 'Center'
+            elif(analysisX == 'Center'):
+                analysis = analysisY
+            elif(analysisY == 'Center'):
+                analysis = analysisX
+            else:
+                analysis = analysisX + '/' + analysisY
 
             self.ballRelativePosition = analysis
 

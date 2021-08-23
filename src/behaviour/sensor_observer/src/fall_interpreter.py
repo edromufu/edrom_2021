@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 #coding=utf-8
 
+import rospy
 from geometry_msgs.msg import Vector3
 
 simulation2BhvTopic = '/webots_natasha/behaviour_controller' #String do topico associado as infos do acelerometro da simulação
