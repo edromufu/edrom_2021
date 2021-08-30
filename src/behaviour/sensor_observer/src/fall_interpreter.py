@@ -85,7 +85,7 @@ class FallInterpreter():
                 #Caiu sobre o lado esquerdo     
                 self.fallState = 'Left'
 
-            elif msg.x < xSensorRight:
+            elif msg.x > xSensorRight:
                 #Caiu sobre o lado direito    
                 self.fallState = 'Right'  
 

@@ -29,6 +29,7 @@ add_message_files(
   GameControllerPlayerMsg.msg
   GameControllerTeamMsg.msg
   GameState.msg
+  simMovMsg.msg
 )
 
 add_service_files(
