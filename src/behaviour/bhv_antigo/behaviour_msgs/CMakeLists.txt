@@ -23,12 +23,6 @@ generate_dynamic_reconfigure_options()
 
 add_message_files(
   FILES
-  GameControllerMsg.msg
-  ActionMsg.msg
-  StateMachineActionsMsg.msg
-  GameControllerPlayerMsg.msg
-  GameControllerTeamMsg.msg
-  GameState.msg
   simMovMsg.msg
 )
 

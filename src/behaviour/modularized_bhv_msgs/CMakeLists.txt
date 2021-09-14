@@ -26,9 +26,10 @@ add_message_files(
   simMovMsg.msg
 )
 
-#add_service_files(
-#  FILES
-#)
+add_service_files(
+  FILES
+  headReqSrv.srv
+)
 
 generate_messages(
   DEPENDENCIES
