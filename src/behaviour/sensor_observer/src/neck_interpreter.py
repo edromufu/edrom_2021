@@ -8,9 +8,9 @@ from modularized_bhv_msgs.msg import simMovMsg as motorMsg  #Mensagem associada 
 headBhvReqServer = '/bhv2mov_communicator/head_requisitions' #String do topico associado as requisicoes sobre a cabeca do bhv para o movimento
 
 #Limites relacionados aos motores da cabeça em radianos
-[lookRightLimit, lookLeftLimit] = [-1.7,1.7] #Intervalos extremos 
-[lookDownLimit, lookUpLimit] = [-1.36,0.7]  #dos motores do pescoço
-ifBallCenteredKickable = -0.97 #Parâmetro que descreve angulação mínima da cabeça na vertical para que, caso a bola esteja centralizada, o chute irá bem
+[lookRightLimit, lookLeftLimit] = [1.7,-1.7] #Intervalos extremos 
+[lookDownLimit, lookUpLimit] = [0.212,2.272]  #dos motores do pescoço
+ifBallCenteredKickable = 0.602 #Parâmetro que descreve angulação mínima da cabeça na vertical para que, caso a bola esteja centralizada, o chute irá bem
 
 #Parametros da configuração do tópico das posições dos motores
 simMov2BhvTopic = '/webots/motors' #String do topico associado as infos dos motores, de onde sera tirada a posicao do pescoco
@@ -96,13 +96,15 @@ class NeckInterpreter():
         #Atribuição aos possíveis request que causam 
         #variação plausível de chegar no limite
         if(msg.headRequest == 'Left'):
-            deltaXInner = deltaX
-        elif(msg.headRequest == 'Right'):
             deltaXInner = -deltaX
+        elif(msg.headRequest == 'Right'):
+            deltaXInner = deltaX
         
         #Cálculo para saber se passou do limite na horizontal
         if(self.horMotorPosition + deltaXInner > lookLeftLimit or self.horMotorPosition + deltaXInner < lookRightLimit):
             self.horLimitAccomplished = True
+        else:
+            self.horLimitAccomplished = False
 
         ############################################VERIFICAÇÃO VERTICAL############################################
         #Atribuição aos possíveis request que causam 
@@ -114,3 +116,5 @@ class NeckInterpreter():
         
         if(self.verMotorPosition + deltaYInner > lookUpLimit or self.verMotorPosition + deltaYInner < lookDownLimit):
             self.verLimitAccomplished = True
+        else:
+            self.verLimitAccomplished = False

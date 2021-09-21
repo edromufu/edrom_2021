@@ -3,8 +3,8 @@ WorldInfo {
   coordinateSystem "NUE"
 }
 Viewpoint {
-  orientation -0.11608259907787837 0.9884006786459378 0.0979230751333625 1.4130025890170181
-  position 4.727353222395415 1.0116975144313876 0.09851417312271031
+  orientation 0.08803484486373589 -0.9926928330048419 -0.0825276038101145 4.731679439054052
+  position 3.0327631354296885 1.1786485633000239 -0.729444472121853
 }
 DEF Grass Floor {
   appearance Parquetry {
@@ -17,8 +17,8 @@ TexturedBackground {
 TexturedBackgroundLight {
 }
 DEF Ball Solid {
-  translation -0.14300149970114573 0.06878899315254836 -0.38529209512886536
-  rotation 0.9219869285465916 0.31361526268041034 -0.22712457067239405 1.72115341537456
+  translation -0.0013708648388794098 0.06878880763740144 2.4419878242568696
+  rotation 0.9186564170688574 0.27949297952267366 -0.2792025461483973 1.6559944806738567
   scale 0.728 0.728 0.728
   children [
     Shape {
@@ -76,6 +76,8 @@ DEF Ball Solid {
       angular 0.77
     }
   }
+  linearVelocity 8.28315624298653e-07 -1.5138669954030271e-12 -2.5975160985561223e-06
+  angularVelocity -3.714639521213449e-05 1.5618449912161744e-21 -1.1845524098074925e-05
 }
 DEF Goal2 Solid {
   translation 0 -4.46605e-06 4.38
@@ -502,25 +504,82 @@ DEF Goal1 Solid {
   }
 }
 DEF Natasha Solid {
-  translation 0 0.275 0.19
+  translation 0 0.27 -0.91
   rotation 1 0 0 3.14159
   children [
+    Robot {
+      translation 0 0.00012547476457580586 3.3295821655343616e-10
+      children [
+        Accelerometer {
+          translation 8.8e-05 0.00055 0.0225
+          rotation 1 0 0 0
+          name "Accelerometer"
+          lookupTable [
+            -10 -10 0.01
+            10 10 0.01
+          ]
+        }
+      ]
+      name "robot_accel"
+      physics Physics {
+      }
+      controller ""
+      linearVelocity 0 -1.2139209690069654e-07 0
+    }
     DEF HorizontalMotor Transform {
       translation 0 -0.31 -0.03
       children [
-        DEF VerticalMotor Transform {
-          translation 0 -0.06 -0.03
-          rotation -1 0 0 5.30716e-06
+        Transform {
+          translation -0.035 -0.048 -0.018
+          rotation 0.5773509358554485 -0.5773509358554485 0.5773489358556708 2.0944
           children [
-            Shape {
-              appearance PBRAppearance {
-                baseColor 0.3 0.3 0.3
-                metalness 0.5
-                IBLStrength 0.1
-              }
-              geometry Box {
-                size 0.1 0.05 0.05
-              }
+            DEF VerticalMotor Transform {
+              translation 0 -0.035 -0.015
+              rotation 0 1 0 1.572
+              children [
+                DEF jointCilynder Shape {
+                  geometry Cylinder {
+                    height 0.01
+                    radius 0.005
+                  }
+                }
+                Transform {
+                  translation -0.003 0 0
+                  children [
+                    DEF boxHead Transform {
+                      translation -0.024 0 -0.025
+                      children [
+                        Robot {
+                          children [
+                            Camera {
+                              translation 0 0 -0.025
+                              rotation 0 -1 0 3.14159
+                              name "Camera"
+                              fieldOfView 1.0123
+                              width 416
+                              height 416
+                              focus Focus {
+                              }
+                            }
+                          ]
+                          name "robot_camera"
+                          controller "ros"
+                        }
+                        Shape {
+                          appearance PBRAppearance {
+                            baseColor 0.3 0.3 0.3
+                            metalness 0.5
+                            IBLStrength 0.1
+                          }
+                          geometry Box {
+                            size 0.05 0.1 0.05
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
             }
           ]
         }
@@ -537,7 +596,7 @@ DEF Natasha Solid {
         }
       ]
     }
-    Shape {
+    DEF torsoBox Shape {
       appearance PBRAppearance {
         baseColor 0.3 0.3 0.3
         metalness 0.5
