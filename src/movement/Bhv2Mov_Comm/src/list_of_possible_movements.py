@@ -21,7 +21,7 @@ class PossibleMovementsList():
         _all_movements_listed = _walking_movements_listed + _page_movements_listed + _moving_head_movements_listed + _mixed_or_other_movements_listed
 
 
-        _dict_movements_listed_and_their_status = dict.fromkeys(_all_movements_listed,False)
+        self.dict_movements_listed_and_their_status = dict.fromkeys(_all_movements_listed,False)
 
         
     def is_movement_listed(self, _movement_to_be_checked):
@@ -30,7 +30,7 @@ class PossibleMovementsList():
         nos listados nesta classe.
         """
 
-        if _movement_to_be_checked in _dict_movements_listed_and_their_status.keys():
+        if _movement_to_be_checked in self.dict_movements_listed_and_their_status.keys():
             return True
         else:
             return False
@@ -41,11 +41,11 @@ class PossibleMovementsList():
         tornando True o tipo solicitado e False todos os outros.
         """
 
-        for key in _dict_movements_listed_and_their_status.keys():
+        for key in self.dict_movements_listed_and_their_status.keys():
             if key == _new_movement_status:
-                _dict_movements_listed_and_their_status[key] = True
+                self.dict_movements_listed_and_their_status[key] = True
             else:
-                _dict_movements_listed_and_their_status[key] = False
+                self.dict_movements_listed_and_their_status[key] = False
     
     def check_current_movement_status(self):
         """
@@ -54,9 +54,9 @@ class PossibleMovementsList():
 
         _countTrue = 0
 
-        for key in _dict_movements_listed_and_their_status.keys():
+        for key in self.dict_movements_listed_and_their_status.keys():
 
-            if _dict_movements_listed_and_their_status[key]:
+            if self.dict_movements_listed_and_their_status[key]:
                 _countTrue += 1
                 _currently_active = key
         
