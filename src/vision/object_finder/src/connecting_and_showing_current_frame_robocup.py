@@ -38,7 +38,7 @@ class Node():
             try:
                 for sublist in rospy.get_published_topics(namespace = "/"):
                     for item in sublist:
-                        if "image_proc" in item:
+                        if "vision_controller" in item:
                             self.vision_topic = item
 
                 rospy.Subscriber(self.vision_topic, ROS_Image, callback = self.convert_ros_image_to_cv2)
@@ -69,8 +69,7 @@ class Node():
             self.classes, self.scores, self.boxes, self.fps = ri.detect_model(self.model, self.current_frame)
             self.show_result_frame()
             self.publish_results()
-        except Exception as e:
-            #print(e)
+        except Exception:
             pass
 
     def show_result_frame(self):
@@ -78,7 +77,7 @@ class Node():
 
         ri.draw_results(self.current_frame, self.classes, self.scores, self.boxes)
 
-        #cv2.imshow("Current Frame", self.current_frame)
+        cv2.imshow("Current Frame", self.current_frame)
         cv2.waitKey(1)
 
     def publish_results(self):
@@ -87,28 +86,64 @@ class Node():
         objects_msg.searching = self.searching
         objects_msg.fps = self.fps
 
+        self.list_of_classes_in_current_frame = []
+        self.dict_of_xs = dict()
+
         for i in range(len(self.boxes)):
             [x_top, y_top, roi_width, roi_height] = self.boxes[i]
 
             x = int(x_top + roi_width/2)
             y = int(y_top + roi_height/2)
-
+            
             results = [True, x, y, roi_width, roi_height]
 
-            if self.classes[i][0] == 0:
-                ball = Ball()
-                [ball.found, ball.x, ball.y, ball.roi_width, ball.roi_height] = results
-                objects_msg.ball = ball
+            
 
-            elif self.classes[i][0] == 1:
-                leftgoalpost = Leftgoalpost()
-                [leftgoalpost.found, leftgoalpost.x, leftgoalpost.y, leftgoalpost.roi_width, leftgoalpost.roi_height] = results
-                objects_msg.leftgoalpost = leftgoalpost
+            # A mesma classe de trave é reconhecida para as duas traves
+            # Sabendo disso, a trave direita é a com maior x
+            self.dict_of_xs[i] = {"classe": self.classes[i][0], "x": x}
+            print(self.dict_of_xs)
 
+            if self.classes[i][0] not in self.list_of_classes_in_current_frame:
+                self.list_of_classes_in_current_frame.append(self.classes[i][0])
+
+                if self.classes[i][0] == 0:
+                    ball = Ball()
+                    [ball.found, ball.x, ball.y, ball.roi_width, ball.roi_height] = results
+                    objects_msg.ball = ball
+
+                elif self.classes[i][0] == 1:
+                    leftgoalpost = Leftgoalpost()
+                    [leftgoalpost.found, leftgoalpost.x, leftgoalpost.y, leftgoalpost.roi_width, leftgoalpost.roi_height] = results
+                    objects_msg.leftgoalpost = leftgoalpost
+
+                else:
+                    rightgoalpost = Rightgoalpost()
+                    [rightgoalpost.found, rightgoalpost.x, rightgoalpost.y, rightgoalpost.roi_width, rightgoalpost.roi_height] = results
+                    objects_msg.rightgoalpost = rightgoalpost
+            
             else:
-                rightgoalpost = Rightgoalpost()
-                [rightgoalpost.found, rightgoalpost.x, rightgoalpost.y, rightgoalpost.roi_width, rightgoalpost.roi_height] = results
-                objects_msg.rightgoalpost = rightgoalpost
+                self.maior_x = -1
+                self.menor_x = 500
+                for key in self.dict_of_xs.keys():
+                    if self.dict_of_xs[key]['classe'] != 0:
+                        if self.dict_of_xs[key]['x'] >= self.maior_x:
+                            self.maior_x = self.dict_of_xs[key]['x']
+                            self.pos_maior_x = key
+
+                        if self.dict_of_xs[key]['x'] < self.menor_x:
+                            self.menor_x = self.dict_of_xs[key]['x']
+                            self.pos_menor_x = key
+
+                if self.dict_of_xs[self.pos_maior_x]['classe'] == 2:
+                    self.dict_of_xs[self.pos_menor_x]['classe'] = 1
+
+                elif self.dict_of_xs[self.pos_maior_x]['classe'] == 1:
+                    self.dict_of_xs[self.pos_maior_x]['classe'] = 2
+
+
+                print("Detectei duas iguais!")
+                print(self.dict_of_xs)
 
         self.publisher.publish(objects_msg)
         

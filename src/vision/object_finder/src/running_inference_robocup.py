@@ -16,7 +16,7 @@ def get_cnn_files():
     arq = open('/proc/self/cgroup', 'r')
     linhas = arq.readlines()
 
-    robocup_folder = os.path.join(os.path.expanduser('~'), "/robotica_ufu/src/vision/robocup_cnn_files")
+    robocup_folder = os.path.join(os.path.expanduser('~'), "edrom_2021/src/vision/robocup_cnn_files")
     for linha in linhas:
         if 'docker' in linha:
             robocup_folder = "/robotica_ufu/src/vision/robocup_cnn_files"
@@ -46,7 +46,7 @@ def detect_model(model, current_frame):
     if (random.randint(1, 3) == 2):
 
         start_time = time.time()
-        classes, scores, boxes = model.detect(current_frame, 0.6, 0.4)
+        classes, scores, boxes = model.detect(current_frame, 0.45, 0.4)
         finish_time = time.time()
         fps = 1/(finish_time-start_time)
 
@@ -83,65 +83,3 @@ def draw_results(frame, classes, scores, boxes):
 def create_binary_image(net, current_frame):
 
     return cv2.dnn.blobFromImage(current_frame, size = (416, 416))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-'''width, height = 416, 416
-classes = ["ball", "left_goalpost", "right_goalpost"]
-
-model = cv2.dnn_DetectionModel(net)
-model.detect()
-
-outputs = net.forward(output_names)
-first_output = outputs[0]
-
-print(first_output.shape)
-print(type(first_output))
-
-class_ids = []
-confidences = []
-boxes = []
-
-for out in outputs:
-
-    for detection in out:
-        scores = detection[5:]
-        class_id = np.argmax(scores)
-        confidence = scores[class_id]
-
-        if confidence > 0.2:
-            # Object detected
-            center_x = int(detection[0] * width)
-            center_y = int(detection[1] * height)
-            w = int(detection[2] * width)
-            h = int(detection[3] * height)
-            # Rectangle coordinates
-            x = int(center_x - w / 2)
-            y = int(center_y - h / 2)
-            boxes.append([x, y, w, h])
-            confidences.append(float(confidence))
-            class_ids.append(class_id)
-
-print(boxes)
-
-indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.4, 0.3)
-
-for i in range(len(boxes)):
-
-    if i in indexes:
-        x, y, w, h = boxes[i]
-        label = str(classes[class_ids[i]])
-        confidence = confidences[i]
-        x_centro, y_centro, roi_largura, roi_altura = int(x + w/2), int(y + h/2), w, h'''
