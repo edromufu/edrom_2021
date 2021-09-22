@@ -1,2 +1,0 @@
-movement/behaviourReceiver:movement/movement_msgs:simulacao/movement_predefined:simulacao/numerical_optimization:simulacao/webots_natasha:tools/recorder:vision/object_finder:vision/vision_msgs
--DCATKIN_DEVEL_PREFIX=/home/murilo/edrom/devel -DCMAKE_INSTALL_PREFIX=/home/murilo/edrom/install -G Unix Makefiles

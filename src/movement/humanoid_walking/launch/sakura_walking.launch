@@ -1,0 +1,24 @@
+<launch>
+  <!-- Humanoid LoadMap -->
+  <include file="$(find motor_comm)/launch/opencm.launch"/>
+
+
+  <!-- Humanoid Model -->
+  <rosparam file="$(find humanoid_model)/config/robotParams.yaml" command="load"/>
+  <node name="humanoid_model" pkg="humanoid_model" type="humanoidmodel_node" output="screen" >   </node>
+
+
+  <!-- Humanoid Walking -->
+  <rosparam file="$(find humanoid_walking)/config/walkingParams.yaml" command="load"/>
+  <node name="humanoid_walking" pkg="humanoid_walking" type="lipwalk_node" output="screen" >   </node>
+
+
+  <!-- Retirar futuramente -->
+  <!-- Humanoid Control -->
+  <rosparam file="$(find humanoid_control)/config/controlParams.yaml" command="load"/>
+  <node name="humanoid_control" pkg="humanoid_control" type="humanoidcontrol_node" output="screen" >   </node>
+
+
+  <!-- Humanoid Config -->
+  <node name="humanoid_config" pkg="rqt_reconfigure" type="rqt_reconfigure" output="screen" >   </node>
+</launch>
