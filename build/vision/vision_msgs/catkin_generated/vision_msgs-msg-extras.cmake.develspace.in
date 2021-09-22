@@ -1,2 +1,0 @@
-set(vision_msgs_MESSAGE_FILES "/home/murilo/edrom/src/vision/vision_msgs/msg/Objects.msg;/home/murilo/edrom/src/vision/vision_msgs/msg/Ball.msg;/home/murilo/edrom/src/vision/vision_msgs/msg/Goal.msg;/home/murilo/edrom/src/vision/vision_msgs/msg/Robot.msg;/home/murilo/edrom/src/vision/vision_msgs/msg/Leftgoalpost.msg;/home/murilo/edrom/src/vision/vision_msgs/msg/Rightgoalpost.msg;/home/murilo/edrom/src/vision/vision_msgs/msg/Webotsmsg.msg")
-set(vision_msgs_SERVICE_FILES "")

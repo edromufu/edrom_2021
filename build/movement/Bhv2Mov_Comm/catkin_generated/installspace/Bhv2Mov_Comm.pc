@@ -1,8 +1,0 @@
-prefix=/home/murilo/edrom/install
-
-Name: Bhv2Mov_Comm
-Description: Description of Bhv2Mov_Comm
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 
