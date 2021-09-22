@@ -1,0 +1,17 @@
+<launch>
+  <include file="$(find humanoid_loadmap)/launch/natasha_loadmap.launch"/>
+
+  <!-- Roda o node para comunicar com a openCM física 
+  <node name="opencm" pkg="rosserial_python" type="serial_node.py" output="screen">
+    <param name="port" value="/dev/ttyACM0" />
+  </node>-->
+  
+  <!-- Roda o node que chama as ações para openCm -->
+  <node name="opencm_actions" pkg="motor_comm" type="opencm_node" output="screen" ></node>
+
+  <!-- Roda o node que abstrai a openCm para o resto do código -->
+  <node name="opencm_transitions" pkg="motor_comm" type="opencm_transitions.py" output="screen" ></node>
+
+  <!-- Roda o node que converte as posições dos motores para a simulação -->
+  <node name="conversion_webots_node" pkg="motor_comm" type="conversion_webots_node"/>
+</launch>

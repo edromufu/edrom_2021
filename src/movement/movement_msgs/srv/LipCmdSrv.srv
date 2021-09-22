@@ -1,0 +1,12 @@
+bool    first_pose
+bool    move_head
+bool    walk_flag
+bool    reset_walk 
+bool    test_mode
+float64 vx
+float64 vy
+float64 vz
+
+---
+
+

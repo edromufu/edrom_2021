@@ -1,81 +1,109 @@
-cmake_minimum_required(VERSION 3.0.2)
+################################################################################
+# CMake
+################################################################################
+cmake_minimum_required(VERSION 2.8.3)
 project(movement_msgs)
 
-## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
-
-
+################################################################################
+# Packages
+################################################################################
 find_package(catkin REQUIRED COMPONENTS
-  std_msgs
   message_generation
+  std_msgs 
+  geometry_msgs
+  sensor_msgs
+  dynamic_reconfigure
 )
 
-################################################
-## Declare ROS messages, services and actions ##
-################################################
+################################################################################
+# Declare ROS messages, services and actions
+################################################################################
+# Generate dynamic parameters
+generate_dynamic_reconfigure_options(
+	cfg/HumanoidModelConfig.cfg
+	cfg/HumanoidModelMoveCreatorConfig.cfg
+	cfg/HumanoidLipWalkingParams.cfg
+	cfg/HumanoidLipWalkingCmd.cfg
+	cfg/HumanoidLipWalkingCtrl.cfg
+	cfg/HumanoidCtrl.cfg
+	cfg/HumanoidInterface.cfg
+	cfg/HumanoidLearning.cfg)
 
 
-## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+add_message_files(
+  FILES
+  FFTMsg.msg
+  LipFeedBack.msg
+  HumanoidControlMsg.msg
+  LipParamsMsg.msg
+  IDMapMsg.msg
+  JointStateMsg.msg
+  EndEffStateMsg.msg
+  EndEffMsg.msg
+  HumanoidPropertiesMsg.msg
+  MotorStateMsg.msg
+  MotorPIDMsg.msg
+  WalkingMsg.msg
+  HeadMoveMsg.msg
+  MovementMsg.msg
+  LearningMsg.msg
+  PerformanceMsg.msg
+  HumanoidStateMsg.msg
+  ImpactMsg.msg
+  OpencmRequestMsg.msg
+  OpencmResponseMsg.msg
+  MotorRequestMsg.msg
+  MotorResponseMsg.msg
+  MotorDataMsg.msg
+  WebotsMsg.msg
+)
 
-## Generate services in the 'srv' folder
 add_service_files(
   FILES
-  BehRequestSrv.srv
+  DynamixelCreatorSrv.srv
+  LipCmdSrv.srv
+  LipCtrlSrv.srv
+  LipParamsSrv.srv
+  LoadMapConfigsSrv.srv
+  LoadHumanoidPropertiesSrv.srv
+  InterfaceSrv.srv
+  MotorSetSrv.srv
+  MovementSrv.srv
+  OpenCm.srv
+  MovementStatesSrv.srv
+  PredefinedMovementSrv.srv
 )
 
-## Generate actions in the 'action' folder
-# add_action_files(
-#   FILES
-#   Action1.action
-#   Action2.action
-# )
-
-## Generate added messages and services with any dependencies listed here
 generate_messages(
   DEPENDENCIES
   std_msgs
+  sensor_msgs
+  geometry_msgs
 )
 
-################################################
-## Declare ROS dynamic reconfigure parameters ##
-################################################
+################################################################################
+# Declare ROS dynamic reconfigure parameters
+################################################################################
 
-
-
-###################################
-## catkin specific configuration ##
-###################################
-
+################################################################################
+# Catkin specific configuration
+################################################################################
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES movement_msgs
-#  CATKIN_DEPENDS std_msgs
-#  DEPENDS system_lib
+   CATKIN_DEPENDS message_generation std_msgs geometry_msgs dynamic_reconfigure
 )
 
-###########
-## Build ##
-###########
-
-
+################################################################################
+# Build
+################################################################################
 include_directories(
-# include
   ${catkin_INCLUDE_DIRS}
 )
 
-
-## Specify libraries to link a library or executable target against
-# target_link_libraries(${PROJECT_NAME}_node
-#   ${catkin_LIBRARIES}
-# )
-
-#############
-## Install ##
-#############
+################################################################################
+# Install
+################################################################################
 
 
+################################################################################
+# Test
+################################################################################
