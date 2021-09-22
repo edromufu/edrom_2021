@@ -1,0 +1,8 @@
+prefix=/home/murilo/edrom/install
+
+Name: ballsim
+Description: Description of ballsim
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
