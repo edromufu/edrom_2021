@@ -4,7 +4,8 @@
 import rospy
 
 from movement_msgs.srv import behaviourReceiver
-import Periclao
+sys.path.append(os.path.abspath("../include"))
+import interface4_checking
 
 class MovementCommunication():
 
@@ -12,18 +13,17 @@ class MovementCommunication():
         
         # Inicialização do service, no primeiro campo cria o service, no segundo coloca o nome do srv que utilizaremos
         
-        rospy.Service('/movement/behaviourReceiver/commands2movement', behaviourReceiver, self.verificar_existencia)
+        rospy.Service('/movement/behaviourReceiver/commands2movement', behaviourReceiver, self.check_existence)
         
         # Variavel que armazena a resposta do service
         
-        self.SrvComunication2Beh = behaviourReceiverResponse()
-        self.PericlaoBrabo = Periclao()
-    def verificar_existencia(self, requisition):
+        self.srv_comunication_beh = behaviourReceiverResponse()
+        self.check = interface4_checking()
 
+    def check_existence(self, requisition):
         
-        if (self.PericlaoBrabo.existe_comando(requisition.description)):
+        if (self.check.existe_comando(requisition.description)):
             self.SrvComunication2Beh.response = True
-            BrenaoFunction(requisition.description)
 
         else:
             self.SrvComunication2Beh.response = False
