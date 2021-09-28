@@ -16,7 +16,7 @@ def get_cnn_files():
     arq = open('/proc/self/cgroup', 'r')
     linhas = arq.readlines()
 
-    robocup_folder = os.path.join(os.path.expanduser('~'), "/robotica_ufu/src/vision/robocup_cnn_files")
+    robocup_folder = os.path.join(os.path.expanduser('~'), "edrom/src/vision/robocup_cnn_files")
     for linha in linhas:
         if 'docker' in linha:
             robocup_folder = "/robotica_ufu/src/vision/robocup_cnn_files"
@@ -52,7 +52,7 @@ def detect_model(model, current_frame):
 
         #print(f"Classes: {classes}, Scores: {scores}")
         #print(f"Boxes: {boxes}")
-        print("FPS: ", fps)
+        #print("FPS: ", fps)
         #print('\n')
 
         return classes, scores, boxes, int(fps)

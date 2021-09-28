@@ -112,10 +112,11 @@ class Attacker(object):
             unless=['robot_falling', 'moving', 'motor_limit_reached'])
 
         #Transições para o S_Walking
+        '''
         self.machine.add_transition('goto_Walking', 'S_Search_ball', 'S_Walking',
             conditions=['ball_found', 'ball_centered'],
             unless=['robot_falling', 'ball_kickable'])
-            
+        '''
         #Transições para o S_Kick
         self.machine.add_transition('goto_Kick', 'S_Search_ball', 'S_Kick', 
             conditions=['ball_found', 'ball_kickable'],

@@ -13,8 +13,8 @@ yBottom_centralized = 120
 
 xTop_to_centralize    = 220                         #Estas quatro variáveis irão informar
 xBottom_to_centralize = 180                         #os valores para centralizar a cabeça
-yTop_to_centralize    = 270                         #com a bola.
-yBottom_to_centralize = 140
+yTop_to_centralize    = 250                         #com a bola.
+yBottom_to_centralize = 160
 
 ball_width  = 75                                   #Variáveis para nos informar a altura
 ball_height = 75                                   #e largura do raio da bola. Define se
@@ -49,10 +49,11 @@ x_to_turn_Left  = 2158
 
 class Think(object):
     def __init__(self):
-        self.listMedsHor = []
-        self.listMedsVer = []
+            self.listMedsHor = []
+            self.listMedsVer = []
+            self.listActionsHead = []
 
-        self.listMedsYSensor = []
+            self.listMedsYSensor = []
 
     def vision(self, x_ball, y_ball, roi_width, roi_height,ball):
         self.ball = ball
@@ -68,25 +69,28 @@ class Think(object):
         if(len(self.listMedsVer) > importantMeasures): 
             self.listMedsVer.remove(self.listMedsVer[0])
 
+        if(len(self.listActionsHead) > 80*importantMeasures): 
+            self.listActionsHead.remove(self.listActionsHead[0])
+
         #Construção da media movel vertical e horizontal
         if self.ball:
+            if x_ball > xTop_to_centralize:
+                self.listMedsHor = self.listMedsHor + ["Right"]
 
-            if x_ball >= xBottom_centralized and x_ball <= xTop_centralized and y_ball >= yBottom_centralized and y_ball <= yTop_centralized:
-                self.listMedsHor = self.listMedsHor + ["Center"]
-                self.listMedsVer = self.listMedsVer + ["Center"]
+            elif x_ball < xBottom_to_centralize:
+                self.listMedsHor = self.listMedsHor + ["Left"]
             
-            else:
-                if x_ball > xTop_to_centralize:
-                    self.listMedsHor = self.listMedsHor + ["Right"]
+            elif x_ball >= xBottom_centralized and x_ball <= xTop_centralized:
+                self.listMedsHor = self.listMedsHor + ["Center"]
 
-                elif x_ball < xBottom_to_centralize:
-                    self.listMedsHor = self.listMedsHor + ["Left"]
+            if y_ball > yTop_to_centralize:
+                self.listMedsVer = self.listMedsVer + ["Down"]
 
-                if y_ball > yTop_to_centralize:
-                    self.listMedsVer = self.listMedsVer + ["Down"]
-
-                elif y_ball < yBottom_to_centralize:
-                    self.listMedsVer = self.listMedsVer + ["Up"]
+            elif y_ball < yBottom_to_centralize:
+                self.listMedsVer = self.listMedsVer + ["Up"]
+            
+            elif y_ball >= yBottom_centralized and y_ball <= yTop_centralized:
+                self.listMedsVer = self.listMedsVer + ["Center"]
         else:
             self.listMedsHor = self.listMedsHor + ["Out"]
             self.listMedsVer = self.listMedsVer + ["Out"]
@@ -99,7 +103,7 @@ class Think(object):
             horAction = -1
         if(self.listMedsHor.count("Right") > timesMeasured):
             horAction = 1
-        if(self.listMedsHor.count("Center") > timesMeasured*3/4):
+        if(self.listMedsHor.count("Center") > timesMeasured/2):
             horAction = 0
 
         #Calculo da media movel vertical
@@ -110,11 +114,15 @@ class Think(object):
             verAction = -2
         if(self.listMedsVer.count("Down") > timesMeasured):
             verAction = 2
-        if(self.listMedsVer.count("Center") > timesMeasured*3/4):
+        if(self.listMedsVer.count("Center") > timesMeasured/2):
             verAction = 0
         
         #Tomada de decisão para motorhead com base no medido da media móvel
-        if(verAction == 3 and horAction == 3): #Completamente fora
+        if(self.listActionsHead.count(3) > 80*timesMeasured and len(self.listActionsHead) > 90*timesMeasured): #Fora do campo de visão à muito tempo
+            self.motorhead = 4
+            self.listActionsHead.clear()
+
+        elif(verAction == 3 and horAction == 3): #Completamente fora
             self.motorhead = 3
 
         elif(verAction == 0 and horAction == 0):#Centralizou
@@ -130,9 +138,10 @@ class Think(object):
         else: #Prioriza centralização horizontal em caso de não estar centralizado em ambos
             self.motorhead = horAction
         
-
         if roi_width*roi_height >= ball_height*ball_width:
             self.ball_close = True
+
+        self.listActionsHead = self.listActionsHead + [self.motorhead]
 
         return (self.ball_centered, self.ball_close, self.motorhead)
 

@@ -38,7 +38,7 @@ class Node():
             try:
                 for sublist in rospy.get_published_topics(namespace = "/"):
                     for item in sublist:
-                        if "image_proc" in item:
+                        if "vision_controller" in item:
                             self.vision_topic = item
 
                 rospy.Subscriber(self.vision_topic, ROS_Image, callback = self.convert_ros_image_to_cv2)

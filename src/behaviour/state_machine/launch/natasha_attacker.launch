@@ -1,6 +1,4 @@
 <launch>
-	<!--NatashaApi-->
-	<node name="natashaApi" pkg="webots_natasha" type="NatashaApi.py" output="screen" >    </node>
 
 	<!-- Movement -->
 	<include file="$(find movecreator_qt)/launch/natasha_movecreator.launch"></include>
