@@ -27,6 +27,9 @@ docs/latex
 *.includes
 
 #Makefiles
+build/
+devel/
+src/src
 CMakeCache.txt
 Makefile
 CMakeFiles
