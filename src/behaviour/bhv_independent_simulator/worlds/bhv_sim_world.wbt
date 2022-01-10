@@ -3,8 +3,8 @@ WorldInfo {
   coordinateSystem "NUE"
 }
 Viewpoint {
-  orientation 0.08803484486373589 -0.9926928330048419 -0.0825276038101145 4.731679439054052
-  position 3.0327631354296885 1.1786485633000239 -0.729444472121853
+  orientation 0.10755555806893129 0.9924006764444152 0.05977206137609754 5.318515060713711
+  position -2.0694711680833664 0.7666315885405821 0.9279669471786522
 }
 DEF Grass Floor {
   appearance Parquetry {
@@ -17,8 +17,8 @@ TexturedBackground {
 TexturedBackgroundLight {
 }
 DEF Ball Solid {
-  translation -0.0013700099403520206 0.06878880763740143 2.4419851433794175
-  rotation 0.9186539411509688 0.2794861002537039 -0.2792175785525851 1.6559627074018095
+  translation -0.0013595354128290295 0.06878880763740151 2.441952296294701
+  rotation 0.9186235785914221 0.2794017903094546 -0.27940179030879714 1.6555734323356366
   scale 0.728 0.728 0.728
   children [
     Shape {
@@ -76,8 +76,8 @@ DEF Ball Solid {
       angular 0.77
     }
   }
-  linearVelocity 7.658123928760312e-07 -1.2941525385942004e-12 -2.4015121157970616e-06
-  angularVelocity -3.43433937566875e-05 1.95458519520886e-21 -1.0951681808844098e-05
+  linearVelocity 7.215581516086253e-17 -8.405145444406721e-17 -1.7750578211010014e-33
+  angularVelocity -2.538464983206031e-32 -9.402851885950964e-33 -1.0318819361440628e-15
 }
 DEF Goal2 Solid {
   translation 0 -4.46605e-06 4.38
@@ -507,24 +507,19 @@ DEF Natasha Solid {
   translation 0 0.27 -0.91
   rotation 1 0 0 3.14159
   children [
-    Robot {
-      translation 0 0.0001411552279049766 3.745677101818501e-10
+    DEF RobotToAddAccel Robot {
+      translation 0 -0.09998431953667242 4.160949362841393e-11
+      rotation -1 0 0 -3.1415899999999977
       children [
-        Accelerometer {
-          translation 8.8e-05 0.00055 0.0225
-          rotation 1 0 0 0
+        DEF Accelerometer Accelerometer {
           name "Accelerometer"
-          lookupTable [
-            -10 -10 0.01
-            10 10 0.01
-          ]
         }
       ]
-      name "robot_accel"
       physics Physics {
       }
-      controller ""
-      linearVelocity 0 -1.2139209690066944e-07 0
+      controller "<extern>"
+      supervisor TRUE
+      linearVelocity 0 -1.2139210900841565e-07 0
     }
     DEF HorizontalMotor Transform {
       translation 0 -0.31 -0.03
@@ -549,22 +544,6 @@ DEF Natasha Solid {
                     DEF boxHead Transform {
                       translation -0.024 0 -0.025
                       children [
-                        Robot {
-                          children [
-                            Camera {
-                              translation 0 0 -0.025
-                              rotation 0 -1 0 3.14159
-                              name "Camera"
-                              fieldOfView 1.0123
-                              width 416
-                              height 416
-                              focus Focus {
-                              }
-                            }
-                          ]
-                          name "robot_camera"
-                          controller "ros"
-                        }
                         Shape {
                           appearance PBRAppearance {
                             baseColor 0.3 0.3 0.3
@@ -609,8 +588,4 @@ DEF Natasha Solid {
     }
   ]
   name "NatashaSolid"
-}
-Robot {
-  controller "<extern>"
-  supervisor TRUE
 }

@@ -90,7 +90,7 @@ class NeckInterpreter():
             - Atribuir um valor a um delta para as duas direções (x e y) dependendo do request
             - Verificar se a soma da posicao atual com o delta ultrapassa algum limite
         -> Input:
-            - msg: Variavel associada a mensagem recebida no topico do ROS, contem as
+            - req: Variavel associada a mensagem recebida no topico do ROS, contem as
             informacoes dos motores horizontal e vertical da cabeça   
         """        
         
@@ -101,9 +101,9 @@ class NeckInterpreter():
         ############################################VERIFICAÇÃO HORIZONTAL############################################
         #Atribuição aos possíveis request que causam 
         #variação plausível de chegar no limite
-        if(msg.headRequest == LEFT):
+        if(req.headRequest == LEFT):
             deltaXInner = -deltaX
-        elif(msg.headRequest == RIGHT):
+        elif(req.headRequest == RIGHT):
             deltaXInner = deltaX
         
         #Cálculo para saber se passou do limite na horizontal
@@ -115,9 +115,9 @@ class NeckInterpreter():
         ############################################VERIFICAÇÃO VERTICAL############################################
         #Atribuição aos possíveis request que causam 
         #variação plausível de chegar no limite
-        if(msg.headRequest == UP):
+        if(req.headRequest == UP):
             deltaYInner = deltaY
-        elif(msg.headRequest == DOWN):
+        elif(req.headRequest == DOWN):
             deltaYInner = -deltaY
         
         if(self.verMotorPosition + deltaYInner > lookUpLimit or self.verMotorPosition + deltaYInner < lookDownLimit):

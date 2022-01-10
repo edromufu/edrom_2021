@@ -7,6 +7,7 @@ from controller import Supervisor
 #Importações para os tópicos do ROS
 from modularized_bhv_msgs.srv import headReqSrv, headReqSrvResponse #Srv associado ao service utilizado para requisitar movimento dos motores da cabeça ao movimento
 from modularized_bhv_msgs.msg import simMovMsg #Mensagem associada ao tópico utilizado para receber info dos motores
+from geometry_msgs.msg import Vector3 #Mensagem associada ao tópico utilizado para enviar info do acelerometro
 
 #Limites relacionados aos motores da cabeça em radianos
 hor_increment = (1.7+1.7)/10 #Valores de incremento obtidos através do step
@@ -37,6 +38,7 @@ class BhvIndependentSim(object):
     def start(self):
         while self.general_supervisor.step(32) != -1 and not rospy.is_shutdown():
             self.motorUpdate()
+            self.accelUpdate()
 
     #Função chamada pelo construtor para habilitação de todos recursos da cabeça
     def init_head(self):
@@ -65,7 +67,17 @@ class BhvIndependentSim(object):
 
     #Função chamada pelo construtor para habilitação de todos recursos do acelerômetro
     def init_accel(self):
-        pass
+        self.accel_sensor = self.general_supervisor.getDevice('Accelerometer')
+
+        self.accel_sensor.enable(32)
+
+        self.accel_publisher = rospy.Publisher('/webots_natasha/behaviour_controller', Vector3, queue_size=100)
+        self.accel_msg = Vector3()
+    
+    def accelUpdate(self):
+        [self.accel_msg.x, self.accel_msg.y, self.accel_msg.z] = self.accel_sensor.getValues()
+
+        self.accel_publisher.publish(self.accel_msg)
 
     #Função chamada no loop para publicar continuamente a posição atual dos motores da cabeça
     def motorUpdate(self):
