@@ -17,8 +17,8 @@ TexturedBackground {
 TexturedBackgroundLight {
 }
 DEF Ball Solid {
-  translation -0.0013708648388794098 0.06878880763740144 2.4419878242568696
-  rotation 0.9186564170688574 0.27949297952267366 -0.2792025461483973 1.6559944806738567
+  translation -0.0013700099403520206 0.06878880763740143 2.4419851433794175
+  rotation 0.9186539411509688 0.2794861002537039 -0.2792175785525851 1.6559627074018095
   scale 0.728 0.728 0.728
   children [
     Shape {
@@ -76,8 +76,8 @@ DEF Ball Solid {
       angular 0.77
     }
   }
-  linearVelocity 8.28315624298653e-07 -1.5138669954030271e-12 -2.5975160985561223e-06
-  angularVelocity -3.714639521213449e-05 1.5618449912161744e-21 -1.1845524098074925e-05
+  linearVelocity 7.658123928760312e-07 -1.2941525385942004e-12 -2.4015121157970616e-06
+  angularVelocity -3.43433937566875e-05 1.95458519520886e-21 -1.0951681808844098e-05
 }
 DEF Goal2 Solid {
   translation 0 -4.46605e-06 4.38
@@ -508,7 +508,7 @@ DEF Natasha Solid {
   rotation 1 0 0 3.14159
   children [
     Robot {
-      translation 0 0.00012547476457580586 3.3295821655343616e-10
+      translation 0 0.0001411552279049766 3.745677101818501e-10
       children [
         Accelerometer {
           translation 8.8e-05 0.00055 0.0225
@@ -524,7 +524,7 @@ DEF Natasha Solid {
       physics Physics {
       }
       controller ""
-      linearVelocity 0 -1.2139209690069654e-07 0
+      linearVelocity 0 -1.2139209690066944e-07 0
     }
     DEF HorizontalMotor Transform {
       translation 0 -0.31 -0.03
@@ -609,4 +609,8 @@ DEF Natasha Solid {
     }
   ]
   name "NatashaSolid"
+}
+Robot {
+  controller "<extern>"
+  supervisor TRUE
 }

@@ -21,6 +21,12 @@ simMov2BhvTopic = '/webots/motors' #String do topico associado as infos dos moto
 deltaX = abs((lookRightLimit - lookLeftLimit)/horizontalStepsNumber) #Valor em radianos da variação de 1 step no motor horizontal
 deltaY = abs((lookDownLimit-lookUpLimit)/verticalStepsNumber) #Valor em radianos da variação de 1 step no motor vertical
 
+#Setando a grafia correta das requisições para a cabeça
+RIGHT = 'Right'
+LEFT = 'Left'
+UP = 'Up'
+DOWN = 'Down'
+
 class NeckInterpreter():
 
     def __init__(self):
@@ -95,9 +101,9 @@ class NeckInterpreter():
         ############################################VERIFICAÇÃO HORIZONTAL############################################
         #Atribuição aos possíveis request que causam 
         #variação plausível de chegar no limite
-        if(msg.headRequest == 'Left'):
+        if(msg.headRequest == LEFT):
             deltaXInner = -deltaX
-        elif(msg.headRequest == 'Right'):
+        elif(msg.headRequest == RIGHT):
             deltaXInner = deltaX
         
         #Cálculo para saber se passou do limite na horizontal
@@ -109,9 +115,9 @@ class NeckInterpreter():
         ############################################VERIFICAÇÃO VERTICAL############################################
         #Atribuição aos possíveis request que causam 
         #variação plausível de chegar no limite
-        if(msg.headRequest == 'Up'):
+        if(msg.headRequest == UP):
             deltaYInner = deltaY
-        elif(msg.headRequest == 'Down'):
+        elif(msg.headRequest == DOWN):
             deltaYInner = -deltaY
         
         if(self.verMotorPosition + deltaYInner > lookUpLimit or self.verMotorPosition + deltaYInner < lookDownLimit):
