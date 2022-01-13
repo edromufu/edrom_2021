@@ -8,15 +8,14 @@ import struct
 
 
 class BehRequestSrvRequest(genpy.Message):
-  _md5sum = "7ab56bed22ef70be464b55a62b49b8f9"
+  _md5sum = "56a2040e58d4fe3f4d4a0df112eea2f6"
   _type = "movement_msgs/BehRequestSrvRequest"
   _has_header = False  # flag to mark the presence of a Header object
-  _full_text = """string category
-string kind
+  _full_text = """string description
 
 """
-  __slots__ = ['category','kind']
-  _slot_types = ['string','string']
+  __slots__ = ['description']
+  _slot_types = ['string']
 
   def __init__(self, *args, **kwds):
     """
@@ -26,7 +25,7 @@ string kind
     changes.  You cannot mix in-order arguments and keyword arguments.
 
     The available fields are:
-       category,kind
+       description
 
     :param args: complete set of field values, in .msg order
     :param kwds: use keyword arguments corresponding to message field names
@@ -35,13 +34,10 @@ string kind
     if args or kwds:
       super(BehRequestSrvRequest, self).__init__(*args, **kwds)
       # message fields cannot be None, assign default values for those that are
-      if self.category is None:
-        self.category = ''
-      if self.kind is None:
-        self.kind = ''
+      if self.description is None:
+        self.description = ''
     else:
-      self.category = ''
-      self.kind = ''
+      self.description = ''
 
   def _get_types(self):
     """
@@ -55,13 +51,7 @@ string kind
     :param buff: buffer, ``StringIO``
     """
     try:
-      _x = self.category
-      length = len(_x)
-      if python3 or type(_x) == unicode:
-        _x = _x.encode('utf-8')
-        length = len(_x)
-      buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
-      _x = self.kind
+      _x = self.description
       length = len(_x)
       if python3 or type(_x) == unicode:
         _x = _x.encode('utf-8')
@@ -85,18 +75,9 @@ string kind
       start = end
       end += length
       if python3:
-        self.category = str[start:end].decode('utf-8', 'rosmsg')
+        self.description = str[start:end].decode('utf-8', 'rosmsg')
       else:
-        self.category = str[start:end]
-      start = end
-      end += 4
-      (length,) = _struct_I.unpack(str[start:end])
-      start = end
-      end += length
-      if python3:
-        self.kind = str[start:end].decode('utf-8', 'rosmsg')
-      else:
-        self.kind = str[start:end]
+        self.description = str[start:end]
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e)  # most likely buffer underfill
@@ -109,13 +90,7 @@ string kind
     :param numpy: numpy python module
     """
     try:
-      _x = self.category
-      length = len(_x)
-      if python3 or type(_x) == unicode:
-        _x = _x.encode('utf-8')
-        length = len(_x)
-      buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
-      _x = self.kind
+      _x = self.description
       length = len(_x)
       if python3 or type(_x) == unicode:
         _x = _x.encode('utf-8')
@@ -140,18 +115,9 @@ string kind
       start = end
       end += length
       if python3:
-        self.category = str[start:end].decode('utf-8', 'rosmsg')
+        self.description = str[start:end].decode('utf-8', 'rosmsg')
       else:
-        self.category = str[start:end]
-      start = end
-      end += 4
-      (length,) = _struct_I.unpack(str[start:end])
-      start = end
-      end += length
-      if python3:
-        self.kind = str[start:end].decode('utf-8', 'rosmsg')
-      else:
-        self.kind = str[start:end]
+        self.description = str[start:end]
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e)  # most likely buffer underfill
@@ -279,6 +245,6 @@ def _get_struct_B():
     return _struct_B
 class BehRequestSrv(object):
   _type          = 'movement_msgs/BehRequestSrv'
-  _md5sum = '147c59713af21eb742ab556d1988f274'
+  _md5sum = 'ee7d6e8b98e6646580b37e2806895049'
   _request_class  = BehRequestSrvRequest
   _response_class = BehRequestSrvResponse

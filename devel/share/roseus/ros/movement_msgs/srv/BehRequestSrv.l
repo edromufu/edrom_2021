@@ -20,48 +20,37 @@
 
 (defclass movement_msgs::BehRequestSrvRequest
   :super ros::object
-  :slots (_category _kind ))
+  :slots (_description ))
 
 (defmethod movement_msgs::BehRequestSrvRequest
   (:init
    (&key
-    ((:category __category) "")
-    ((:kind __kind) "")
+    ((:description __description) "")
     )
    (send-super :init)
-   (setq _category (string __category))
-   (setq _kind (string __kind))
+   (setq _description (string __description))
    self)
-  (:category
-   (&optional __category)
-   (if __category (setq _category __category)) _category)
-  (:kind
-   (&optional __kind)
-   (if __kind (setq _kind __kind)) _kind)
+  (:description
+   (&optional __description)
+   (if __description (setq _description __description)) _description)
   (:serialization-length
    ()
    (+
-    ;; string _category
-    4 (length _category)
-    ;; string _kind
-    4 (length _kind)
+    ;; string _description
+    4 (length _description)
     ))
   (:serialize
    (&optional strm)
    (let ((s (if strm strm
               (make-string-output-stream (send self :serialization-length)))))
-     ;; string _category
-       (write-long (length _category) s) (princ _category s)
-     ;; string _kind
-       (write-long (length _kind) s) (princ _kind s)
+     ;; string _description
+       (write-long (length _description) s) (princ _description s)
      ;;
      (if (null strm) (get-output-stream-string s))))
   (:deserialize
    (buf &optional (ptr- 0))
-   ;; string _category
-     (let (n) (setq n (sys::peek buf ptr- :integer)) (incf ptr- 4) (setq _category (subseq buf ptr- (+ ptr- n))) (incf ptr- n))
-   ;; string _kind
-     (let (n) (setq n (sys::peek buf ptr- :integer)) (incf ptr- 4) (setq _kind (subseq buf ptr- (+ ptr- n))) (incf ptr- n))
+   ;; string _description
+     (let (n) (setq n (sys::peek buf ptr- :integer)) (incf ptr- 4) (setq _description (subseq buf ptr- (+ ptr- n))) (incf ptr- n))
    ;;
    self)
   )
@@ -107,7 +96,7 @@
   :super ros::object
   :slots ())
 
-(setf (get movement_msgs::BehRequestSrv :md5sum-) "147c59713af21eb742ab556d1988f274")
+(setf (get movement_msgs::BehRequestSrv :md5sum-) "ee7d6e8b98e6646580b37e2806895049")
 (setf (get movement_msgs::BehRequestSrv :datatype-) "movement_msgs/BehRequestSrv")
 (setf (get movement_msgs::BehRequestSrv :request) movement_msgs::BehRequestSrvRequest)
 (setf (get movement_msgs::BehRequestSrv :response) movement_msgs::BehRequestSrvResponse)
@@ -115,11 +104,10 @@
 (defmethod movement_msgs::BehRequestSrvRequest
   (:response () (instance movement_msgs::BehRequestSrvResponse :init)))
 
-(setf (get movement_msgs::BehRequestSrvRequest :md5sum-) "147c59713af21eb742ab556d1988f274")
+(setf (get movement_msgs::BehRequestSrvRequest :md5sum-) "ee7d6e8b98e6646580b37e2806895049")
 (setf (get movement_msgs::BehRequestSrvRequest :datatype-) "movement_msgs/BehRequestSrvRequest")
 (setf (get movement_msgs::BehRequestSrvRequest :definition-)
-      "string category
-string kind
+      "string description
 
 ---
 
@@ -127,11 +115,10 @@ bool response
 
 ")
 
-(setf (get movement_msgs::BehRequestSrvResponse :md5sum-) "147c59713af21eb742ab556d1988f274")
+(setf (get movement_msgs::BehRequestSrvResponse :md5sum-) "ee7d6e8b98e6646580b37e2806895049")
 (setf (get movement_msgs::BehRequestSrvResponse :datatype-) "movement_msgs/BehRequestSrvResponse")
 (setf (get movement_msgs::BehRequestSrvResponse :definition-)
-      "string category
-string kind
+      "string description
 
 ---
 
@@ -141,6 +128,6 @@ bool response
 
 
 
-(provide :movement_msgs/BehRequestSrv "147c59713af21eb742ab556d1988f274")
+(provide :movement_msgs/BehRequestSrv "ee7d6e8b98e6646580b37e2806895049")
 
 

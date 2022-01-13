@@ -1,0 +1,8 @@
+prefix=/home/murilo/edrom/install
+
+Name: behaviourRecives
+Description: Description of behaviourRecives
+Version: 0.0.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib -lbehaviourRecives
+Requires: roscpp rospy

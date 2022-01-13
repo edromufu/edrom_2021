@@ -1,8 +1,6 @@
 (cl:in-package movement_msgs-srv)
-(cl:export '(CATEGORY-VAL
-          CATEGORY
-          KIND-VAL
-          KIND
+(cl:export '(DESCRIPTION-VAL
+          DESCRIPTION
           RESPONSE-VAL
           RESPONSE
 ))

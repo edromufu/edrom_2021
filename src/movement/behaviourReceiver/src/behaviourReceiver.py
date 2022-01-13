@@ -2,36 +2,28 @@
 # -*- coding: utf-8 -*-
 
 import rospy
-
-from movement_msgs.srv import behaviourReceiver
-sys.path.append(os.path.abspath("../include"))
-import interface4_checking
+from movement_msgs.srv import *
+from behaviour_msgs.srv import *
 
 class MovementCommunication():
 
     def __init__(self):
         
-        # Inicialização do service, no primeiro campo cria o service, no segundo coloca o nome do srv que utilizaremos
-        
-        rospy.Service('/movement/behaviourReceiver/commands2movement', behaviourReceiver, self.check_existence)
-        
-        # Variavel que armazena a resposta do service
-        
-        self.srv_comunication_beh = behaviourReceiverResponse()
-        self.check = interface4_checking()
+        rospy.Service('nomeService', tipoService, self.receber_string)
 
-    def check_existence(self, requisition):
+        self.SrvComunication = tipoServiceResponse()
+
+    def receber_string(self, acao):
+
+        print(acao)
         
-        if (self.check.existe_comando(requisition.description)):
-            self.SrvComunication2Beh.response = True
+        self.SrvComunication.sucess = True
 
-        else:
-            self.SrvComunication2Beh.response = False
-            rospy.loginfo("Não existe o comando "+requisition.description)
-
+        # Retorna a resposta do serviço
+        
         return self.SrvComunication
 
 if __name__ == '__main__':
     rospy.init_node('Movement_node', anonymous=False)
-    movement = Movement()
+    movement = MovementCommunication()
     rospy.spin()

@@ -1,8 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 #Tem apenas como finalidade testar a comunicacao do 
 #
-from webots_ros.srv import set_string
+
 import rospy
 
 def handle(req):

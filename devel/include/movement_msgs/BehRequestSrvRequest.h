@@ -24,22 +24,17 @@ struct BehRequestSrvRequest_
   typedef BehRequestSrvRequest_<ContainerAllocator> Type;
 
   BehRequestSrvRequest_()
-    : category()
-    , kind()  {
+    : description()  {
     }
   BehRequestSrvRequest_(const ContainerAllocator& _alloc)
-    : category(_alloc)
-    , kind(_alloc)  {
+    : description(_alloc)  {
   (void)_alloc;
     }
 
 
 
-   typedef std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  _category_type;
-  _category_type category;
-
-   typedef std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  _kind_type;
-  _kind_type kind;
+   typedef std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  _description_type;
+  _description_type description;
 
 
 
@@ -70,8 +65,7 @@ return s;
 template<typename ContainerAllocator1, typename ContainerAllocator2>
 bool operator==(const ::movement_msgs::BehRequestSrvRequest_<ContainerAllocator1> & lhs, const ::movement_msgs::BehRequestSrvRequest_<ContainerAllocator2> & rhs)
 {
-  return lhs.category == rhs.category &&
-    lhs.kind == rhs.kind;
+  return lhs.description == rhs.description;
 }
 
 template<typename ContainerAllocator1, typename ContainerAllocator2>
@@ -128,12 +122,12 @@ struct MD5Sum< ::movement_msgs::BehRequestSrvRequest_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "7ab56bed22ef70be464b55a62b49b8f9";
+    return "56a2040e58d4fe3f4d4a0df112eea2f6";
   }
 
   static const char* value(const ::movement_msgs::BehRequestSrvRequest_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0x7ab56bed22ef70beULL;
-  static const uint64_t static_value2 = 0x464b55a62b49b8f9ULL;
+  static const uint64_t static_value1 = 0x56a2040e58d4fe3fULL;
+  static const uint64_t static_value2 = 0x4d4a0df112eea2f6ULL;
 };
 
 template<class ContainerAllocator>
@@ -152,8 +146,7 @@ struct Definition< ::movement_msgs::BehRequestSrvRequest_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "string category\n"
-"string kind\n"
+    return "string description\n"
 "\n"
 ;
   }
@@ -173,8 +166,7 @@ namespace serialization
   {
     template<typename Stream, typename T> inline static void allInOne(Stream& stream, T m)
     {
-      stream.next(m.category);
-      stream.next(m.kind);
+      stream.next(m.description);
     }
 
     ROS_DECLARE_ALLINONE_SERIALIZER
@@ -193,10 +185,8 @@ struct Printer< ::movement_msgs::BehRequestSrvRequest_<ContainerAllocator> >
 {
   template<typename Stream> static void stream(Stream& s, const std::string& indent, const ::movement_msgs::BehRequestSrvRequest_<ContainerAllocator>& v)
   {
-    s << indent << "category: ";
-    Printer<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::stream(s, indent + "  ", v.category);
-    s << indent << "kind: ";
-    Printer<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::stream(s, indent + "  ", v.kind);
+    s << indent << "description: ";
+    Printer<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::stream(s, indent + "  ", v.description);
   }
 };
 

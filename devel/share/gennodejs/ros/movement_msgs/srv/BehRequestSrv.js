@@ -21,31 +21,22 @@ class BehRequestSrvRequest {
   constructor(initObj={}) {
     if (initObj === null) {
       // initObj === null is a special case for deserialization where we don't initialize fields
-      this.category = null;
-      this.kind = null;
+      this.description = null;
     }
     else {
-      if (initObj.hasOwnProperty('category')) {
-        this.category = initObj.category
+      if (initObj.hasOwnProperty('description')) {
+        this.description = initObj.description
       }
       else {
-        this.category = '';
-      }
-      if (initObj.hasOwnProperty('kind')) {
-        this.kind = initObj.kind
-      }
-      else {
-        this.kind = '';
+        this.description = '';
       }
     }
   }
 
   static serialize(obj, buffer, bufferOffset) {
     // Serializes a message object of type BehRequestSrvRequest
-    // Serialize message field [category]
-    bufferOffset = _serializer.string(obj.category, buffer, bufferOffset);
-    // Serialize message field [kind]
-    bufferOffset = _serializer.string(obj.kind, buffer, bufferOffset);
+    // Serialize message field [description]
+    bufferOffset = _serializer.string(obj.description, buffer, bufferOffset);
     return bufferOffset;
   }
 
@@ -53,18 +44,15 @@ class BehRequestSrvRequest {
     //deserializes a message object of type BehRequestSrvRequest
     let len;
     let data = new BehRequestSrvRequest(null);
-    // Deserialize message field [category]
-    data.category = _deserializer.string(buffer, bufferOffset);
-    // Deserialize message field [kind]
-    data.kind = _deserializer.string(buffer, bufferOffset);
+    // Deserialize message field [description]
+    data.description = _deserializer.string(buffer, bufferOffset);
     return data;
   }
 
   static getMessageSize(object) {
     let length = 0;
-    length += _getByteLength(object.category);
-    length += _getByteLength(object.kind);
-    return length + 8;
+    length += _getByteLength(object.description);
+    return length + 4;
   }
 
   static datatype() {
@@ -74,14 +62,13 @@ class BehRequestSrvRequest {
 
   static md5sum() {
     //Returns md5sum for a message object
-    return '7ab56bed22ef70be464b55a62b49b8f9';
+    return '56a2040e58d4fe3f4d4a0df112eea2f6';
   }
 
   static messageDefinition() {
     // Returns full string definition for message
     return `
-    string category
-    string kind
+    string description
     
     
     `;
@@ -93,18 +80,11 @@ class BehRequestSrvRequest {
       msg = {};
     }
     const resolved = new BehRequestSrvRequest(null);
-    if (msg.category !== undefined) {
-      resolved.category = msg.category;
+    if (msg.description !== undefined) {
+      resolved.description = msg.description;
     }
     else {
-      resolved.category = ''
-    }
-
-    if (msg.kind !== undefined) {
-      resolved.kind = msg.kind;
-    }
-    else {
-      resolved.kind = ''
+      resolved.description = ''
     }
 
     return resolved;
@@ -187,6 +167,6 @@ class BehRequestSrvResponse {
 module.exports = {
   Request: BehRequestSrvRequest,
   Response: BehRequestSrvResponse,
-  md5sum() { return '147c59713af21eb742ab556d1988f274'; },
+  md5sum() { return 'ee7d6e8b98e6646580b37e2806895049'; },
   datatype() { return 'movement_msgs/BehRequestSrv'; }
 };

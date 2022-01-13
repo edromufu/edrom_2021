@@ -40,7 +40,7 @@ template<>
 struct MD5Sum< ::movement_msgs::BehRequestSrv > {
   static const char* value()
   {
-    return "147c59713af21eb742ab556d1988f274";
+    return "ee7d6e8b98e6646580b37e2806895049";
   }
 
   static const char* value(const ::movement_msgs::BehRequestSrv&) { return value(); }
