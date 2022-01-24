@@ -25,9 +25,9 @@ class RosPacker():
             print("Posicao da bola: ", self.iBall.getValues()[0])
             print("Encontrada: ", self.iBall.getValues()[2], "   | Bola proxima: ", self.iBall.getValues()[1])
             print("Posicao de robo (queda): ", self.iFall.getValues())
-            print("Atingiu limite horizontal: ", self.iNeck.getValues()[0], "| vertical: ", self.iNeck.getValues()[1])
-            print("Cabeca confirma o chute: ", self.iNeck.getValues()[2])
-            print("Posicao atual do motor horizontal: ", self.iNeck.getValues()[3])
+            print("Movimentos disponíveis: ", self.iNeck.getValues()[0])
+            print("Cabeca confirma o chute: ", self.iNeck.getValues()[1])
+            print("Posicao atual do motor horizontal: ", self.iNeck.getValues()[2])
             print("----------------------------")
             time.sleep(0.2)
 

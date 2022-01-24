@@ -3,8 +3,8 @@ WorldInfo {
   coordinateSystem "NUE"
 }
 Viewpoint {
-  orientation 0.10755555806893129 0.9924006764444152 0.05977206137609754 5.318515060713711
-  position -2.0694711680833664 0.7666315885405821 0.9279669471786522
+  orientation -0.28575642133890816 -0.9052901943328118 -0.3143134290933817 1.7541238677125417
+  position -7.540339485669418 6.081368101899876 -1.7047504202925179
 }
 DEF Grass Floor {
   appearance Parquetry {
@@ -17,8 +17,8 @@ TexturedBackground {
 TexturedBackgroundLight {
 }
 DEF Ball Solid {
-  translation -0.0013595354128290295 0.06878880763740151 2.441952296294701
-  rotation 0.9186235785914221 0.2794017903094546 -0.27940179030879714 1.6555734323356366
+  translation 0.3617672033846472 0.06878880802397087 1.1472604342471657
+  rotation 0.2870206436292647 0.9298229252274277 -0.23032255176632696 3.095256859256597
   scale 0.728 0.728 0.728
   children [
     Shape {
@@ -76,8 +76,8 @@ DEF Ball Solid {
       angular 0.77
     }
   }
-  linearVelocity 7.215581516086253e-17 -8.405145444406721e-17 -1.7750578211010014e-33
-  angularVelocity -2.538464983206031e-32 -9.402851885950964e-33 -1.0318819361440628e-15
+  linearVelocity -0.00043145747044507797 -4.1422184252731395e-06 -0.0044131663007324
+  angularVelocity -0.06307474617099432 -4.521250158988981e-06 0.0061665691577054
 }
 DEF Goal2 Solid {
   translation 0 -4.46605e-06 4.38
@@ -503,24 +503,10 @@ DEF Goal1 Solid {
     ]
   }
 }
-DEF Natasha Solid {
-  translation 0 0.27 -0.91
-  rotation 1 0 0 3.14159
+DEF Supervisor Robot {
+  translation 1.5810638674069143e-17 0.2572309966431615 -0.9099992967947269
+  rotation 1 -1.2169246295569839e-17 1.750649490144697e-18 3.141592653589793
   children [
-    DEF RobotToAddAccel Robot {
-      translation 0 -0.09998431953667242 4.160949362841393e-11
-      rotation -1 0 0 -3.1415899999999977
-      children [
-        DEF Accelerometer Accelerometer {
-          name "Accelerometer"
-        }
-      ]
-      physics Physics {
-      }
-      controller "<extern>"
-      supervisor TRUE
-      linearVelocity 0 -1.2139210900841565e-07 0
-    }
     DEF HorizontalMotor Transform {
       translation 0 -0.31 -0.03
       children [
@@ -530,7 +516,7 @@ DEF Natasha Solid {
           children [
             DEF VerticalMotor Transform {
               translation 0 -0.035 -0.015
-              rotation 0 1 0 1.572
+              rotation 0 1 0 1.5719996938995748
               children [
                 DEF jointCilynder Shape {
                   geometry Cylinder {
@@ -544,6 +530,20 @@ DEF Natasha Solid {
                     DEF boxHead Transform {
                       translation -0.024 0 -0.025
                       children [
+                        Transform {
+                          translation 0 0 -0.025
+                          children [
+                            Camera {
+                              rotation -2.653589999981315e-06 2.653589999981315e-06 0.9999999999929585 1.5708
+                              name "Camera"
+                              fieldOfView 1.01
+                              width 416
+                              height 416
+                              focus Focus {
+                              }
+                            }
+                          ]
+                        }
                         Shape {
                           appearance PBRAppearance {
                             baseColor 0.3 0.3 0.3
@@ -586,6 +586,22 @@ DEF Natasha Solid {
         size 0.2 0.55 0.11
       }
     }
+    DEF Accelerometer Accelerometer {
+      name "Accelerometer"
+    }
   ]
-  name "NatashaSolid"
+  boundingObject Transform {
+    translation 0 -0.065 -0.02
+    children [
+      Box {
+        size 0.2 0.66 0.15
+      }
+    ]
+  }
+  physics Physics {
+  }
+  controller "<extern>"
+  supervisor TRUE
+  linearVelocity 4.144488928359711e-17 -4.252892052854149e-06 -1.2410175256521084e-17
+  angularVelocity -4.7001960387112817e-17 2.463267362358629e-17 -1.2676298265210635e-16
 }

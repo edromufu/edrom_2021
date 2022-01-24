@@ -3,11 +3,14 @@
 
 import rospy
 from controller import Supervisor
+from controller import Robot
 
 #Importações para os tópicos do ROS
 from modularized_bhv_msgs.srv import headReqSrv, headReqSrvResponse #Srv associado ao service utilizado para requisitar movimento dos motores da cabeça ao movimento
 from modularized_bhv_msgs.msg import simMovMsg #Mensagem associada ao tópico utilizado para receber info dos motores
 from geometry_msgs.msg import Vector3 #Mensagem associada ao tópico utilizado para enviar info do acelerometro
+
+from sensor_msgs.msg import Image as visionSimImage
 
 #Limites relacionados aos motores da cabeça em radianos
 hor_increment = (1.7+1.7)/10 #Valores de incremento obtidos através do step
@@ -31,14 +34,16 @@ class BhvIndependentSim(object):
             -> Movimentação 3D da robô.
         """
         self.general_supervisor = Supervisor()
-        
+
         self.init_head()
         self.init_accel()
+        self.init_cam()
 
     def start(self):
         while self.general_supervisor.step(32) != -1 and not rospy.is_shutdown():
             self.motorUpdate()
             self.accelUpdate()
+            self.camUpdate()
 
     #Função chamada pelo construtor para habilitação de todos recursos da cabeça
     def init_head(self):
@@ -74,10 +79,18 @@ class BhvIndependentSim(object):
         self.accel_publisher = rospy.Publisher('/webots_natasha/behaviour_controller', Vector3, queue_size=100)
         self.accel_msg = Vector3()
     
-    def accelUpdate(self):
-        [self.accel_msg.x, self.accel_msg.y, self.accel_msg.z] = self.accel_sensor.getValues()
+    #Função chamada pelo construtor para habilitação de todos recursos da câmera
+    def init_cam(self):
+        self.camera_sensor = self.general_supervisor.getDevice('Camera')
 
-        self.accel_publisher.publish(self.accel_msg)
+        self.camera_sensor.enable(32)
+
+        self.pubImage = rospy.Publisher('/webots_natasha/vision_controller', visionSimImage, queue_size= 33)
+
+        self.image_msg = visionSimImage()
+        self.image_msg.encoding = 'bgra8'
+        [self.image_msg.height, self.image_msg.width] = [416,416]
+        self.image_msg.step = 1664
 
     #Função chamada no loop para publicar continuamente a posição atual dos motores da cabeça
     def motorUpdate(self):
@@ -94,6 +107,17 @@ class BhvIndependentSim(object):
         self.head_pos_msg.positions = [self.hor_head_pos,self.ver_head_pos]
 
         self.head_pos_publisher.publish(self.head_pos_msg)
+    
+    #Função chamada no loop para publicar continuamente a leitura do acelerômetro
+    def accelUpdate(self):
+        [self.accel_msg.x, self.accel_msg.y, self.accel_msg.z] = self.accel_sensor.getValues()
+
+        self.accel_publisher.publish(self.accel_msg)
+
+    #Função chamada no loop para publicar continuamente a imagem da câmera
+    def camUpdate(self):
+        self.image_msg.data = self.camera_sensor.getImage()
+        self.pubImage.publish(self.image_msg)  
 
     #Função responsável pela movimentação da cabeça de acordo com as requisições
     def moveSimHead(self, request):

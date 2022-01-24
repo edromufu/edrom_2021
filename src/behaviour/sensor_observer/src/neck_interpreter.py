@@ -5,8 +5,6 @@ import rospy
 from modularized_bhv_msgs.srv import headReqSrv #Srv associado ao service utilizado para requisitar movimento dos motores da cabeça ao movimento
 from modularized_bhv_msgs.msg import simMovMsg as motorMsg  #Mensagem associada ao tópico utilizado para receber info dos motores
 
-headBhvReqServer = '/bhv2mov_communicator/head_requisitions' #String do topico associado as requisicoes sobre a cabeca do bhv para o movimento
-
 #Limites relacionados aos motores da cabeça em radianos
 [lookRightLimit, lookLeftLimit] = [1.7,-1.7] #Intervalos extremos 
 [lookDownLimit, lookUpLimit] = [0.212,2.272]  #dos motores do pescoço
@@ -21,12 +19,6 @@ simMov2BhvTopic = '/webots/motors' #String do topico associado as infos dos moto
 deltaX = abs((lookRightLimit - lookLeftLimit)/horizontalStepsNumber) #Valor em radianos da variação de 1 step no motor horizontal
 deltaY = abs((lookDownLimit-lookUpLimit)/verticalStepsNumber) #Valor em radianos da variação de 1 step no motor vertical
 
-#Setando a grafia correta das requisições para a cabeça
-RIGHT = 'Right'
-LEFT = 'Left'
-UP = 'Up'
-DOWN = 'Down'
-
 class NeckInterpreter():
 
     def __init__(self):
@@ -38,7 +30,6 @@ class NeckInterpreter():
 
         #Variaveis do ROS
         rospy.Subscriber(simMov2BhvTopic, motorMsg, self.callback_positions)
-        rospy.Service(headBhvReqServer, headReqSrv, self.server_head_reqs)
 
         #Variaveis de código
         self.horLimitAccomplished = False
@@ -47,6 +38,8 @@ class NeckInterpreter():
 
         self.verMotorPosition = 0
         self.horMotorPosition = 0
+
+        self.headPossibleMovements = []
 
     #Funcao chamada pelo agrupador ROS quando necessitar saber 
     #a interpretacao dos motores da cabeça para alguma requisicao
@@ -59,7 +52,7 @@ class NeckInterpreter():
             - horAngleValue: Valor atual de medicao do motor horizontal da cabeca em relacao a referencia
         """
 
-        return self.horLimitAccomplished, self.verLimitAccomplished, self.verAngleAccomplished, self.horMotorPosition
+        return self.headPossibleMovements, self.verAngleAccomplished, self.horMotorPosition
     
     #Callback do tópico de infos dos motores da cabeça do ROS
     def callback_positions(self, msg):
@@ -81,46 +74,18 @@ class NeckInterpreter():
         #Avaliação se a cabeça verticalmente está boa para chute
         if(self.verMotorPosition < ifBallCenteredKickable):
             self.verAngleAccomplished = True
-    
-    #Callback do tópico de requisições de movimentos da cabeça para o movimento
-    def server_head_reqs(self, req):
-        """
-        -> Funcao:
-        Analisar se os movimentos do pescoco são possíveis para uma dada request é possível através de:
-            - Atribuir um valor a um delta para as duas direções (x e y) dependendo do request
-            - Verificar se a soma da posicao atual com o delta ultrapassa algum limite
-        -> Input:
-            - req: Variavel associada a mensagem recebida no topico do ROS, contem as
-            informacoes dos motores horizontal e vertical da cabeça   
-        """        
-        
-        #Inicialização das variaveis internas da funcao
-        deltaXInner = 0
-        deltaYInner = 0
-
-        ############################################VERIFICAÇÃO HORIZONTAL############################################
-        #Atribuição aos possíveis request que causam 
-        #variação plausível de chegar no limite
-        if(req.headRequest == LEFT):
-            deltaXInner = -deltaX
-        elif(req.headRequest == RIGHT):
-            deltaXInner = deltaX
-        
-        #Cálculo para saber se passou do limite na horizontal
-        if(self.horMotorPosition + deltaXInner > lookLeftLimit or self.horMotorPosition + deltaXInner < lookRightLimit):
-            self.horLimitAccomplished = True
         else:
-            self.horLimitAccomplished = False
-
-        ############################################VERIFICAÇÃO VERTICAL############################################
-        #Atribuição aos possíveis request que causam 
-        #variação plausível de chegar no limite
-        if(req.headRequest == UP):
-            deltaYInner = deltaY
-        elif(req.headRequest == DOWN):
-            deltaYInner = -deltaY
+            self.verAngleAccomplished = False
         
-        if(self.verMotorPosition + deltaYInner > lookUpLimit or self.verMotorPosition + deltaYInner < lookDownLimit):
-            self.verLimitAccomplished = True
-        else:
-            self.verLimitAccomplished = False
+        self.headPossibleMovements = ['L','R','U','D'] #Left, Right, Up, Down
+
+        if(self.horMotorPosition + deltaX > lookRightLimit):
+            self.headPossibleMovements.remove('R')
+        elif(self.horMotorPosition - deltaX < lookLeftLimit):
+            self.headPossibleMovements.remove('L')
+        
+        if(self.verMotorPosition + deltaY > lookUpLimit):
+            self.headPossibleMovements.remove('U')
+        elif(self.verMotorPosition - deltaY < lookDownLimit):
+            self.headPossibleMovements.remove('D')
+
