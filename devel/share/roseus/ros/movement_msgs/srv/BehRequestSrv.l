@@ -20,37 +20,48 @@
 
 (defclass movement_msgs::BehRequestSrvRequest
   :super ros::object
-  :slots (_description ))
+  :slots (_required_movement _required_status ))
 
 (defmethod movement_msgs::BehRequestSrvRequest
   (:init
    (&key
-    ((:description __description) "")
+    ((:required_movement __required_movement) "")
+    ((:required_status __required_status) nil)
     )
    (send-super :init)
-   (setq _description (string __description))
+   (setq _required_movement (string __required_movement))
+   (setq _required_status __required_status)
    self)
-  (:description
-   (&optional __description)
-   (if __description (setq _description __description)) _description)
+  (:required_movement
+   (&optional __required_movement)
+   (if __required_movement (setq _required_movement __required_movement)) _required_movement)
+  (:required_status
+   (&optional (__required_status :null))
+   (if (not (eq __required_status :null)) (setq _required_status __required_status)) _required_status)
   (:serialization-length
    ()
    (+
-    ;; string _description
-    4 (length _description)
+    ;; string _required_movement
+    4 (length _required_movement)
+    ;; bool _required_status
+    1
     ))
   (:serialize
    (&optional strm)
    (let ((s (if strm strm
               (make-string-output-stream (send self :serialization-length)))))
-     ;; string _description
-       (write-long (length _description) s) (princ _description s)
+     ;; string _required_movement
+       (write-long (length _required_movement) s) (princ _required_movement s)
+     ;; bool _required_status
+       (if _required_status (write-byte -1 s) (write-byte 0 s))
      ;;
      (if (null strm) (get-output-stream-string s))))
   (:deserialize
    (buf &optional (ptr- 0))
-   ;; string _description
-     (let (n) (setq n (sys::peek buf ptr- :integer)) (incf ptr- 4) (setq _description (subseq buf ptr- (+ ptr- n))) (incf ptr- n))
+   ;; string _required_movement
+     (let (n) (setq n (sys::peek buf ptr- :integer)) (incf ptr- 4) (setq _required_movement (subseq buf ptr- (+ ptr- n))) (incf ptr- n))
+   ;; bool _required_status
+     (setq _required_status (not (= 0 (sys::peek buf ptr- :char)))) (incf ptr- 1)
    ;;
    self)
   )
@@ -96,7 +107,7 @@
   :super ros::object
   :slots ())
 
-(setf (get movement_msgs::BehRequestSrv :md5sum-) "ee7d6e8b98e6646580b37e2806895049")
+(setf (get movement_msgs::BehRequestSrv :md5sum-) "4f5d36d25e04a31db12adbc950d9b1a5")
 (setf (get movement_msgs::BehRequestSrv :datatype-) "movement_msgs/BehRequestSrv")
 (setf (get movement_msgs::BehRequestSrv :request) movement_msgs::BehRequestSrvRequest)
 (setf (get movement_msgs::BehRequestSrv :response) movement_msgs::BehRequestSrvResponse)
@@ -104,22 +115,22 @@
 (defmethod movement_msgs::BehRequestSrvRequest
   (:response () (instance movement_msgs::BehRequestSrvResponse :init)))
 
-(setf (get movement_msgs::BehRequestSrvRequest :md5sum-) "ee7d6e8b98e6646580b37e2806895049")
+(setf (get movement_msgs::BehRequestSrvRequest :md5sum-) "4f5d36d25e04a31db12adbc950d9b1a5")
 (setf (get movement_msgs::BehRequestSrvRequest :datatype-) "movement_msgs/BehRequestSrvRequest")
 (setf (get movement_msgs::BehRequestSrvRequest :definition-)
-      "string description
-
+      "string required_movement
+bool required_status
 ---
 
 bool response
 
 ")
 
-(setf (get movement_msgs::BehRequestSrvResponse :md5sum-) "ee7d6e8b98e6646580b37e2806895049")
+(setf (get movement_msgs::BehRequestSrvResponse :md5sum-) "4f5d36d25e04a31db12adbc950d9b1a5")
 (setf (get movement_msgs::BehRequestSrvResponse :datatype-) "movement_msgs/BehRequestSrvResponse")
 (setf (get movement_msgs::BehRequestSrvResponse :definition-)
-      "string description
-
+      "string required_movement
+bool required_status
 ---
 
 bool response
@@ -128,6 +139,6 @@ bool response
 
 
 
-(provide :movement_msgs/BehRequestSrv "ee7d6e8b98e6646580b37e2806895049")
+(provide :movement_msgs/BehRequestSrv "4f5d36d25e04a31db12adbc950d9b1a5")
 
 

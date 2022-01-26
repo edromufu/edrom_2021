@@ -67,14 +67,14 @@ set(object_finder_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("FALSE" STREQUAL "TRUE")
-  set(object_finder_SOURCE_PREFIX /home/murilo/edrom/src/vision/object_finder)
-  set(object_finder_DEVEL_PREFIX /home/murilo/edrom/devel)
+  set(object_finder_SOURCE_PREFIX /home/gabriel-ubuntu/edrom_2021/src/vision/object_finder)
+  set(object_finder_DEVEL_PREFIX /home/gabriel-ubuntu/edrom_2021/devel)
   set(object_finder_INSTALL_PREFIX "")
   set(object_finder_PREFIX ${object_finder_DEVEL_PREFIX})
 else()
   set(object_finder_SOURCE_PREFIX "")
   set(object_finder_DEVEL_PREFIX "")
-  set(object_finder_INSTALL_PREFIX /home/murilo/edrom/install)
+  set(object_finder_INSTALL_PREFIX /home/gabriel-ubuntu/edrom_2021/install)
   set(object_finder_PREFIX ${object_finder_INSTALL_PREFIX})
 endif()
 
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/murilo/edrom/install/lib;/home/murilo/edrom/devel/lib;/opt/ros/noetic/lib)
+    foreach(path /home/gabriel-ubuntu/edrom_2021/install/lib;/opt/ros/noetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

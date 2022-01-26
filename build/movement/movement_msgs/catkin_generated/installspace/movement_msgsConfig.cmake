@@ -67,14 +67,14 @@ set(movement_msgs_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("FALSE" STREQUAL "TRUE")
-  set(movement_msgs_SOURCE_PREFIX /home/murilo/edrom/src/movement/movement_msgs)
-  set(movement_msgs_DEVEL_PREFIX /home/murilo/edrom/devel)
+  set(movement_msgs_SOURCE_PREFIX /home/gabriel-ubuntu/edrom_2021/src/movement/movement_msgs)
+  set(movement_msgs_DEVEL_PREFIX /home/gabriel-ubuntu/edrom_2021/devel)
   set(movement_msgs_INSTALL_PREFIX "")
   set(movement_msgs_PREFIX ${movement_msgs_DEVEL_PREFIX})
 else()
   set(movement_msgs_SOURCE_PREFIX "")
   set(movement_msgs_DEVEL_PREFIX "")
-  set(movement_msgs_INSTALL_PREFIX /home/murilo/edrom/install)
+  set(movement_msgs_INSTALL_PREFIX /home/gabriel-ubuntu/edrom_2021/install)
   set(movement_msgs_PREFIX ${movement_msgs_INSTALL_PREFIX})
 endif()
 
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/murilo/edrom/install/lib;/home/murilo/edrom/devel/lib;/opt/ros/noetic/lib)
+    foreach(path /home/gabriel-ubuntu/edrom_2021/install/lib;/opt/ros/noetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

@@ -1,5 +1,5 @@
 # generated from catkin/cmake/template/order_packages.context.py.in
-source_root_dir = '/home/murilo/edrom/src'
+source_root_dir = '/home/gabriel-ubuntu/edrom_2021/src'
 whitelisted_packages = ''.split(';') if '' != '' else []
 blacklisted_packages = ''.split(';') if '' != '' else []
-underlay_workspaces = '/home/murilo/edrom/devel;/opt/ros/noetic'.split(';') if '/home/murilo/edrom/devel;/opt/ros/noetic' != '' else []
+underlay_workspaces = '/opt/ros/noetic'.split(';') if '/opt/ros/noetic' != '' else []

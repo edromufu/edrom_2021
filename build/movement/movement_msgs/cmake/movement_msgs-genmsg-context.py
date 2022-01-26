@@ -1,7 +1,7 @@
 # generated from genmsg/cmake/pkg-genmsg.context.in
 
 messages_str = ""
-services_str = "/home/murilo/edrom/src/movement/movement_msgs/srv/BehRequestSrv.srv"
+services_str = "/home/gabriel-ubuntu/edrom_2021/src/movement/movement_msgs/srv/BehRequestSrv.srv"
 pkg_name = "movement_msgs"
 dependencies_str = "std_msgs"
 langs = "gencpp;geneus;genlisp;gennodejs;genpy"

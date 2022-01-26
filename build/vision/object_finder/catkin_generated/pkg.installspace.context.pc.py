@@ -4,5 +4,5 @@ PROJECT_PKG_CONFIG_INCLUDE_DIRS = "".split(';') if "" != "" else []
 PROJECT_CATKIN_DEPENDS = "rospy;message_runtime".replace(';', ' ')
 PKG_CONFIG_LIBRARIES_WITH_PREFIX = "".split(';') if "" != "" else []
 PROJECT_NAME = "object_finder"
-PROJECT_SPACE_DIR = "/home/murilo/edrom/install"
+PROJECT_SPACE_DIR = "/home/gabriel-ubuntu/edrom_2021/install"
 PROJECT_VERSION = "0.0.1"

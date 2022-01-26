@@ -67,14 +67,14 @@ set(recorder_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("TRUE" STREQUAL "TRUE")
-  set(recorder_SOURCE_PREFIX /home/murilo/edrom/src/tools/recorder)
-  set(recorder_DEVEL_PREFIX /home/murilo/edrom/devel)
+  set(recorder_SOURCE_PREFIX /home/gabriel-ubuntu/edrom_2021/src/tools/recorder)
+  set(recorder_DEVEL_PREFIX /home/gabriel-ubuntu/edrom_2021/devel)
   set(recorder_INSTALL_PREFIX "")
   set(recorder_PREFIX ${recorder_DEVEL_PREFIX})
 else()
   set(recorder_SOURCE_PREFIX "")
   set(recorder_DEVEL_PREFIX "")
-  set(recorder_INSTALL_PREFIX /home/murilo/edrom/install)
+  set(recorder_INSTALL_PREFIX /home/gabriel-ubuntu/edrom_2021/install)
   set(recorder_PREFIX ${recorder_INSTALL_PREFIX})
 endif()
 
@@ -91,9 +91,9 @@ endif()
 # flag project as catkin-based to distinguish if a find_package()-ed project is a catkin project
 set(recorder_FOUND_CATKIN_PROJECT TRUE)
 
-if(NOT "/home/murilo/edrom/src/tools/recorder/include;/usr/include/opencv4 " STREQUAL " ")
+if(NOT "/home/gabriel-ubuntu/edrom_2021/src/tools/recorder/include;/usr/include/opencv4 " STREQUAL " ")
   set(recorder_INCLUDE_DIRS "")
-  set(_include_dirs "/home/murilo/edrom/src/tools/recorder/include;/usr/include/opencv4")
+  set(_include_dirs "/home/gabriel-ubuntu/edrom_2021/src/tools/recorder/include;/usr/include/opencv4")
   if(NOT " " STREQUAL " ")
     set(_report "Check the issue tracker '' and consider creating a ticket if the problem has not been reported yet.")
   elseif(NOT " " STREQUAL " ")
@@ -110,7 +110,7 @@ if(NOT "/home/murilo/edrom/src/tools/recorder/include;/usr/include/opencv4 " STR
         message(FATAL_ERROR "Project 'recorder' specifies '${idir}' as an include dir, which is not found.  It does not exist in '${include}'.  ${_report}")
       endif()
     else()
-      message(FATAL_ERROR "Project 'recorder' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/murilo/edrom/src/tools/recorder/${idir}'.  ${_report}")
+      message(FATAL_ERROR "Project 'recorder' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/gabriel-ubuntu/edrom_2021/src/tools/recorder/${idir}'.  ${_report}")
     endif()
     _list_append_unique(recorder_INCLUDE_DIRS ${include})
   endforeach()
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/murilo/edrom/devel/lib;/home/murilo/edrom/devel/lib;/opt/ros/noetic/lib)
+    foreach(path /home/gabriel-ubuntu/edrom_2021/devel/lib;/opt/ros/noetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

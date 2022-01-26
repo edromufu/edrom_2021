@@ -67,14 +67,14 @@ set(behaviourRecives_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("FALSE" STREQUAL "TRUE")
-  set(behaviourRecives_SOURCE_PREFIX /home/murilo/edrom/src/movement/behaviourRecives)
-  set(behaviourRecives_DEVEL_PREFIX /home/murilo/edrom/devel)
+  set(behaviourRecives_SOURCE_PREFIX /home/gabriel-ubuntu/edrom_2021/src/movement/behaviourRecives)
+  set(behaviourRecives_DEVEL_PREFIX /home/gabriel-ubuntu/edrom_2021/devel)
   set(behaviourRecives_INSTALL_PREFIX "")
   set(behaviourRecives_PREFIX ${behaviourRecives_DEVEL_PREFIX})
 else()
   set(behaviourRecives_SOURCE_PREFIX "")
   set(behaviourRecives_DEVEL_PREFIX "")
-  set(behaviourRecives_INSTALL_PREFIX /home/murilo/edrom/install)
+  set(behaviourRecives_INSTALL_PREFIX /home/gabriel-ubuntu/edrom_2021/install)
   set(behaviourRecives_PREFIX ${behaviourRecives_INSTALL_PREFIX})
 endif()
 
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/murilo/edrom/install/lib;/home/murilo/edrom/devel/lib;/opt/ros/noetic/lib)
+    foreach(path /home/gabriel-ubuntu/edrom_2021/install/lib;/opt/ros/noetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

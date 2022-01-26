@@ -1,4 +1,4 @@
-prefix=/home/murilo/edrom/install
+prefix=/home/gabriel-ubuntu/edrom_2021/install
 
 Name: object_finder
 Description: Description of object_finder

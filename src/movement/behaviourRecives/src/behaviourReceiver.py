@@ -1,29 +1,30 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import rospy
 
+import rospy
+import sys
+import os
 from movement_msgs.srv import BehRequestSrv, BehRequestSrvResponse
+user_name = os.environ.get("HOME")
+sys.path.append(user_name + "/edrom_2021/src/movement/behaviourRecives/include")
+
+import statsManipulator
 
 
 
 class MovementCommunication():
 
     def __init__(self):
-        
-        # Inicialização do service, no primeiro campo cria o service, no segundo coloca o nome do srv que utilizaremos
-        
-        rospy.Service('/movement/behaviourReceiver/commands2movement', BehRequestSrv, self.check_existence)
-        
-        # Variavel que armazena a resposta do service
-        
+        self.test = statsManipulator.StatsManipulator()
+        rospy.Service('/movement/behaviourReceiver/commands2movement', BehRequestSrv, self.checkExistence)      
         self.srv_comunication_beh = BehRequestSrvResponse()
         
 
-    def check_existence(self, requisition):
-        
-        print(requisition)
-
+    def checkExistence(self, requisition):
+        check_movement = self.test.isMovementListed(requisition.required_movement)
+        print("O movimento solicitado existe:",check_movement)
+        self.srv_comunication_beh.response = check_movement
         return self.srv_comunication_beh
 
 if __name__ == "__main__":
