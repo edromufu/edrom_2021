@@ -28,13 +28,12 @@ class StatsManipulator():
                 if (status_priority):
                     aux += 1
                     teste = key
-                    #comentário pra upar o código
+
+            self.movList.dict_movements_listed_and_their_status[key] = False
 
             if (key == _new_movement_status) and (aux == 0):
                 self.movList.dict_movements_listed_and_their_status[key] = _status
                 print("Status alterado com sucesso")
-            if (key != teste):
-                self.movList.dict_movements_listed_and_their_status[key] = self.movList.dict_movements_listed_and_their_status[key]
     
     def checkCurrentMovementStatus(self):
         """
@@ -62,6 +61,8 @@ class StatsManipulator():
         for key in self.movList.dict_movements_listed_and_their_status.keys():
             if (key == movement):
                 return self.movList.dict_movements_listed_and_their_status[key]
+        
+        return False
         
     
 
