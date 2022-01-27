@@ -1,2 +1,0 @@
-set(vision_msgs_MESSAGE_FILES "/home/gabriel-ubuntu/edrom_2021/src/vision/vision_msgs/msg/Objects.msg;/home/gabriel-ubuntu/edrom_2021/src/vision/vision_msgs/msg/Ball.msg;/home/gabriel-ubuntu/edrom_2021/src/vision/vision_msgs/msg/Goal.msg;/home/gabriel-ubuntu/edrom_2021/src/vision/vision_msgs/msg/Robot.msg;/home/gabriel-ubuntu/edrom_2021/src/vision/vision_msgs/msg/Leftgoalpost.msg;/home/gabriel-ubuntu/edrom_2021/src/vision/vision_msgs/msg/Rightgoalpost.msg;/home/gabriel-ubuntu/edrom_2021/src/vision/vision_msgs/msg/Webotsmsg.msg")
-set(vision_msgs_SERVICE_FILES "")

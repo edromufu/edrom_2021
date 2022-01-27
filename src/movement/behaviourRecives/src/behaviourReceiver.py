@@ -16,14 +16,17 @@ import statsManipulator
 class MovementCommunication():
 
     def __init__(self):
-        self.test = statsManipulator.StatsManipulator()
+        self.manipulator = statsManipulator.StatsManipulator()
         rospy.Service('/movement/behaviourReceiver/commands2movement', BehRequestSrv, self.checkExistence)      
         self.srv_comunication_beh = BehRequestSrvResponse()
         
 
     def checkExistence(self, requisition):
-        check_movement = self.test.isMovementListed(requisition.required_movement)
+        check_movement = self.manipulator.isMovementListed(requisition.required_movement)
         print("O movimento solicitado existe:",check_movement)
+        check_priority = self.manipulator.changeMovementStatus(requisition.required_movement,requisition.required_status)
+        check_movement = self.manipulator.checkMovementStatus(requisition.required_movement)
+        print("Conferindo mudanca:",check_movement)
         self.srv_comunication_beh.response = check_movement
         return self.srv_comunication_beh
 

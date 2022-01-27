@@ -1,8 +1,0 @@
-prefix=/home/gabriel-ubuntu/edrom_2021/devel
-
-Name: movement_msgs
-Description: Description of movement_msgs
-Version: 0.0.0
-Cflags: -I/home/gabriel-ubuntu/edrom_2021/devel/include
-Libs: -L${prefix}/lib 
-Requires: 

@@ -1,8 +1,0 @@
-prefix=/home/gabriel-ubuntu/edrom_2021/devel
-
-Name: behaviourRecives
-Description: Description of behaviourRecives
-Version: 0.0.0
-Cflags: -I/home/gabriel-ubuntu/edrom_2021/src/movement/behaviourRecives/include
-Libs: -L${prefix}/lib -lbehaviourRecives
-Requires: roscpp rospy

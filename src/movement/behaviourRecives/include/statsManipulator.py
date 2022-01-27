@@ -9,22 +9,32 @@ class StatsManipulator():
 
     def isMovementListed(self, movement_to_be_checked):
         if movement_to_be_checked in self.movList.dict_movements_listed_and_their_status.keys():
-            #checkPriority(movement_to_be_checked)
             return True
         else:
             return False
 
-    def changeMovementStatus(self, _new_movement_status):
+    def changeMovementStatus(self, _new_movement_status, _status):
         """
         Método para alterar o status de movimentação da robô
         tornando True o tipo solicitado e False todos os outros.
         """
+        
+        aux = 0
+        teste = ""
+        for key in self.movList.dict_movements_listed_and_their_status.keys():
+            for key_priority in self.movList.dict_priority_movements.keys():
+                self.movList.dict_priority_movements[key_priority] = self.movList.dict_movements_listed_and_their_status[key_priority]
+                status_priority = self.movList.dict_priority_movements[key_priority]
+                if (status_priority):
+                    aux += 1
+                    teste = key
+                    #comentário pra upar o código
 
-        for key in movList.self.dict_movements_listed_and_their_status.keys():
-            if key == _new_movement_status:
-                movList.dict_movements_listed_and_their_status[key] = True
-            else:
-                movList.dict_movements_listed_and_their_status[key] = False
+            if (key == _new_movement_status) and (aux == 0):
+                self.movList.dict_movements_listed_and_their_status[key] = _status
+                print("Status alterado com sucesso")
+            if (key != teste):
+                self.movList.dict_movements_listed_and_their_status[key] = self.movList.dict_movements_listed_and_their_status[key]
     
     def checkCurrentMovementStatus(self):
         """
@@ -46,8 +56,12 @@ class StatsManipulator():
         else:
             return _currently_active
 
-    #def checkPriority(self, moviment_to_check):
+    def checkMovementStatus(self, movement):
         
+        print("Movimento a ser checado", movement)
+        for key in self.movList.dict_movements_listed_and_their_status.keys():
+            if (key == movement):
+                return self.movList.dict_movements_listed_and_their_status[key]
         
     
 
