@@ -13,32 +13,28 @@ class StatsManipulator():
         else:
             return False
 
-    def changeMovementStatus(self, _new_movement_status, _status):
-        """
-        Método para alterar o status de movimentação da robô
-        tornando True o tipo solicitado e False todos os outros.
-        """
-        
-        aux = 0
-        teste = ""
+    def changeMovementStatus(self, _new_movement, _status):
+
+        if(_status == False):
+            self.movList.dict_movements_listed_and_their_status[_new_movement] = _status
+            print("O status de {" ,_new_movement, "} alterado para: ",_status)
+            return
+
+        for key in self.movList.other_movements_listed:
+            if(self.checkMovementStatus(key)):
+                print("Impossivel alterar status. Movimento {" ,key, "} esta ligado")
+                return 
+
         for key in self.movList.dict_movements_listed_and_their_status.keys():
-            for key_priority in self.movList.dict_priority_movements.keys():
-                self.movList.dict_priority_movements[key_priority] = self.movList.dict_movements_listed_and_their_status[key_priority]
-                status_priority = self.movList.dict_priority_movements[key_priority]
-                if (status_priority):
-                    aux += 1
-                    teste = key
-
-            self.movList.dict_movements_listed_and_their_status[key] = False
-
-            if (key == _new_movement_status) and (aux == 0):
+            if (key == _new_movement):
                 self.movList.dict_movements_listed_and_their_status[key] = _status
-                print("Status alterado com sucesso")
-    
+                print("O status de {" ,key, "} alterado para: ",_status)
+            else:
+                self.movList.dict_movements_listed_and_their_status[key] = False
+                
+        return 
     def checkCurrentMovementStatus(self):
-        """
-        Método para checar qual o status atual de movimentação.
-        """
+        
 
         _countTrue = 0
 
@@ -64,5 +60,8 @@ class StatsManipulator():
         
         return False
         
-    
+    def showAllStatus(self):
 
+        for key in self.movList.dict_movements_listed_and_their_status.keys():
+            print("O movimento", key, "tem status:", self.movList.dict_movements_listed_and_their_status[key])
+    

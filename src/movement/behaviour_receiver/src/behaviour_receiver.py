@@ -27,7 +27,7 @@ class MovementCommunication():
 
         if movement_exists:
             self.changeStatus(requisition.required_movement,requisition.required_status)
-            self.srv_comunication_beh.response = self.sendMovement(requisition.required_movement)
+            #self.srv_comunication_beh.response = self.sendMovement(requisition.required_movement)
         else:
             self.srv_comunication_beh.response = False
         
