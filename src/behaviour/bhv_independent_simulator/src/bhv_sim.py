@@ -36,6 +36,7 @@ class BhvIndependentSim(object):
         self.init_head()
         self.init_accel()
         self.init_cam()
+        self.init_ball()
     
     #Função para loopar os updates dos sensores durante a execução da simulação
     def start(self):
@@ -43,6 +44,7 @@ class BhvIndependentSim(object):
             self.motorUpdate()
             self.accelUpdate()
             self.camUpdate()
+            self.ballUpdate()
 
     #Função chamada pelo construtor para habilitação de todos recursos dos motores da cabeça
     def init_head(self):
@@ -173,6 +175,22 @@ class BhvIndependentSim(object):
         
         self.response.success = True
         return self.response
+    
+    def init_ball(self):
+        self.ball = self.general_supervisor.getFromDef('ball')
+        self.ball_trans_field = self.ball.getField("translation")
+    
+    def ballUpdate(self):
+        [x, y, z] = self.ball_trans_field.getSFVec3f()
+
+        if z < 2 and x <=0:
+            self.ball.addForce([0,0,0.005],False)
+        if z >= 2 and x <2.5:
+            self.ball.addForce([0.005,0,0],False)
+        if z >= -2 and x >=2.5:
+            self.ball.addForce([0,0,-0.005],False)
+        if z <= -2 and x >0:
+            self.ball.addForce([-0.005,0,0],False)
     
 if __name__ == '__main__':
     rospy.init_node('Bhv_independent_simulator_node', anonymous=False)
