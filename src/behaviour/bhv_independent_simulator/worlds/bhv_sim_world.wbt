@@ -1,12 +1,13 @@
-#VRML_SIM R2021b utf8
+#VRML_SIM R2022a utf8
 WorldInfo {
   coordinateSystem "NUE"
 }
 Viewpoint {
-  orientation -0.11574757264993615 0.9734961010690633 0.1972507050151657 2.1196840625012294
-  position 3.301495833540681 1.8261232529181606 -3.3117117561730014
+  orientation 0.5736036877895282 -0.6206796031060344 -0.5345424582223465 4.04177827948826
+  position -0.01533557244054471 1.7451596746708595 4.330629147558673
 }
 DEF Grass Floor {
+  rotation -0.5773502691896258 0.5773502691896258 0.5773502691896258 2.0943951023931953
   appearance Parquetry {
     type "dark strip"
     colorOverride 0 1 0
@@ -18,11 +19,125 @@ TexturedBackground {
 TexturedBackgroundLight {
 }
 DEF ball Ball {
-  hidden linearVelocity_0 2.3955340026327055e-05 -5.4275635447659656e-09 -3.187350521210637e-05
-  hidden angularVelocity_0 -0.0004226455433899041 -4.222223157260629e-21 -0.00031764996146929376
-  translation 0.4343573938474028 0.07491367199545332 0.2278324801738208
-  rotation -0.029512726644433534 0.9986725643549392 0.042215023045603116 3.072916614273259
+  hidden linearVelocity_0 -1.4855391303070363e-13 -1.2753576525459645e-16 1.9696368365690078e-13
+  hidden angularVelocity_0 2.6117321029186682e-12 -1.3265030924463425e-27 1.9698201232315245e-12
+  translation 0.43899868418146215 0.07491367199999995 0.22165706410830555
+  rotation -0.550888382709555 -0.5901364205848173 -0.5901364205800137 2.1345426241968015
   radius 0.075
+}
+DEF Supervisor Robot {
+  translation -6.291707171779149e-16 0.2572304800000004 -1.08
+  rotation 1 -1.8549384555806458e-17 -1.3797548304523914e-16 -3.1415926535897927
+  children [
+    DEF HorizontalMotor Transform {
+      translation 0 -0.31 -0.03
+      rotation 0 1 0 0
+      children [
+        Transform {
+          rotation 1 0 0 1.5699996938995748
+          children [
+            Transform {
+              translation 0.035 -0.02 0.02
+              rotation 0.7071062811861719 0.7071072811865696 -1.0171504044775673e-08 3.14159
+              children [
+                DEF VerticalMotor Transform {
+                  translation 0 -0.035 -0.015
+                  rotation 0 1 0 0
+                  children [
+                    Transform {
+                      rotation 1 0 0 -1.5707953071795862
+                      children [
+                        DEF jointCilynder Shape {
+                          geometry Cylinder {
+                            height 0.01
+                            radius 0.005
+                          }
+                        }
+                      ]
+                    }
+                    Transform {
+                      translation -0.003 0 0
+                      children [
+                        DEF boxHead Transform {
+                          translation -0.024 0 -0.025
+                          children [
+                            Transform {
+                              translation 0 0 -0.025
+                              children [
+                                Camera {
+                                  translation -0.025 0 0.02
+                                  rotation 3.6634499999728014e-06 0.9999999999925757 -1.1949199999911285e-06 3.14159
+                                  name "Camera"
+                                  fieldOfView 1.01
+                                  width 416
+                                  height 416
+                                  focus Focus {
+                                  }
+                                }
+                              ]
+                            }
+                            Shape {
+                              appearance PBRAppearance {
+                                baseColor 0.3 0.3 0.3
+                                metalness 0.5
+                                IBLStrength 0.1
+                              }
+                              geometry Box {
+                                size 0.05 0.1 0.05
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+            DEF horizontalNeck Shape {
+              appearance PBRAppearance {
+                baseColor 0.3 0.3 0.3
+                metalness 0.5
+                IBLStrength 0.1
+              }
+              geometry Cylinder {
+                height 0.07
+                radius 0.02
+              }
+            }
+          ]
+        }
+      ]
+    }
+    DEF torsoBox Shape {
+      appearance PBRAppearance {
+        baseColor 0.3 0.3 0.3
+        metalness 0.5
+        IBLStrength 0.01
+        emissiveIntensity 0
+      }
+      geometry Box {
+        size 0.2 0.55 0.11
+      }
+    }
+    DEF Accelerometer Accelerometer {
+      name "Accelerometer"
+    }
+  ]
+  boundingObject Transform {
+    translation 0 -0.065 -0.02
+    children [
+      Box {
+        size 0.2 0.66 0.15
+      }
+    ]
+  }
+  physics Physics {
+  }
+  controller "<extern>"
+  supervisor TRUE
+  linearVelocity -4.5449794100578044e-18 -6.9892927924891935e-16 2.628804492357955e-17
+  angularVelocity 1.128047049290681e-16 -2.8237180925452005e-17 3.6217995043457414e-17
 }
 DEF Goal2 Solid {
   translation 0 -4.46605e-06 4.38
@@ -30,7 +145,7 @@ DEF Goal2 Solid {
   children [
     DEF HORIZONTAL_POST_TRANS Transform {
       translation 0 0 1.25
-      rotation 0 0 1 1.5708
+      rotation -0.5773488553723224 -0.5773509760969792 0.5773509760969793 2.094397223120449
       children [
         Shape {
           appearance DEF POST_APP PBRAppearance {
@@ -46,7 +161,7 @@ DEF Goal2 Solid {
     }
     DEF RIGHT_POST_TRANS Transform {
       translation -1.35 0 0.625
-      rotation 1 0 0 1.5708
+      rotation 1 0 0 3.6731891284930826e-06
       children [
         Shape {
           appearance USE POST_APP
@@ -61,7 +176,7 @@ DEF Goal2 Solid {
     }
     DEF LEFT_POST_TRANS Transform {
       translation 1.35 0 0.625
-      rotation 1 0 0 1.5708
+      rotation 1 0 0 3.6731891284930826e-06
       children [
         Shape {
           appearance USE POST_APP
@@ -123,7 +238,7 @@ DEF Goal2 Solid {
     }
     Transform {
       translation 0 -0.6 1.25
-      rotation 0 0 1 1.5708
+      rotation -0.5773488553723224 -0.5773509760969792 0.5773509760969793 2.094397223120449
       children [
         DEF SMALL_HORIZONTAL_POST_SHAPE Shape {
           appearance USE POST_APP
@@ -136,14 +251,14 @@ DEF Goal2 Solid {
     }
     Transform {
       translation 0 -0.6 0.01
-      rotation 0 0 1 1.5708
+      rotation -0.5773488553723224 -0.5773509760969792 0.5773509760969793 2.094397223120449
       children [
         USE SMALL_HORIZONTAL_POST_SHAPE
       ]
     }
     Transform {
       translation 1.35 -0.6 0.625
-      rotation 1 0 0 1.5708
+      rotation 1 0 0 3.6731891284930826e-06
       children [
         DEF SMALL_POST_SHAPE Shape {
           appearance USE POST_APP
@@ -158,13 +273,14 @@ DEF Goal2 Solid {
     }
     Transform {
       translation -1.35 -0.6 0.625
-      rotation 1 0 0 1.5708
+      rotation 1 0 0 3.6731891284930826e-06
       children [
         USE SMALL_POST_SHAPE
       ]
     }
     Transform {
       translation 1.35 -0.3 1.25
+      rotation -1 0 0 1.5707963267948966
       children [
         DEF OTHER_SMALL_POST_SHAPE Shape {
           appearance USE POST_APP
@@ -179,18 +295,21 @@ DEF Goal2 Solid {
     }
     Transform {
       translation -1.35 -0.3 1.25
+      rotation -1 0 0 1.5707963267948966
       children [
         USE OTHER_SMALL_POST_SHAPE
       ]
     }
     Transform {
       translation 1.35 -0.3 0.01
+      rotation -1 0 0 1.5707963267948966
       children [
         USE OTHER_SMALL_POST_SHAPE
       ]
     }
     Transform {
       translation -1.35 -0.3 0.01
+      rotation -1 0 0 1.5707963267948966
       children [
         USE OTHER_SMALL_POST_SHAPE
       ]
@@ -242,7 +361,7 @@ DEF Goal1 Solid {
   children [
     DEF HORIZONTAL_POST_TRANS Transform {
       translation 0 0 1.25
-      rotation 0 0 1 1.5708
+      rotation -0.5773488553723224 -0.5773509760969792 0.5773509760969793 2.094397223120449
       children [
         Shape {
           appearance DEF POST_APP PBRAppearance {
@@ -258,7 +377,7 @@ DEF Goal1 Solid {
     }
     DEF RIGHT_POST_TRANS Transform {
       translation -1.35 0 0.625
-      rotation 1 0 0 1.5708
+      rotation 1 0 0 3.6731891284930826e-06
       children [
         Shape {
           appearance USE POST_APP
@@ -273,7 +392,7 @@ DEF Goal1 Solid {
     }
     DEF LEFT_POST_TRANS Transform {
       translation 1.35 0 0.625
-      rotation 1 0 0 1.5708
+      rotation 1 0 0 3.6731891284930826e-06
       children [
         Shape {
           appearance USE POST_APP
@@ -335,7 +454,7 @@ DEF Goal1 Solid {
     }
     Transform {
       translation 0 -0.6 1.25
-      rotation 0 0 1 1.5708
+      rotation -0.5773488553723224 -0.5773509760969792 0.5773509760969793 2.094397223120449
       children [
         DEF SMALL_HORIZONTAL_POST_SHAPE Shape {
           appearance USE POST_APP
@@ -348,14 +467,14 @@ DEF Goal1 Solid {
     }
     Transform {
       translation 0 -0.6 0.01
-      rotation 0 0 1 1.5708
+      rotation -0.5773488553723224 -0.5773509760969792 0.5773509760969793 2.094397223120449
       children [
         USE SMALL_HORIZONTAL_POST_SHAPE
       ]
     }
     Transform {
       translation 1.35 -0.6 0.625
-      rotation 1 0 0 1.5708
+      rotation 1 0 0 3.6731891284930826e-06
       children [
         DEF SMALL_POST_SHAPE Shape {
           appearance USE POST_APP
@@ -370,13 +489,14 @@ DEF Goal1 Solid {
     }
     Transform {
       translation -1.35 -0.6 0.625
-      rotation 1 0 0 1.5708
+      rotation 1 0 0 3.6731891284930826e-06
       children [
         USE SMALL_POST_SHAPE
       ]
     }
     Transform {
       translation 1.35 -0.3 1.25
+      rotation -1 0 0 1.5707963267948966
       children [
         DEF OTHER_SMALL_POST_SHAPE Shape {
           appearance USE POST_APP
@@ -391,18 +511,21 @@ DEF Goal1 Solid {
     }
     Transform {
       translation -1.35 -0.3 1.25
+      rotation -1 0 0 1.5707963267948966
       children [
         USE OTHER_SMALL_POST_SHAPE
       ]
     }
     Transform {
       translation 1.35 -0.3 0.01
+      rotation -1 0 0 1.5707963267948966
       children [
         USE OTHER_SMALL_POST_SHAPE
       ]
     }
     Transform {
       translation -1.35 -0.3 0.01
+      rotation -1 0 0 1.5707963267948966
       children [
         USE OTHER_SMALL_POST_SHAPE
       ]
@@ -447,106 +570,4 @@ DEF Goal1 Solid {
       }
     ]
   }
-}
-DEF Supervisor Robot {
-  translation -7.384669109714686e-18 0.2572304800002283 -1.0799967276337976
-  rotation 1 -5.221162379736293e-18 -4.820942273648841e-17 3.141592653589793
-  children [
-    DEF HorizontalMotor Transform {
-      translation 0 -0.31 -0.03
-      children [
-        Transform {
-          translation -0.035 -0.048 -0.018
-          rotation 0.5773509358554485 -0.5773509358554485 0.5773489358556708 2.0944
-          children [
-            DEF VerticalMotor Transform {
-              translation 0 -0.035 -0.015
-              rotation 0 1 0 1.5719996938995748
-              children [
-                DEF jointCilynder Shape {
-                  geometry Cylinder {
-                    height 0.01
-                    radius 0.005
-                  }
-                }
-                Transform {
-                  translation -0.003 0 0
-                  children [
-                    DEF boxHead Transform {
-                      translation -0.024 0 -0.025
-                      children [
-                        Transform {
-                          translation 0 0 -0.025
-                          children [
-                            Camera {
-                              rotation -2.653589999981315e-06 2.653589999981315e-06 0.9999999999929585 1.5708
-                              name "Camera"
-                              fieldOfView 1.01
-                              width 416
-                              height 416
-                              focus Focus {
-                              }
-                            }
-                          ]
-                        }
-                        Shape {
-                          appearance PBRAppearance {
-                            baseColor 0.3 0.3 0.3
-                            metalness 0.5
-                            IBLStrength 0.1
-                          }
-                          geometry Box {
-                            size 0.05 0.1 0.05
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-        DEF horizontalNeck Shape {
-          appearance PBRAppearance {
-            baseColor 0.3 0.3 0.3
-            metalness 0.5
-            IBLStrength 0.1
-          }
-          geometry Cylinder {
-            height 0.07
-            radius 0.02
-          }
-        }
-      ]
-    }
-    DEF torsoBox Shape {
-      appearance PBRAppearance {
-        baseColor 0.3 0.3 0.3
-        metalness 0.5
-        IBLStrength 0.01
-        emissiveIntensity 0
-      }
-      geometry Box {
-        size 0.2 0.55 0.11
-      }
-    }
-    DEF Accelerometer Accelerometer {
-      name "Accelerometer"
-    }
-  ]
-  boundingObject Transform {
-    translation 0 -0.065 -0.02
-    children [
-      Box {
-        size 0.2 0.66 0.15
-      }
-    ]
-  }
-  physics Physics {
-  }
-  controller "<extern>"
-  supervisor TRUE
-  linearVelocity 2.549182462526756e-17 -1.4947407621410535e-12 4.484050698694654e-17
-  angularVelocity 1.5040627323876088e-16 -6.411607541940476e-17 -7.243599008691795e-17
 }
