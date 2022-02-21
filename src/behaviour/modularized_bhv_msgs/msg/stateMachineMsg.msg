@@ -1,0 +1,6 @@
+string fallState
+bool ballFound
+bool ballClose
+string ballRelativePosition
+bool verAngleAccomplished
+string[] headPossibleMovements
