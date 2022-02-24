@@ -18,7 +18,6 @@ class MovementCommunication():
 
         rospy.Service('/movement/behaviour_receiver/commands2movement', BehRequestSrv, self.callback)
         self.client = rospy.ServiceProxy('/movement/approved_movement', ApprovedMovementSrv)
-        self.movement_2_send = ApprovedMovementSrv()
     
     def callback(self, requisition):
         movement_exists = self.checkExistence(requisition.required_movement)
@@ -27,7 +26,9 @@ class MovementCommunication():
 
         if movement_exists:
             self.changeStatus(requisition.required_movement,requisition.required_status)
-            #self.srv_comunication_beh.response = self.sendMovement(requisition.required_movement)
+            
+            if requisition.required_status:
+                self.srv_comunication_beh.response = self.sendMovement(requisition.required_movement)
         else:
             self.srv_comunication_beh.response = False
         
@@ -43,10 +44,9 @@ class MovementCommunication():
     
     def sendMovement(self, movement):
         rospy.wait_for_service('/movement/approved_movement')
-        self.movement_2_send.approved_movement = movement
 
         try:
-            client_call = self.client(self.movement_2_send)
+            client_call = self.client(movement)
 
             return client_call.response
 
