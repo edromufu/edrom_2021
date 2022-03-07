@@ -7,8 +7,8 @@ from modularized_bhv_msgs.msg import simMovMsg as motorMsg  #Mensagem associada 
 
 #Limites relacionados aos motores da cabeça em radianos
 [lookRightLimit, lookLeftLimit] = [1.7,-1.7] #Intervalos extremos 
-[lookDownLimit, lookUpLimit] = [0.212,2.272]  #dos motores do pescoço
-ifBallCenteredKickable = 0.602 #Parâmetro que descreve angulação mínima da cabeça na vertical para que, caso a bola esteja centralizada, o chute irá bem
+[lookDownLimit, lookUpLimit] = [1.47,0]  #dos motores do pescoço
+ifBallCenteredKickable = 1.3 #Parâmetro que descreve angulação mínima da cabeça na vertical para que, caso a bola esteja centralizada, o chute irá bem
 
 #Parametros da configuração do tópico das posições dos motores
 simMov2BhvTopic = '/webots/motors' #String do topico associado as infos dos motores, de onde sera tirada a posicao do pescoco
@@ -16,8 +16,8 @@ simMov2BhvTopic = '/webots/motors' #String do topico associado as infos dos moto
 
 #Parametros de variacao "por step" da cabeça
 [horizontalStepsNumber,verticalStepsNumber] = [10,10] #Dita o quão divisível é o range dos motores
-deltaX = abs((lookRightLimit - lookLeftLimit)/horizontalStepsNumber) #Valor em radianos da variação de 1 step no motor horizontal
-deltaY = abs((lookDownLimit-lookUpLimit)/verticalStepsNumber) #Valor em radianos da variação de 1 step no motor vertical
+deltaX = round(abs((lookRightLimit - lookLeftLimit)/horizontalStepsNumber),2) #Valor em radianos da variação de 1 step no motor horizontal
+deltaY = round(abs((lookDownLimit - lookUpLimit)/verticalStepsNumber),2) #Valor em radianos da variação de 1 step no motor vertical
 
 class NeckInterpreter():
 
@@ -72,7 +72,7 @@ class NeckInterpreter():
         self.verMotorPosition = msg.positions[indexVerPosition]
 
         #Avaliação se a cabeça verticalmente está boa para chute
-        if(self.verMotorPosition < ifBallCenteredKickable):
+        if(self.verMotorPosition > ifBallCenteredKickable):
             self.verAngleAccomplished = True
         else:
             self.verAngleAccomplished = False
@@ -84,8 +84,8 @@ class NeckInterpreter():
         elif(self.horMotorPosition - deltaX < lookLeftLimit):
             self.headPossibleMovements.remove('L')
         
-        if(self.verMotorPosition + deltaY > lookUpLimit):
+        if(self.verMotorPosition - deltaY < lookUpLimit):
             self.headPossibleMovements.remove('U')
-        elif(self.verMotorPosition - deltaY < lookDownLimit):
+        elif(self.verMotorPosition + deltaY > lookDownLimit):
             self.headPossibleMovements.remove('D')
 

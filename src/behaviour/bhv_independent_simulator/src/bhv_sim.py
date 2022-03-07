@@ -12,8 +12,8 @@ from geometry_msgs.msg import Vector3 #Mensagem associada ao tópico utilizado p
 from sensor_msgs.msg import Image as visionSimImage #Mensagem associada ao tópico utilizado para enviar as imagens da câmera
 
 #Limites relacionados aos motores da cabeça em radianos
-hor_increment = (1.7+1.7)/10 #Valores de incremento obtidos através do step
-ver_increment = (2.272-0.212)/10 #dos motores do pescoço na neck_interpreter.py
+hor_increment = ((1.7+1.7)/10) #Valores de incremento obtidos através do step
+ver_increment = ((1.47)/10) #dos motores do pescoço na neck_interpreter.py
 
 #Setando a grafia correta das requisições para a cabeça
 RIGHT = 'Right'
@@ -159,18 +159,18 @@ class BhvIndependentSim(object):
         """
         direction = request.headRequest
 
-        if direction == RIGHT or direction == UP:
+        if direction == RIGHT or direction == DOWN:
             increment = 1
-        elif direction == LEFT or direction == DOWN:
+        elif direction == LEFT or direction == UP:
             increment = -1
 
         if direction == RIGHT or direction == LEFT:
             increment *= hor_increment
-            rotation = self.sim_hor_head_motor.getSFRotation()[:3]+[self.hor_head_pos+increment]
+            rotation = self.sim_hor_head_motor.getSFRotation()[:3]+[round(self.hor_head_pos+increment,2)]
             self.sim_hor_head_motor.setSFRotation(rotation)
         elif direction == UP or direction == DOWN:
             increment *= ver_increment
-            rotation = self.sim_ver_head_motor.getSFRotation()[:3]+[self.ver_head_pos+increment]
+            rotation = self.sim_ver_head_motor.getSFRotation()[:3]+[round(self.ver_head_pos+increment,2)]
             self.sim_ver_head_motor.setSFRotation(rotation)
         
         self.response.success = True
