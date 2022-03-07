@@ -44,7 +44,7 @@ class BhvIndependentSim(object):
             self.motorUpdate()
             self.accelUpdate()
             self.camUpdate()
-            self.ballUpdate()
+            #self.ballUpdate()
 
     #Função chamada pelo construtor para habilitação de todos recursos dos motores da cabeça
     def init_head(self):
