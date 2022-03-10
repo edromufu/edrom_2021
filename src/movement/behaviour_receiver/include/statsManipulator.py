@@ -15,28 +15,27 @@ class StatsManipulator():
 
     def changeMovementStatus(self, _new_movement, _status):
 
-        if(_status == False):
+        if (not _status):
             self.movList.dict_movements_listed_and_their_status[_new_movement] = _status
             print("O status de {" ,_new_movement, "} alterado para: ",_status)
-            return
-
-        if(_new_movement == 'stop_all_motions'):
-            self.movList.dict_movements_listed_and_their_status = dict.fromkeys(self.movList.all_movements_listed, False)
             return
                
         for key in self.movList.other_movements_listed:
             if(self.checkMovementStatus(key)):
                 print("Impossivel alterar status. Movimento {" ,key, "} esta ligado")
-                return 
+                return
 
         for key in self.movList.dict_movements_listed_and_their_status.keys():
-            if (key == _new_movement):
+            if(_new_movement == 'stop_all_motions'):
+                self.movList.dict_movements_listed_and_their_status[key] = False
+
+            elif (key == _new_movement):
                 self.movList.dict_movements_listed_and_their_status[key] = _status
                 print("O status de {" ,key, "} alterado para: ",_status)
             else:
                 self.movList.dict_movements_listed_and_their_status[key] = False
                 
-        return 
+        return
         
     def checkMovementStatus(self, movement):
         
