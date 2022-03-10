@@ -20,6 +20,10 @@ class StatsManipulator():
             print("O status de {" ,_new_movement, "} alterado para: ",_status)
             return
 
+        if(_new_movement == 'stop_all_motions'):
+            self.movList.dict_movements_listed_and_their_status = dict.fromkeys(self.movList.all_movements_listed, False)
+            return
+               
         for key in self.movList.other_movements_listed:
             if(self.checkMovementStatus(key)):
                 print("Impossivel alterar status. Movimento {" ,key, "} esta ligado")
@@ -33,24 +37,7 @@ class StatsManipulator():
                 self.movList.dict_movements_listed_and_their_status[key] = False
                 
         return 
-    def checkCurrentMovementStatus(self):
         
-
-        _countTrue = 0
-
-        for key in movList.self.dict_movements_listed_and_their_status.keys():
-
-            if movList.dict_movements_listed_and_their_status[key]:
-                _countTrue += 1
-                _currently_active = key
-        
-        if count == 0:
-            return "none_of_the_movements_active"
-        elif count > 1:
-            return "error_more_than_one_movement_active"
-        else:
-            return _currently_active
-
     def checkMovementStatus(self, movement):
         
         print("Movimento a ser checado", movement)
@@ -64,4 +51,3 @@ class StatsManipulator():
 
         for key in self.movList.dict_movements_listed_and_their_status.keys():
             print("O movimento", key, "tem status:", self.movList.dict_movements_listed_and_their_status[key])
-    
