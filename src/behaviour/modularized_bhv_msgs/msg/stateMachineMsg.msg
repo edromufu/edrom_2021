@@ -4,3 +4,4 @@ bool ballClose
 string ballRelativePosition
 bool verAngleAccomplished
 string[] headPossibleMovements
+bool horMotorOutOfCenter

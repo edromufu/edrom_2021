@@ -8,6 +8,7 @@ from modularized_bhv_msgs.msg import simMovMsg as motorMsg  #Mensagem associada 
 #Limites relacionados aos motores da cabeça em radianos
 [lookRightLimit, lookLeftLimit] = [1.7,-1.7] #Intervalos extremos 
 [lookDownLimit, lookUpLimit] = [1.47,0]  #dos motores do pescoço
+[centerRightHorLimit, centerLeftHorLimit] = [0.09, -0.09]
 ifBallCenteredKickable = 1.3 #Parâmetro que descreve angulação mínima da cabeça na vertical para que, caso a bola esteja centralizada, o chute irá bem
 
 #Parametros da configuração do tópico das posições dos motores
@@ -35,6 +36,7 @@ class NeckInterpreter():
         self.horLimitAccomplished = False
         self.verLimitAccomplished = False
         self.verAngleAccomplished = False
+        self.horMotorOutOfCenter = False
 
         self.verMotorPosition = 0
         self.horMotorPosition = 0
@@ -52,7 +54,7 @@ class NeckInterpreter():
             - horAngleValue: Valor atual de medicao do motor horizontal da cabeca em relacao a referencia
         """
 
-        return self.headPossibleMovements, self.verAngleAccomplished, self.horMotorPosition
+        return self.headPossibleMovements, self.verAngleAccomplished, self.horMotorOutOfCenter, self.horMotorPosition
     
     #Callback do tópico de infos dos motores da cabeça do ROS
     def callback_positions(self, msg):
@@ -76,6 +78,11 @@ class NeckInterpreter():
             self.verAngleAccomplished = True
         else:
             self.verAngleAccomplished = False
+        
+        if self.horMotorPosition < centerLeftHorLimit or self.horMotorPosition > centerRightHorLimit:
+            self.horMotorOutOfCenter = True
+        else:
+            self.horMotorOutOfCenter = False
         
         self.headPossibleMovements = ['L','R','U','D'] #Left, Right, Up, Down
 

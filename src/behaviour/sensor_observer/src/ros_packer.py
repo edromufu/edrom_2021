@@ -30,10 +30,11 @@ class RosPacker():
         self.pFallState = self.iFall.getValues()
         self.pHeadKickCheck = self.iNeck.getValues()[1]
         self.pPossibleHeadMovs = self.iNeck.getValues()[0]
-        self.pHorMotorPosition = self.iNeck.getValues()[2]
+        self.pHorMotorOutOfCenter = self.iNeck.getValues()[2]
+        self.pHorMotorPosition = self.iNeck.getValues()[3]
 
         self.smVarsLastValue = [self.pFallState,self.pBallFound,self.pBallClose,
-                                self.pBallPosition,self.pHeadKickCheck,self.pPossibleHeadMovs]
+                                self.pBallPosition,self.pHeadKickCheck,self.pPossibleHeadMovs, self.pHorMotorOutOfCenter]
 
         self.publish2StateMachine()
     
@@ -51,11 +52,12 @@ class RosPacker():
         self.pFallState = self.iFall.getValues()
         self.pHeadKickCheck = self.iNeck.getValues()[1]
         self.pPossibleHeadMovs = self.iNeck.getValues()[0]
-        self.pHorMotorPosition = self.iNeck.getValues()[2]
+        self.pHorMotorOutOfCenter = self.iNeck.getValues()[2]
+        self.pHorMotorPosition = self.iNeck.getValues()[3]
 
     def runMethodsCalls(self):
         self.stateMachineFlagger([self.pFallState,self.pBallFound,self.pBallClose,
-                                self.pBallPosition,self.pHeadKickCheck,self.pPossibleHeadMovs])
+                                self.pBallPosition,self.pHeadKickCheck,self.pPossibleHeadMovs, self.pHorMotorOutOfCenter])
 
     def stateMachineFlagger(self,smVarsCurrentValue):
         if not smVarsCurrentValue == self.smVarsLastValue:
@@ -70,6 +72,7 @@ class RosPacker():
         self.stateMachineVars.ballRelativePosition = self.pBallPosition
         self.stateMachineVars.verAngleAccomplished = self.pHeadKickCheck
         self.stateMachineVars.headPossibleMovements = self.pPossibleHeadMovs
+        self.stateMachineVars.horMotorOutOfCenter = self.pHorMotorOutOfCenter
 
         self.pub2StateMachine.publish(self.stateMachineVars)
     
@@ -80,7 +83,7 @@ class RosPacker():
         print("Posicao de robo (queda): ", self.pFallState)
         print("Movimentos disponíveis: ", self.pPossibleHeadMovs)
         print("Cabeca confirma o chute: ", self.pHeadKickCheck)
-        print("Posicao atual do motor horizontal: ", self.pHorMotorPosition)
+        print("Motor horizontal fora do centro: ", self.pHorMotorOutOfCenter)
         print("----------------------------")
 
 if __name__ == '__main__':
