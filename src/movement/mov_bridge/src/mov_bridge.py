@@ -6,7 +6,7 @@ import sys
 import os
 from movement_msgs.srv import BehRequestSrv, BehRequestSrvResponse, ApprovedMovementSrv
 user_name = os.environ.get("HOME")
-sys.path.append(user_name + "/edrom/src/movement/behaviour_receiver/include")
+sys.path.append(user_name + "/edrom/src/movement/mov_bridge/include")
 
 import statsManipulator
 
@@ -16,10 +16,10 @@ class MovementCommunication():
         self.manipulator = statsManipulator.StatsManipulator()     
         self.srv_comunication_beh = BehRequestSrvResponse()
 
-        rospy.Service('/movement/behaviour_receiver/commands2movement', BehRequestSrv, self.callback)
+        rospy.Service('/movement/mov_bridge/commands2movement', BehRequestSrv, self.requestMovement)
         self.client = rospy.ServiceProxy('/movement/approved_movement', ApprovedMovementSrv)
     
-    def callback(self, requisition):
+    def requestMovement(self, requisition):
         movement_exists = self.checkExistence(requisition.required_movement)
 
         print("\nO movimento solicitado existe:",movement_exists)
