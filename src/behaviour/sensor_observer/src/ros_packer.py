@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #coding=utf-8
 
-import rospy, time
+import rospy
 import fall_interpreter, ball_interpreter, neck_interpreter
 
 from modularized_bhv_msgs.msg import stateMachineMsg
@@ -20,7 +20,7 @@ class RosPacker():
         self.iNeck = neck_interpreter.NeckInterpreter()
 
         #Inicialização das variáveis do ROS
-        self.pub2StateMachine = rospy.Publisher('/sensor_observer/state_machine_vars', stateMachineMsg)
+        self.pub2StateMachine = rospy.Publisher('/sensor_observer/state_machine_vars', stateMachineMsg, queue_size=1)
         self.stateMachineVars = stateMachineMsg()
 
         #Variáveis de interpretação para facilitação do fluxo
