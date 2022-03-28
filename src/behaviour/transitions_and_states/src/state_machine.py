@@ -17,7 +17,7 @@ class StateMachine():
 
     def __init__(self):
 
-        states = ['search_ball','body_alignment','body_search','walking','stand_still','kick','getting_up']
+        states = ['search_ball','body_alignment','body_search','walking','stand_still','kick','getting_up', 'impossible']
         
         go_to_search_ball_transitions = [
             { 'trigger': 'go_to_search_ball', 'source': 'body_alignment', 'dest': 'search_ball',
@@ -34,19 +34,10 @@ class StateMachine():
             ,
             { 'trigger': 'go_to_search_ball', 'source': 'walking', 'dest': 'search_ball',
              'conditions': 'search_ball_align_kick_condition', 'unless': 'getting_up_condition'}
-            ,
-            { 'trigger': 'go_to_search_ball', 'source': 'search_ball', 'dest': 'search_ball',
-             'conditions': 'search_ball_condition', 'unless': 'getting_up_condition'}
-            ,
-            { 'trigger': 'go_to_search_ball', 'source': 'search_ball', 'dest': 'search_ball',
-             'conditions': 'search_ball_align_kick_condition', 'unless': 'getting_up_condition'}
         ]
 
         go_to_body_alignment_transitions = [
             { 'trigger': 'go_to_body_alignment', 'source': 'search_ball', 'dest': 'body_alignment',
-             'conditions': 'body_alignment_condition', 'unless': 'getting_up_condition'}
-            ,
-            { 'trigger': 'go_to_body_alignment', 'source': 'body_alignment', 'dest': 'body_alignment',
              'conditions': 'body_alignment_condition', 'unless': 'getting_up_condition'}
         ]
 
@@ -64,9 +55,6 @@ class StateMachine():
             ,
             { 'trigger': 'go_to_walking', 'source': 'body_alignment', 'dest': 'walking',
              'conditions': 'walking_condition', 'unless': 'getting_up_condition'}
-            ,
-            { 'trigger': 'go_to_walking', 'source': 'walking', 'dest': 'walking',
-             'conditions': 'walking_condition', 'unless': 'getting_up_condition'}
         ]
         
         go_to_stand_still_transitions = [
@@ -75,17 +63,13 @@ class StateMachine():
             ,
             { 'trigger': 'go_to_stand_still', 'source': 'kick', 'dest': 'stand_still',
              'unless': 'getting_up_condition'}
-            ,
-            { 'trigger': 'go_to_stand_still', 'source': 'stand_still', 'dest': 'stand_still',
-             'unless': 'getting_up_condition'}
         ]
 
         go_to_kick_transitions = [
+            { 'trigger': 'go_to_kick', 'source': 'walking', 'dest': 'kick',
+             'conditions': 'kick_condition', 'unless': 'getting_up_condition'},
             { 'trigger': 'go_to_kick', 'source': 'search_ball', 'dest': 'kick',
-             'conditions': 'kick_condition', 'unless': 'getting_up_condition'}
-            ,
-            { 'trigger': 'go_to_kick', 'source': 'kick', 'dest': 'kick',
-             'conditions': 'kick_condition', 'unless': 'getting_up_condition'}
+             'conditions': 'kick_condition', 'unless': 'getting_up_condition'},
         ]
 
         go_to_getting_up_transitions = [
@@ -93,8 +77,26 @@ class StateMachine():
              'conditions': 'getting_up_condition'}
         ]
 
+        go_to_impossible_transitions = [
+            {'trigger': 'go_to_search_ball', 'source': '*', 'dest': 'impossible',
+             'conditions': 'impossible_condition'},
+            {'trigger': 'go_to_body_search', 'source': '*', 'dest': 'impossible',
+             'conditions': 'impossible_condition'},
+            {'trigger': 'go_to_walking', 'source': '*', 'dest': 'impossible',
+             'conditions': 'impossible_condition'},
+            {'trigger': 'go_to_kick', 'source': '*', 'dest': 'impossible',
+             'conditions': 'impossible_condition'},
+            {'trigger': 'go_to_getting_up', 'source': '*', 'dest': 'impossible',
+             'conditions': 'impossible_condition'},
+            {'trigger': 'go_to_body_alignment', 'source': '*', 'dest': 'impossible',
+             'conditions': 'impossible_condition'},
+            {'trigger': 'go_to_stand_still', 'source': '*', 'dest': 'impossible',
+             'conditions': 'impossible_condition'}
+        ]
+
         all_transitions = (go_to_search_ball_transitions + go_to_body_alignment_transitions + go_to_walking_transitions 
-        + go_to_kick_transitions + go_to_getting_up_transitions + go_to_stand_still_transitions + go_to_body_search_transitions)
+        + go_to_kick_transitions + go_to_getting_up_transitions + go_to_stand_still_transitions + go_to_body_search_transitions
+        + go_to_impossible_transitions)
 
         self.robot_state_machine = Machine(self, states=states, transitions=all_transitions, initial='stand_still')
     
@@ -111,24 +113,25 @@ class StateMachine():
         self.update_state()
     
     def update_state(self):
-        if self.go_to_search_ball():
-            print('Transição para o search_ball\n-------------------\n')
+
+        if self.go_to_getting_up():
+            print('Transição para o getting_up\n-------------------\n')
             return True
         
+        elif self.go_to_kick():
+            print('Transição para o kick\n-------------------\n')
+            return True
+
+        elif self.go_to_search_ball():
+            print('Transição para o search_ball\n-------------------\n')
+            return True
+
         elif self.go_to_body_search():
             print('Transição para o body_search\n-------------------\n')
             return True
 
         elif self.go_to_walking():
             print('Transição para o walking\n-------------------\n')
-            return True
-        
-        elif self.go_to_kick():
-            print('Transiçãoa para o kick\n-------------------\n')
-            return True
-        
-        elif self.go_to_getting_up():
-            print('Transição para o getting_up\n-------------------\n')
             return True
         
         elif self.go_to_body_alignment():
@@ -185,7 +188,7 @@ class StateMachine():
             self.search_ball_condition = False
 
     def search_ball_align_kick_condition_update(self, ball_relative_position):
-        if str(self.state) == 'walking' and ball_relative_position == BOTTOM:
+        if str(self.state) == 'walking' and BOTTOM in ball_relative_position:
             self.search_ball_align_kick_condition = True
         else:
             self.search_ball_align_kick_condition = False
@@ -204,3 +207,4 @@ class StateMachine():
     def search_ball_condition(self): return self.search_ball_condition
     def search_ball_align_kick_condition(self): return self.search_ball_align_kick_condition  
     def body_search_condition(self): return self.body_search_condition
+    def impossible_condition(self): return False
