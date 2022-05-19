@@ -4,7 +4,7 @@
 import rospy
 from geometry_msgs.msg import Vector3
 
-simulation2BhvTopic = '/webots_natasha/behaviour_controller' #String do topico associado as infos do acelerometro da simulação
+simulation2BhvTopic = '/webots_natasha/behaviour_controller' #Endereço do tópico que está transmitindo as informações do acelerometro
 
 timesSecurity = 7 #Numero de vezes para verificacoes de seguranca no codigo
 
@@ -28,8 +28,8 @@ class FallInterpreter():
         rospy.Subscriber(simulation2BhvTopic, Vector3, self.callback_sensor)
 
         #Variaveis de código
-        self.fallState = 'Up'
-        self.countFalled = 0
+        self.fallState = 'Up' #Estado da queda do robô, sendo up = em pé
+        self.countFalled = 0 #Contador de quedas interpretadas para segurança
     
     #Funcao chamada pelo agrupador ROS quando necessitar saber 
     #a interpretacao da queda para alguma requisicao
@@ -50,7 +50,8 @@ class FallInterpreter():
             - Interpreta a medição y retornando se houve queda
             - Interpreta as medições x e z retornando a orientação da queda
             - Confia mais no estar de pé do que na queda, evitando falsos positivos 
-            * A orientação só é interpretada se a queda foi detectada mais de 7 vezes seguida, poupando processamento
+            * A orientação só é interpretada se a queda for detectada mais vezes do que o timesSecurity estipula 
+            (lembrando que o timesSecurity é a variavel que estipula o numero de vezes para verificacoes de seguranca), poupando processamento
         -> Input:
             - msg: Variavel associada a mensagem recebida no topico do ROS, contem as
             informacoes do acelerometro    
@@ -86,7 +87,7 @@ class FallInterpreter():
                 self.fallState = 'Right'
 
             elif msg.x > xSensorRight:
-                #Caiu sobre o lado esquerdo     
+                #Caiu sobre o lado esquerdo    
                 self.fallState = 'Left'  
 
 
