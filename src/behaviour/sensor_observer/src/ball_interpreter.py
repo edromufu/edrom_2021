@@ -61,8 +61,8 @@ class BallInterpreter():
             * Os dados só são interpretados, ou seja, a posicao relativa só é atualizada
             * se a bola estiver sendo encontrada (para ter uma especie de 'visto por ultimo')  
         -> Input:
-            - general: Variavel associada a mensagem recebida no topico do ROS, contem as
-            informacoes de todos os objetos, é separada somente para a bola nesse caso.   
+            - general: Variavel associada a mensagem recebida no topico do ROS, contém as
+            informações de todos os objetos, é separada somente para a bola nesse caso.   
         """
 
         #Captura das informacoes da bola de dentro da mensagem completa
@@ -99,7 +99,7 @@ class BallInterpreter():
                 analysisX = 'Center'
             
             #Interpretacao vertical
-            if(msg.y > yCenterBottomLimit): #Deve ser maior por conta da referencia do Yolo
+            if(msg.y > yCenterBottomLimit): #Deve ser maior por conta da referência ([0,0] no canto superior esquerdo)
                 analysisY = 'Bottom'
             elif(msg.y < yCenterTopLimit):
                 analysisY = 'Top'
