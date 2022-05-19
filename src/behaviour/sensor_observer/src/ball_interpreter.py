@@ -58,11 +58,11 @@ class BallInterpreter():
             - Interpreta o x e y retornando a posicao relativa da bola
             - Interpreta o width e height retornando a proximidade da bola
             - Realiza resets das variaveis booelanas baseado em contador
-            * Os dados só são interpretados, ou seja, a posicao relativa só é atualizada
+            * Os dados so sao interpretados, ou seja, a posicao relativa so e atualizada
             * se a bola estiver sendo encontrada (para ter uma especie de 'visto por ultimo')  
         -> Input:
-            - general: Variavel associada a mensagem recebida no topico do ROS, contém as
-            informações de todos os objetos, é separada somente para a bola nesse caso.   
+            - general: Variavel associada a mensagem recebida no topico do ROS, contem as
+            informacoes de todos os objetos, e separada somente para a bola nesse caso.   
         """
 
         #Captura das informacoes da bola de dentro da mensagem completa
