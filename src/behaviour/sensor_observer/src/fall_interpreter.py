@@ -75,19 +75,19 @@ class FallInterpreter():
             #levantar mesmo se não estiver)
             if msg.z < zSensorFront:
                 #Caiu de costa
-                self.fallState = 'Back'
+                self.fallState = 'Front'
 
             elif msg.z > zSensorBack:
                 #Caiu de frente     
-                self.fallState = 'Front'
+                self.fallState = 'Back'
 
             elif msg.x < xSensorLeft:
                 #Caiu sobre o lado esquerdo     
-                self.fallState = 'Right'
+                self.fallState = 'Left'
 
             elif msg.x > xSensorRight:
                 #Caiu sobre o lado direito    
-                self.fallState = 'Left'  
+                self.fallState = 'Right'  
 
 
 
