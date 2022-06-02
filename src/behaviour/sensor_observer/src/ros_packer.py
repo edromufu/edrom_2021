@@ -4,7 +4,8 @@
 import rospy
 import fall_interpreter, ball_interpreter, neck_interpreter
 
-from modularized_bhv_msgs.msg import stateMachineMsg
+#Importacao para os topicos ROS
+from modularized_bhv_msgs.msg import stateMachineMsg #Mensagem associada ao topico utilizado para receber info dos estados da robo
 
 class RosPacker():
 
@@ -15,26 +16,26 @@ class RosPacker():
         """
 
         #Inicialização dos interpretadores em variaveis deste objeto
-        self.iBall = ball_interpreter.BallInterpreter()
-        self.iFall = fall_interpreter.FallInterpreter()
-        self.iNeck = neck_interpreter.NeckInterpreter()
+        self.iBall = ball_interpreter.BallInterpreter() #Ve se a robo achou e onde esta a bola
+        self.iFall = fall_interpreter.FallInterpreter() #Ve se a robo esta em pe e qual e a posicao da queda
+        self.iNeck = neck_interpreter.NeckInterpreter() #Captura as informacoes dos motores e define os intervalos extremos do pescoco
 
         #Inicialização das variáveis do ROS
-        self.pub2StateMachine = rospy.Publisher('/sensor_observer/state_machine_vars', stateMachineMsg, queue_size=1)
+        self.pub2StateMachine = rospy.Publisher('/sensor_observer/state_machine_vars', stateMachineMsg, queue_size=1) #Envia as mensagens para o stateMachineMsg
         self.stateMachineVars = stateMachineMsg()
 
         #Variáveis de interpretação para facilitação do fluxo
-        self.pBallPosition = self.iBall.getValues()[0]
-        self.pBallClose = self.iBall.getValues()[1]
-        self.pBallFound = self.iBall.getValues()[2]
-        self.pFallState = self.iFall.getValues()
-        self.pHeadKickCheck = self.iNeck.getValues()[1]
-        self.pPossibleHeadMovs = self.iNeck.getValues()[0]
-        self.pHorMotorOutOfCenter = self.iNeck.getValues()[2]
-        self.pHorMotorPosition = self.iNeck.getValues()[3]
+        self.pBallPosition = self.iBall.getValues()[0] #Captura a posicao da bola em x e y
+        self.pBallClose = self.iBall.getValues()[1] #Captura se a bola ta perto
+        self.pBallFound = self.iBall.getValues()[2] #Ve se a bola foi achada
+        self.pFallState = self.iFall.getValues() #Captura a posicao da queda
+        self.pHeadKickCheck = self.iNeck.getValues()[1] #Ve se a cabeca ta no local certo para a robo mudar o estado para chute
+        self.pPossibleHeadMovs = self.iNeck.getValues()[0] #Ve qual sao as possibilidades de movimento devido aos intervalos extremos do pescoco
+        self.pHorMotorOutOfCenter = self.iNeck.getValues()[2] #Ve se o motor horizontal esta fora do centro
+        self.pHorMotorPosition = self.iNeck.getValues()[3] #Pega o valor do motor horizontal
 
         self.smVarsLastValue = [self.pFallState,self.pBallFound,self.pBallClose,
-                                self.pBallPosition,self.pHeadKickCheck,self.pPossibleHeadMovs, self.pHorMotorOutOfCenter]
+                                self.pBallPosition,self.pHeadKickCheck,self.pPossibleHeadMovs, self.pHorMotorOutOfCenter] #?
 
         self.publish2StateMachine()
     
@@ -60,7 +61,7 @@ class RosPacker():
                                 self.pBallPosition,self.pHeadKickCheck,self.pPossibleHeadMovs, self.pHorMotorOutOfCenter])
 
     def stateMachineFlagger(self,smVarsCurrentValue):
-        if not smVarsCurrentValue == self.smVarsLastValue:
+        if not smVarsCurrentValue == self.smVarsLastValue: #Se os valores forem diferentes do anterior, roda o runPrints
             self.smVarsLastValue = smVarsCurrentValue
             self.runPrints()
             self.publish2StateMachine()
