@@ -10,11 +10,8 @@ firstSearch = 'Left' #Sentido preferencial de busca com o corpo
 #Parametros de configuracao da camera e seus quadrantes
 [cameraWidth, cameraHeight] = [416, 416]
 
-[settingCenterLeftConstant, settingCenterRightConstant] = [cameraWidth*0, cameraWidth*0] #Aumenta a regiao central horizontalmente quanto maior o número
-[settingCenterBottomConstant, settingCenterTopLimit] = [cameraHeight*0, cameraHeight*0] #Aumenta a regiao central verticalmente quanto maior o número
-
-[xCenterLeftLimit, xCenterRightLimit] = [cameraWidth/4 - settingCenterLeftConstant, 3*cameraWidth/4 + settingCenterRightConstant]
-[yCenterBottomLimit, yCenterTopLimit] = [2*cameraHeight/3 + settingCenterBottomConstant, cameraHeight/3 - settingCenterTopLimit]
+[xCenterLeftLimit, xCenterRightLimit] = [cameraWidth/4, 3*cameraWidth/4]
+[yCenterBottomLimit, yCenterTopLimit] = [2*cameraHeight/3, cameraHeight/3]
 
 [close_width, close_height] = [110, 110] #Parametro de definicao da proximidade da bola
 timesSecurity = 7 #Numero de vezes para verificacoes de seguranca no codigo
