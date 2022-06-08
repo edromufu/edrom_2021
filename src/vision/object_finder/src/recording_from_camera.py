@@ -11,28 +11,35 @@ import cv2
 class Listener():
     def __init__(self):
         fourcc = cv2.VideoWriter_fourcc(*'XVID')
-        self.escritor = cv2.VideoWriter(os.path.join(os.path.expanduser('~'), 'edrom/src/vision/robocup_videos/') + 'film.avi', fourcc, 5.0, (416, 416))
+        self.escritor = cv2.VideoWriter(os.path.join(os.path.expanduser('~'), 'edrom/src/vision/robocup_videos/') + 'film.avi', fourcc, 5.0, (640, 480))
 
-        rospy.init_node('recebeImagemWebots', anonymous = True)
-        rospy.Subscriber("/webots_natasha/vision_controller", TipoMensagemImagem, self.callback)  
+        # rospy.init_node('recebeImagemWebots', anonymous = True)
+        # rospy.Subscriber("/webots_natasha/vision_controller", TipoMensagemImagem, self.callback)  
         
-        rospy.spin()
+        # rospy.spin()
+
+
+        self.cap = cv2.VideoCapture("/dev/video2")
+
+        while True:
+            self.record()
+            if cv2.waitKey(1) == ord("q"):
+                self.excluir()
+
 
     # Função de callback
-    def callback(self, data):
-        bridge = CvBridge()
-        self.frame = bridge.imgmsg_to_cv2(data, desired_encoding='bgr8')
-
+    def record(self):
+        #bridge = CvBridge()
+        
+        _ , self.frame = self.cap.read()
         cv2.imshow("Camera", self.frame)
         self.escritor.write(self.frame)
 
-        if cv2.waitKey(1) == ord("q"):
-            self.excluir()
-
+        
     def excluir(self):
         self.escritor.release()
         cv2.destroyAllWindows()
-        rospy.signal_shutdown("Tudo desligado!")
+        #rospy.signal_shutdown("Tudo desligado!")
 
 """# Obtendo todos os serviços em funcionamento no momento
 servicos = subprocess.check_output("rosservice list", shell = True)

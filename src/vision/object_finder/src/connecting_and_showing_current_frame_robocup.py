@@ -27,8 +27,12 @@ class Node():
         self.searching = True
 
         self.publisher = rospy.Publisher('/webots_natasha/vision_inference', Webotsmsg, queue_size=100)
-        self.connect_to_webots()
 
+        #SE FOR NO REAL 
+        #self.get_webcam()
+
+        #SE FOR NO WEBOTS
+        self.connect_to_webots()
 
     def connect_to_webots(self):
         '''Gets the Vision topic sent from Behavior, and subscribe it.'''
@@ -60,6 +64,27 @@ class Node():
             print(f"{e}")
 
         self.send_current_frame_to_inference()
+
+    def get_webcam(self):
+        '''Converts the sensor_msgs/Image to Numpy Array'''
+
+        self.opencv_bridge = CvBridge()
+        while True:
+            try:
+                self.current_frame = cv2.VideoCapture("/dev/video2")
+                _, self.current_frame = self.current_frame.read()
+                self.current_frame = cv2.resize(self.current_frame, (416,416))
+                #self.current_frame = cv2.blur(self.current_frame, (10,10))
+
+                key = cv2.waitKey(5)
+
+                if key == 27:      #tecla ESC fecha as janelas
+                    break
+            
+            except Exception as e:
+                print(f"{e}")
+
+            self.send_current_frame_to_inference()
 
     def send_current_frame_to_inference(self):
         '''Sends the current frame to the inference code.'''
