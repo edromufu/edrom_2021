@@ -16,16 +16,11 @@ def get_cnn_files():
     arq = open('/proc/self/cgroup', 'r')
     linhas = arq.readlines()
 
-    robocup_folder = os.path.join(os.path.expanduser('~'), "edrom/src/vision/robocup_cnn_files")
+    robocup_folder = os.path.join(os.path.expanduser('~'), "edrom_2021/src/vision/robocup_cnn_files")
     for linha in linhas:
         if 'docker' in linha:
             robocup_folder = "/robotica_ufu/src/vision/robocup_cnn_files"
             break
-
-
-    #forçando o path dos arquivos
-    robocup_folder = os.path.join(os.path.expanduser('~'), "edrom/src/vision/robocup_cnn_files")
-
 
     config_file = os.path.join(robocup_folder, "yolov4-tiny-obj.cfg")
     weights_file = os.path.join(robocup_folder, "yolov4-tiny-obj_best.weights")
@@ -41,27 +36,26 @@ def read_cnn_architecture(config_file, weights_file):
 
 def set_model_input(net):
 
-    #o pedro mandou tirar o underline e botar ponto!
-    model = cv2.dnn.DetectionModel(net)
+    model = cv2.dnn_DetectionModel(net)
     model.setInputParams(size=(416, 416), scale=1/255, swapRB=True)
     
     return model
 
 def detect_model(model, current_frame):
     
-    #if (random.randint(1, 10) == 2):
+    if (random.randint(1, 3) == 2):
 
-    start_time = time.time()
-    classes, scores, boxes = model.detect(current_frame, 0.45, 0.4)
-    finish_time = time.time()
-    fps = 1/(finish_time-start_time)
+        start_time = time.time()
+        classes, scores, boxes = model.detect(current_frame, 0.45, 0.4)
+        finish_time = time.time()
+        fps = 1/(finish_time-start_time)
 
-    #print(f"Classes: {classes}, Scores: {scores}")
-    #print(f"Boxes: {boxes}")
-    print("FPS: ", fps)
-    #print('\n')
+        #print(f"Classes: {classes}, Scores: {scores}")
+        #print(f"Boxes: {boxes}")
+        print("FPS: ", fps)
+        #print('\n')
 
-    return classes, scores, boxes, int(fps)
+        return classes, scores, boxes, int(fps)
 
 def draw_results(frame, classes, scores, boxes):
 
