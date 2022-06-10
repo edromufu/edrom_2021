@@ -4,7 +4,7 @@
 import rospy
 from controller import Supervisor
 
-from modularized_bhv_msgs.srv import headReqSrv, headReqSrvResponse #Srv associado ao service utilizado para requisitar movimento dos motores da cabeça ao movimento
+from modularized_bhv_msgs.srv import moveRequest, moveRequestResponse #Srv associado ao service utilizado para requisitar qualquer movimento dos motores
 
 #Limites relacionados aos motores da cabeça em radianos
 hor_increment = ((1.7+1.7)/10) #Valores de incremento obtidos através do step
@@ -54,7 +54,7 @@ class HeadMover():
             - Capturar os nodes de Transform de cada motor;
             - Capturar seus campos de rotação;
             - Iniciar as variáveis que indica as posições dos motores da cabeça;
-            - Inicializa as variáveis do ROS para publicação da posição dos motores.
+            - Inicializa as variáveis do ROS para recebimento de requisição de movimento da cabeça.
         """
         sim_horizontal_head_motor_node = self.general_supervisor.getFromDef('HorizontalMotor')
         sim_vertical_head_motor_node = self.general_supervisor.getFromDef('VerticalMotor')
@@ -65,8 +65,8 @@ class HeadMover():
         self.hor_head_pos = self.sim_hor_head_motor.getSFRotation()[3]
         self.ver_head_pos = self.sim_ver_head_motor.getSFRotation()[3]
 
-        rospy.Service('/bhv2mov_communicator/head_requisitions', headReqSrv, self.moveSimHead)
-        self.response = response = headReqSrvResponse()
+        rospy.Service('/bhv2mov_communicator/head_requisitions', moveRequest, self.moveSimHead)
+        self.response = moveRequestResponse()
         
     #Função responsável pela movimentação da cabeça de acordo com as requisições
     def moveSimHead(self, request):
@@ -79,7 +79,7 @@ class HeadMover():
             - Enviar a nova rotação ao simulador;
             - Retornar a informação de sucesso após movimentar.
         """
-        direction = request.headRequest
+        direction = request.moveRequest
 
         if direction == RIGHT or direction == DOWN:
             increment = 1

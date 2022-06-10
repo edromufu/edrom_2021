@@ -29,7 +29,7 @@ add_message_files(
 
 add_service_files(
   FILES
-  headReqSrv.srv
+  moveRequest.srv
 )
 
 generate_messages(

@@ -5,6 +5,8 @@ import rospy
 from controller import Supervisor
 from sensors_update import RobotSensors
 from move_head import HeadMover
+from robot_3D_moves import Robot3DMover
+from sim_page_exec import RobotPagesExec
 
 class BhvIndependentSim(object):
     
@@ -20,12 +22,16 @@ class BhvIndependentSim(object):
 
         self.robot_sensors = RobotSensors(self.general_supervisor)
         self.robot_head_requisitions = HeadMover(self.general_supervisor)
+        self.robot_3D_move_requisitions = Robot3DMover(self.general_supervisor)
+        self.robot_pages_requisitions = RobotPagesExec(self.general_supervisor)
 
     #Função para loopar os updates dos sensores durante a execução da simulação
     def start(self):
         while self.general_supervisor.step(32) != -1 and not rospy.is_shutdown():
             self.robot_sensors.callClock()
             self.robot_head_requisitions.callClock()
+            self.robot_3D_move_requisitions.callClock()
+            self.robot_pages_requisitions.callClock()
     
     def init_ball(self):
         self.ball = self.general_supervisor.getFromDef('ball')
