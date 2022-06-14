@@ -9,4 +9,4 @@ orthographicViewHeight: 1
 textFiles: -1
 consoles: Console:All:All
 renderingDevicePerspectives: red player 1:Camera;0;1;0;0
-renderingDevicePerspectives: robot:Camera;1;1;0;0
+renderingDevicePerspectives: robot:Camera;1;0.512019;0;0
