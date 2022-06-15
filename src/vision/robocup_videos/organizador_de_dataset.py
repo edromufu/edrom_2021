@@ -1,6 +1,6 @@
 import os
 
-os.chdir("frames_larc_2021")
+os.chdir("frames_larc_2022")
 lista_de_arquivo = os.listdir(os.getcwd())
 lista_de_imagens = []
 
