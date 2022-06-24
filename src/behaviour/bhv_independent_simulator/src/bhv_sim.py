@@ -31,7 +31,6 @@ class BhvIndependentSim(object):
             self.robot_sensors.callClock()
             self.robot_head_requisitions.callClock()
             self.robot_3D_move_requisitions.callClock()
-            self.robot_pages_requisitions.callClock()
     
     def init_ball(self):
         self.ball = self.general_supervisor.getFromDef('ball')
