@@ -1,0 +1,12 @@
+<package>
+  <description brief="ik_walk">
+
+     ik_walk
+
+  </description>
+  <author>murilo</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/ik_walk</url>
+
+</package>
