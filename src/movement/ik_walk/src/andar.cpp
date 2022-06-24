@@ -1,4 +1,3 @@
-
 #include "std_msgs/String.h"
 #include "ros/ros.h"
 #include "../include/andar.h"
@@ -124,6 +123,6 @@ static void runWalk(const Rhoban::IKWalkParameters& params, double timeLength, d
           loop_rate.sleep();
       }
       params_pub.publish(walkinRes); 
-      ros::spinOnce();
+      ros::spin();
   }
 }

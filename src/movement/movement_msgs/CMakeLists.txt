@@ -20,6 +20,7 @@ add_message_files(
   FILES
   WalkingParamsMsg.msg
   HeadParamsMsg.msg
+  MotorDatasMsg.msg
 )
 
 ## Generate services in the 'srv' folder
