@@ -16,6 +16,7 @@ LEFT = 'head_to_left'
 UP = 'head_to_up'
 DOWN = 'head_to_down'
 CENTER = 'head_to_center'
+POSSIBLE_REQUESTS = [RIGHT, LEFT, UP, DOWN, CENTER]
 
 class HeadMover():
 
@@ -79,6 +80,12 @@ class HeadMover():
             - Enviar a nova rotação ao simulador;
             - Retornar a informação de sucesso após movimentar.
         """
+        if request.moveRequest in POSSIBLE_REQUESTS:
+            calm_down = True
+            initial_time = self.general_supervisor.getTime()
+        else:
+            calm_down = False
+
         direction = request.moveRequest
 
         if direction == RIGHT or direction == DOWN:
@@ -100,6 +107,9 @@ class HeadMover():
             self.sim_hor_head_motor.setSFRotation(hor_rotation)
             self.sim_ver_head_motor.setSFRotation(ver_rotation)
 
+        if calm_down:
+            while self.general_supervisor.getTime()-initial_time < 0.1:
+                pass
         
         self.response.success = True
         return self.response

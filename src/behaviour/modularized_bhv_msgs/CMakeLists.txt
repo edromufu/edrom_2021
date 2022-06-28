@@ -25,6 +25,7 @@ add_message_files(
   FILES
   simMovMsg.msg
   stateMachineMsg.msg
+  currentStateMsg.msg
 )
 
 add_service_files(

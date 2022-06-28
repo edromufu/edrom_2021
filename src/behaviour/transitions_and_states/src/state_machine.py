@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 #coding=utf-8
 
+import rospy
 from transitions import Machine
+from modularized_bhv_msgs.msg import currentStateMsg
 
 #Parametros associados a posicao relativa da bola
 LEFT = 'Left' #Strings de resposta do interpretador da bola
@@ -108,6 +110,9 @@ class StateMachine():
         + go_to_impossible_transitions)
 
         self.robot_state_machine = Machine(self, states=states, transitions=all_transitions, initial='stand_still')
+
+        self.state_publisher = rospy.Publisher('/transitions_and_states/state_machine', currentStateMsg, queue_size=1)
+        self.state_msg = currentStateMsg()
     
     #Funcao para chamada de atualizacao de cada uma das variaveis
     #que controlarao as transicoes de estados da maquina
@@ -137,6 +142,8 @@ class StateMachine():
         #!
         print(f'-------------------\nEstado {str(self.state)}')
         self.update_state()
+        self.state_msg.currentState = str(self.state)
+        self.state_publisher.publish(self.state_msg)
     
     #Funcao para transicao de estado da biblioteca
     def update_state(self):
@@ -147,7 +154,7 @@ class StateMachine():
             inicializacao da maquina de estados em um logica de if's
             funcional
         """
-
+        
         if self.go_to_getting_up():
             print('Transição para o getting_up\n-------------------\n')
             return True

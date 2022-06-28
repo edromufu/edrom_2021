@@ -12,8 +12,7 @@ from modularized_bhv_msgs.srv import moveRequest, moveRequestResponse #Srv assoc
 KICK = 'kick'
 GET_UP_FRONT = 'front_up'
 GET_UP_BACK = 'back_up'
-
-
+POSSIBLE_REQUESTS = [KICK, GET_UP_FRONT, GET_UP_BACK]
 
 class RobotPagesExec():
 
@@ -89,9 +88,18 @@ class RobotPagesExec():
             - Comparar a requisição com os padrões definidos;
             - Chamar a função adequada da situação.
         """
+        if request.moveRequest in POSSIBLE_REQUESTS:
+            calm_down = True
+            initial_time = self.general_supervisor.getTime()
+        else:
+            calm_down = False
 
         if request.moveRequest == KICK:
             self.response = self.kick()
+        
+        if calm_down:
+            while self.general_supervisor.getTime()-initial_time < 1:
+                pass
 
         return self.response
         

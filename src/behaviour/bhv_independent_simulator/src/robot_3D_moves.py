@@ -11,6 +11,7 @@ from modularized_bhv_msgs.srv import moveRequest, moveRequestResponse #Srv assoc
 FORWARD = 'walk_forward'
 CLOCKWISE = 'rotate_clockwise'
 COUNTER_CLOCKWISE = 'rotate_counter_clockwise'
+POSSIBLE_REQUESTS = [FORWARD,CLOCKWISE,COUNTER_CLOCKWISE]
 
 #Setando o step para cada tipo de movimento
 ROTATION_STEP = 0.1309
@@ -71,6 +72,12 @@ class Robot3DMover():
         -> Funcao:
         Alterar os campos de rotação e translação do node principal para simular a caminhada, atraves de:
         """
+        if request.moveRequest in POSSIBLE_REQUESTS:
+            calm_down = True
+            initial_time = self.general_supervisor.getTime()
+        else:
+            calm_down = False
+
         if request.moveRequest == CLOCKWISE:
             increment = -ROTATION_STEP
         elif request.moveRequest == COUNTER_CLOCKWISE:
@@ -87,6 +94,9 @@ class Robot3DMover():
             new_translation = [self.sim_3D_translation_field.getSFVec3f()[0]+x_increment,self.sim_3D_translation_field.getSFVec3f()[1],self.sim_3D_translation_field.getSFVec3f()[2]+z_increment]
             self.sim_3D_translation_field.setSFVec3f(new_translation)
 
+        if calm_down:
+            while self.general_supervisor.getTime()-initial_time < 0.25:
+                pass
         
         self.response.success = True
         return self.response

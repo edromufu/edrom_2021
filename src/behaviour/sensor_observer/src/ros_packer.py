@@ -74,6 +74,7 @@ class RosPacker():
         self.stateMachineVars.verAngleAccomplished = self.pHeadKickCheck
         self.stateMachineVars.headPossibleMovements = self.pPossibleHeadMovs
         self.stateMachineVars.horMotorOutOfCenter = self.pHorMotorOutOfCenter
+        self.stateMachineVars.horMotorPosition = self.pHorMotorPosition
 
         self.pub2StateMachine.publish(self.stateMachineVars)
     
