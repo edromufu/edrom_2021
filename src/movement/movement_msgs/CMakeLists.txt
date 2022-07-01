@@ -20,7 +20,7 @@ add_message_files(
   FILES
   WalkingParamsMsg.msg
   HeadParamsMsg.msg
-  MotorDatasMsg.msg
+  WalkingPositionsMsg.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -28,6 +28,7 @@ add_service_files(
   FILES
   BehRequestSrv.srv
   ApprovedMovementSrv.srv
+  WalkCreatorRequestSrv.srv
 )
 
 ## Generate actions in the 'action' folder
