@@ -21,7 +21,9 @@ add_message_files(
   WalkingParamsMsg.msg
   HeadParamsMsg.msg
   WalkingPositionsMsg.msg
-)
+  OpencmRequestMsg.msg
+  OpencmResponseMsg.msg
+  )
 
 ## Generate services in the 'srv' folder
 add_service_files(
