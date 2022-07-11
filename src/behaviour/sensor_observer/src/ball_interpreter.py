@@ -13,7 +13,7 @@ firstSearch = 'Left' #Sentido preferencial de busca com o corpo
 [xCenterLeftLimit, xCenterRightLimit] = [cameraWidth/4, 3*cameraWidth/4]
 [yCenterBottomLimit, yCenterTopLimit] = [2*cameraHeight/3, cameraHeight/3]
 
-[close_width, close_height] = [110, 110] #Parametro de definicao da proximidade da bola
+[close_width, close_height] = [80, 80] #Parametro de definicao da proximidade da bola
 timesSecurity = 7 #Numero de vezes para verificacoes de seguranca no codigo
 
 class BallInterpreter():
@@ -70,6 +70,7 @@ class BallInterpreter():
         if(self.countFound > timesSecurity):
             self.ballFound = False
             self.ballClose = False
+            self.ballRelativePosition = 'Left'
 
         if(msg.found):
             #Reseta o contador de informar que a bola foi perdida, pois encontrou :)

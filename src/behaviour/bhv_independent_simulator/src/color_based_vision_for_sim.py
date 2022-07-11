@@ -12,8 +12,8 @@ from cv_bridge import CvBridge
 from sensor_msgs.msg import Image as visionSimImage
 from vision_msgs.msg import Webotsmsg
 
-ORANGE_MAX = [180, 255, 255]
-ORANGE_MIN = [160, 50, 50]
+ORANGE_MAX = [255, 255, 255]
+ORANGE_MIN = [130, 60, 50]
 
 [HEIGHT,WIDTH] = [416,416]
 

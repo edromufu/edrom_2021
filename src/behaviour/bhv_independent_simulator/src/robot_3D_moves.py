@@ -82,18 +82,18 @@ class Robot3DMover():
             increment = -ROTATION_STEP
         elif request.moveRequest == COUNTER_CLOCKWISE:
             increment = ROTATION_STEP
-
+        
         if request.moveRequest == CLOCKWISE or request.moveRequest == COUNTER_CLOCKWISE:
             new_rotation = self.sim_3D_rotation_field.getSFRotation()[:3]+[self.robot_rotation+increment]
             self.sim_3D_rotation_field.setSFRotation(new_rotation)
-
+        '''
         elif request.moveRequest == FORWARD:
             x_increment = -WALK_STEP*m.sin(self.robot_rotation)
             z_increment = -WALK_STEP*m.cos(self.robot_rotation)
 
             new_translation = [self.sim_3D_translation_field.getSFVec3f()[0]+x_increment,self.sim_3D_translation_field.getSFVec3f()[1],self.sim_3D_translation_field.getSFVec3f()[2]+z_increment]
             self.sim_3D_translation_field.setSFVec3f(new_translation)
-
+        '''
         if calm_down:
             while self.general_supervisor.getTime()-initial_time < 0.25:
                 pass

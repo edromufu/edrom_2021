@@ -294,7 +294,7 @@ class StateMachine():
             - Atualizar a variavel de condicao de acordo com verificacao
         """
 
-        if str(self.state) == 'walking' and BOTTOM in ball_relative_position:
+        if str(self.state) == 'walking' and ball_relative_position != CENTER:
             self.search_ball_align_kick_condition = True
         else:
             self.search_ball_align_kick_condition = False
