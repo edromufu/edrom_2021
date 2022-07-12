@@ -126,18 +126,18 @@ class Node():
 
             # A mesma classe de trave é reconhecida para as duas traves
             # Sabendo disso, a trave direita é a com maior x
-            self.dict_of_xs[i] = {"classe": self.classes[i][0], "x": x}
+            self.dict_of_xs[i] = {"classe": self.classes[i], "x": x}
             print(self.dict_of_xs)
 
-            if self.classes[i][0] not in self.list_of_classes_in_current_frame:
-                self.list_of_classes_in_current_frame.append(self.classes[i][0])
+            if self.classes[i] not in self.list_of_classes_in_current_frame:
+                self.list_of_classes_in_current_frame.append(self.classes[i])
 
-                if self.classes[i][0] == 0:
+                if self.classes[i]== 0:
                     ball = Ball()
                     [ball.found, ball.x, ball.y, ball.roi_width, ball.roi_height] = results
                     objects_msg.ball = ball
 
-                elif self.classes[i][0] == 1:
+                elif self.classes[i] == 1:
                     leftgoalpost = Leftgoalpost()
                     [leftgoalpost.found, leftgoalpost.x, leftgoalpost.y, leftgoalpost.roi_width, leftgoalpost.roi_height] = results
                     objects_msg.leftgoalpost = leftgoalpost
