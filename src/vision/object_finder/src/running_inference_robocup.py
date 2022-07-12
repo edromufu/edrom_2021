@@ -66,25 +66,27 @@ def detect_model(model, current_frame):
 def draw_results(frame, classes, scores, boxes):
 
     # Draw the bounding boxes
+    
     for i in range(len(boxes)):
         [x_top, y_top, roi_width, roi_height] = boxes[i]
         p1 = (x_top, y_top)
         p2 = (x_top + roi_width, y_top + roi_height)
         p3 = (x_top, y_top - 5)
-
-        cv2.rectangle(frame, p1, p2, outline_color_list[classes[i][0]], 2)
-
-        confidence = str(round(float(scores[i][0]), 2))
-
-        if classes[i][0] == 0:
+        
+        cv2.rectangle(frame, p1, p2, outline_color_list[classes[i]], 2)
+        
+        confidence = str(round(float(scores[i]), 2))
+        
+        if classes[i] == 0:
             label = "Ball"
-        elif classes[i][0] == 1:
+            
+        elif classes[i] == 1:
             label = "Left_goalpost"
         else:
             label = "Right_goalpost"
         
         cv2.putText(frame, label + " " + confidence, p3, cv2.FONT_HERSHEY_PLAIN, 1, (255,255,255), 1)
-
+    
 
 def create_binary_image(net, current_frame):
 
