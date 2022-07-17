@@ -55,7 +55,7 @@ class MovementCommunication():
 
         
 if __name__ == "__main__":
-    rospy.init_node('Movement_node', anonymous=False)
+    rospy.init_node('Movement_bridge_node', anonymous=False)
 
     movement = MovementCommunication()
 

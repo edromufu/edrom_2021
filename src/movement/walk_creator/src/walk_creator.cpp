@@ -8,7 +8,7 @@ bool WalkCreator::walkRequest(movement_msgs::WalkCreatorRequestSrv::Request  &re
     params.lateralGain = req_params.lateralGain;
     params.turnGain = req_params.turnGain;
 
-    res.success = runWalk(params, 2, phase, time);
+    res.success = runWalk(params, 5.12, phase, time);
 
     return res.success;
 }
@@ -24,11 +24,17 @@ bool WalkCreator::runWalk(const Rhoban::IKWalkParameters& params, double timeLen
 
             return false;
         } else {
-            positions.positions = {outputs.left_hip_yaw, outputs.left_hip_pitch, outputs.left_hip_roll, outputs.left_knee, 
-            outputs.left_ankle_pitch, outputs.left_ankle_roll, outputs.right_hip_yaw, outputs.right_hip_pitch,
-            outputs.right_hip_roll, outputs.right_knee, outputs.right_ankle_pitch, outputs.right_ankle_roll};
+            positions.positions = { outputs.right_hip_yaw, outputs.left_hip_yaw,
+                                    outputs.right_hip_roll, outputs.left_hip_roll, 
+                                    outputs.right_hip_pitch, outputs.left_hip_pitch,                                    
+                                    outputs.right_knee, outputs.left_knee, 
+                                    outputs.right_ankle_pitch, outputs.left_ankle_pitch, 
+                                    outputs.right_ankle_roll, outputs.left_ankle_roll
+                                  };
 
+            while (!flag2Publish){
 
+            }
             walk_motor_positions_pub.publish(positions);
         }
     }
@@ -36,16 +42,23 @@ bool WalkCreator::runWalk(const Rhoban::IKWalkParameters& params, double timeLen
     return true;
 }
 
+void WalkCreator::flagChange(const std_msgs::Bool &status)
+{
+    flag2Publish = status.data;
+}
+
 WalkCreator::WalkCreator(ros::NodeHandle nh){
     walk_motor_positions_pub = nh.advertise<movement_msgs::WalkingPositionsMsg>("/walk_creator/positions", 1000);
     ros::Rate loop_rate(10);
 
+    flag_to_publish_positions_sub = nh.subscribe("/movement_comm/flag", &WalkCreator::flagChange, this);
     request_walk_creation = nh.advertiseService("/walk_creator/request", &WalkCreator::walkRequest, this);
 
     params.distHipToKnee = 0.093;
     params.distKneeToAnkle = 0.105;
     params.distAnkleToGround = 0.032;
     params.distFeetLateral = 0.092;
+
     params.freq = 1.7;
     params.enabledGain = 1.0;
     params.supportPhaseRatio = 0.0;
@@ -83,7 +96,7 @@ WalkCreator::WalkCreator(ros::NodeHandle nh){
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "WalkCreatorNode");
+    ros::init(argc, argv, "Walk_creator_node");
     ros::NodeHandle nh;
     
     WalkCreator WalkCreatorObject(nh);

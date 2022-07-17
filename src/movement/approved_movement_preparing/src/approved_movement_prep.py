@@ -91,7 +91,7 @@ class MovementPreparation():
         self.head_params_publisher.publish(head_params2publish)
 
 if __name__ == "__main__":
-    rospy.init_node('Movement_preparing_node', anonymous=False)
+    rospy.init_node('Approved_movement_prep_node', anonymous=False)
 
     preparing = MovementPreparation()
 

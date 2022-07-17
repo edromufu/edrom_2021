@@ -4,6 +4,7 @@ project(walk_creator)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   movement_msgs
+  std_msgs
 )
 
 

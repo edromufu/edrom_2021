@@ -23,6 +23,7 @@ add_message_files(
   WalkingPositionsMsg.msg
   OpencmRequestMsg.msg
   OpencmResponseMsg.msg
+  WebotsRequestMsg.msg
   )
 
 ## Generate services in the 'srv' folder
