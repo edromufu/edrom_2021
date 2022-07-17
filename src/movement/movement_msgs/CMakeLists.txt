@@ -31,6 +31,7 @@ add_service_files(
   BehRequestSrv.srv
   ApprovedMovementSrv.srv
   WalkCreatorRequestSrv.srv
+  CommandToOpenCMSrv.srv
 )
 
 ## Generate actions in the 'action' folder

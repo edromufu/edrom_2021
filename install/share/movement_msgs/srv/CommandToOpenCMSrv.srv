@@ -1,0 +1,3 @@
+int16 opencm_command
+---
+bool command_executed

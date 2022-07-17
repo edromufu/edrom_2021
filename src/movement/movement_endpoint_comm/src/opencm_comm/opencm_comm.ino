@@ -2,39 +2,45 @@
 #include <DynamixelWorkbench.h>
 #include <movement_msgs/OpencmRequestMsg.h>
 #include <movement_msgs/OpencmResponseMsg.h>
+#include <movement_msgs/CommandToOpenCMSrv.h>
 
 #define BAUDRATE 1000000
 #define DOF 20
 
-/*
- Nomes de Modelos
-
-#define MX_106 302
-#define MX_106_2 321
-#define MX_64 310
-#define MX_64_2 311
-#define EX_106 107
-#define AX_12 12
-#define AX_18 18
-#define RX_64 64
- */
-
 enum Command {
-  live, position_dt_head, position_dt, shutdown_now, reborn, motor_feed_back
+  position_dt, shutdown_now, reborn
 };
 
 /* 
  *  Funções
  */
  
-void request(const movement_msgs::OpencmRequestMsg& rqt);
+void requestMovement(const movement_msgs::OpencmRequestMsg& rqt);
+void resquestCommand(movement_msgs::CommandToOpenCMSrv::Request &req, movement_msgs::CommandToOpenCMSrv::Response &res);
+
+Command command;
+
+void resquestCommand(const movement_msgs::CommandToOpenCMSrv::Request &req, movement_msgs::CommandToOpenCMSrv::Response &res)
+{
+  if(strcmp (req.opencm_command,"position_dt") == 0)
+  {
+    command = position_dt;
+  }
+  else if(strcmp (req.opencm_command,"shutdown_now") == 0)
+  {
+    command = shutdown_now;
+  }
+  else if (strcmp (req.opencm_command,"reborn") == 0)
+  {
+    command = reborn;
+  }
+}
+
 void scan();
 void setupDynamixel();
 void torqueDisable();
 void torqueEnable();
 void feedbackMotor();
-void feedbackMotorHead();
-double mapDouble(double, double, double, double, double);
 
 /* 
  *  Variáveis globais
@@ -55,7 +61,8 @@ movement_msgs::OpencmRequestMsg rqt;
 movement_msgs::OpencmResponseMsg response_msg;
 
 // Topicos
-ros::Subscriber<movement_msgs::OpencmRequestMsg> sub("opencm/request", request);
+ros::Subscriber<movement_msgs::OpencmRequestMsg> sub("opencm/request_move", requestMovement);
+ros::ServiceServer<movement_msgs::CommandToOpenCMSrv::Request, movement_msgs::CommandToOpenCMSrv::Response> service("opencm/request_command", &resquestCommand);
 ros::Publisher pub("opencm/response", &response_msg);
 
 unsigned long initialTime = 0;
@@ -79,7 +86,6 @@ int32_t *expSpeedFeedback;
 
 int countZeroMotor = 0;
 
-Command command;
 int32_t data[DOF] = {0};
 int32_t vel[DOF] = {0}; 
 
@@ -90,6 +96,9 @@ void setup()
   nh.initNode();
   nh.subscribe(sub);
   nh.advertise(pub);
+  nh.advertiseService(service);
+
+  setupDynamixel();
   
   // Esperando a conexão com o computador para continuar a execução
   while (!nh.connected())
@@ -103,13 +112,8 @@ void loop()
   countZeroMotor = 0;
     
   if(receivedRequest) 
-  {  
-    if(command == live) 
-    {
-      setupDynamixel();
-    }
-    
-    else if(command == shutdown_now) 
+  { 
+    if(command == shutdown_now) 
     {
       torqueDisable();
     }
@@ -149,67 +153,10 @@ void loop()
         expWb.syncWrite(0,&expData[0]);
       }
       
-      /*if (millis() > 10000 + initialTime)
-      {
-        nh.spinOnce();
-        feedbackMotor();
-        nh.spinOnce();
-        initialTime = millis();
-      } */
     } 
-    
-    if (command == position_dt_head)
-    {
-      for (int index = 0; index < opencmMotorCount; index++)
-      {
-        int id = opencmMotors[index];
-        if (id > 17)
-        {
-          headMotorOpenCm = true;
-          openCmData[index] = (int32_t)data[id];
-          openCmSpeed[index] = (int32_t)vel[id] + 1;
-        }
-        else
-        {
-          headMotorOpenCm = false; 
-        }
-      } 
-      
-      for (int index = 0; index < expMotorCount; index++)
-      {
-        int id = expMotors[index];
-        if (id > 17)
-        {
-          headMotorExp = true;
-          expData[index] = (int32_t)data[id];
-          expSpeed[index] = (int32_t)vel[id] + 1;
-        }
-        else
-        {
-          headMotorExp = false; 
-        }
-      }
-      
-      if(opencmMotorCount > 0 && headMotorOpenCm == true)
-      {
-        openCmWb.syncWrite(1,&openCmSpeed[0]);
-        openCmWb.syncWrite(0,&openCmData[0]);
-      }
-              
-      else if(expMotorCount > 0 && headMotorExp == true) 
-      {
-        expWb.syncWrite(1,&expSpeed[0]);
-        expWb.syncWrite(0,&expData[0]);
-      }
-      
-      if (millis() > 100 + initialTime)
-      {
-        feedbackMotorHead();
-        initialTime = millis();
-      } 
-    }
-    receivedRequest = false;
   }
+
+  feedbackMotor();
   nh.spinOnce();
 }
 
@@ -309,72 +256,53 @@ void scan()
   nh.loginfo (" _______________________________ ");
   sprintf (buffer,"|    MOTORES ENCONTRADOS: %d     |", MotorCount);
   nh.logwarn(buffer);
-
-  for (uint8_t i = 0; i < DOF; i++)
-  {
-    response_msg.model[i] = modelMotors[i];
-  }
-  pub.publish(&response_msg);
-}
-
-int checkZero(int32_t motorPosition, String board)
-{
-  if (motorPosition == 0)
-  {
-    countZeroMotor++;
-  }
-
-  if(countZeroMotor > 2)
-  {
-    nh.loginfo("Security activated");
-    for (int index = 0; index < 20; index++)
-    {
-      if (board == "OpenCm") openCmData[index] = (int32_t)2048;
-      else if (board == "Exp") expData[index] = (int32_t)2048;
-      countZeroMotor = 0;
-    }
-  }
 }
  
-void request(const movement_msgs::OpencmRequestMsg& rqt)
+void requestMovement(const movement_msgs::OpencmRequestMsg& rqt)
 {
   /*
    * Por algum motivo ainda desconhecido, quando tento executar alguma ação dentro do request a OpenCM trava, por isso estou copiando o 
    * conteúdo da mensagem para executar dentro do loop
    */
-  if(strcmp (rqt.commandRead,"position_dt") == 0)
-  {
-    command = position_dt;
-  }
-  else if(strcmp (rqt.commandRead,"position_dt_head") == 0)
-  {
-    command = position_dt_head;
-  }
-  else if(strcmp (rqt.commandRead,"live") == 0)
-  {
-    command = live;
-  }
-  else if(strcmp (rqt.commandRead,"shutdown_now") == 0)
-  {
-    command = shutdown_now;
-  }
-  else if(strcmp (rqt.commandRead,"reborn") == 0)
-  {
-    command = reborn;
-  }
-
-  else if(strcmp (rqt.commandRead,"motor_feed_back") == 0)
-  {
-    command = motor_feed_back;
-    receivedRequest = false;
-  }
 
   for(int i = 0; i < DOF; i++)
   {
-    data[i] = rqt.data[i];
-    vel[i] = rqt.velocity[i];
+    data[i] = rqt.motors_position[i];
+    vel[i] = rqt.motors_velocity[i];
   }
   receivedRequest = true;
+}
+
+void feedbackMotor()
+{
+  nh.loginfo("FeedBack");
+  for (int index = 0; index < DOF; index++)
+  {
+    bool resultOpencmData = openCmWb.itemRead(index, "Present_Position", &openCmDataFeedback[index]);
+    bool resultExpData = expWb.itemRead(index, "Present_Position", &expDataFeedback[index]);
+    bool resultOpencmSpeed = openCmWb.itemRead(index, "Present_Velocity", &openCmSpeedFeedback[index]);
+    bool resultExpSpeed = expWb.itemRead(index, "Present_Velocity", &expSpeedFeedback[index]);
+
+    if (resultOpencmData == 0 && resultExpData == 0)
+    {
+      response_msg.motors_position[index] = 0;
+      response_msg.motors_velocity[index] = 0;
+    }
+    
+    else if (resultOpencmData == 1 && resultExpData == 0)
+    {
+      response_msg.motors_position[index] = openCmDataFeedback[index];
+      response_msg.motors_velocity[index] = openCmSpeedFeedback[index];
+    }
+    
+    else if (resultOpencmData == 0 && resultExpData == 1)
+    { 
+      response_msg.motors_position[index] = expDataFeedback[index];
+      response_msg.motors_velocity[index] = expSpeedFeedback[index];
+    }
+  }
+  pub.publish(&response_msg);
+  nh.spinOnce();
 }
 
 void torqueDisable()
@@ -408,64 +336,21 @@ void torqueEnable()
   nh.logwarn("|        TORQUE  ATIVADO        |");
 }
 
-void feedbackMotor()
+int checkZero(int32_t motorPosition, String board)
 {
-  nh.loginfo("FeedBack");
-  for (int index = 0; index < DOF; index++)
+  if (motorPosition == 0)
   {
-    bool resultOpencmData = openCmWb.itemRead(index, "Present_Position", &openCmDataFeedback[index]);
-    bool resultExpData = expWb.itemRead(index, "Present_Position", &expDataFeedback[index]);
-    bool resultOpencmSpeed = openCmWb.itemRead(index, "Present_Velocity", &openCmSpeedFeedback[index]);
-    bool resultExpSpeed = expWb.itemRead(index, "Present_Velocity", &expSpeedFeedback[index]);
+    countZeroMotor++;
+  }
 
-    if (resultOpencmData == 0 && resultExpData == 0)
+  if(countZeroMotor > 2)
+  {
+    nh.loginfo("Security activated");
+    for (int index = 0; index < 20; index++)
     {
-      response_msg.data[index] = 0;
-      response_msg.velocity[index] = 0;
-    }
-    
-    else if (resultOpencmData == 1 && resultExpData == 0)
-    {
-      response_msg.data[index] = openCmDataFeedback[index];
-      response_msg.velocity[index] = openCmSpeedFeedback[index];
-    }
-    
-    else if (resultOpencmData == 0 && resultExpData == 1)
-    { 
-      response_msg.data[index] = expDataFeedback[index];
-      response_msg.velocity[index] = expSpeedFeedback[index];
+      if (board == "OpenCm") openCmData[index] = (int32_t)2048;
+      else if (board == "Exp") expData[index] = (int32_t)2048;
+      countZeroMotor = 0;
     }
   }
-  pub.publish(&response_msg);
-  nh.spinOnce();
-}
-
-void feedbackMotorHead()
-{
-  for (int index = 18; index < DOF; index++)
-  {
-    bool resultOpencm = openCmWb.itemRead(index, "Present_Position", &openCmDataFeedback[index]);
-    bool resultExp = expWb.itemRead(index, "Present_Position", &expDataFeedback[index]);
-
-    if (resultOpencm == 0 && resultExp == 0)
-    {
-      response_msg.data[index] = 0;
-    }
-    
-    else if (resultOpencm == 1 && resultExp == 0)
-    {
-      response_msg.data[index] = openCmDataFeedback[index];
-    }
-    
-    else if (resultOpencm == 0 && resultExp == 1)
-    { 
-      response_msg.data[index] = expDataFeedback[index];
-    }
-  }
-  pub.publish(&response_msg);
-}
-
-double mapDouble(double x, double in_min, double in_max, double out_min, double out_max) 
-{ 
-  return ((x - in_min) * (out_max - out_min)) / ((in_max - in_min) + out_min); 
 }
