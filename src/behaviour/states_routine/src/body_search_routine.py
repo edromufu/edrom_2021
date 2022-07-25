@@ -19,9 +19,15 @@ class BodySearchRoutine():
 
         self.flag = False
         self.current_ball_position = 'Left'
+        self.last_decision = None
 
         while not rospy.is_shutdown():
             self.createRequest()
+            
+            if self.last_decision != self.request:
+
+                self.last_decision = self.request
+                self.move_request(self.request)
     
     def flagUpdate(self, msg):
         if msg.currentState == 'body_search':
@@ -34,16 +40,13 @@ class BodySearchRoutine():
         
     def createRequest(self):
 
-        if 'Left' in self.current_ball_position:
-            request = COUNTER_CLOCKWISE
-        elif 'Right' in self.current_ball_position:
-            request = CLOCKWISE
-        else:
-            request = None
-
         if self.flag:
-            self.move_request(request)
-
+            if 'Left' in self.current_ball_position:
+                self.request = COUNTER_CLOCKWISE
+            elif 'Right' in self.current_ball_position:
+                self.request = CLOCKWISE
+        else:
+            self.request = None
 
 if __name__ == '__main__':
     rospy.init_node('Body_search_node', anonymous=False)

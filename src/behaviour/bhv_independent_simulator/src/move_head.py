@@ -3,6 +3,7 @@
 
 import rospy
 from controller import Supervisor
+from std_msgs.msg import String
 
 from modularized_bhv_msgs.srv import moveRequest, moveRequestResponse #Srv associado ao service utilizado para requisitar qualquer movimento dos motores
 
@@ -25,6 +26,11 @@ class HeadMover():
         Construtor:
         - Faz a chamada de funções para definir as variáveis field e ros dos motores da simulação.
         """
+        self.last_request = None
+        self.last_run = 0
+
+        self.log_pub = rospy.Publisher('log', String)
+        self.log_msg = String()
         self.general_supervisor = supervisor
 
         self.init_head()
@@ -36,6 +42,28 @@ class HeadMover():
         Chamar o metodo para atualizacao interna da posicao da cabeca.
         """
         self.motorUpdate()
+        if self.last_request in POSSIBLE_REQUESTS and (self.general_supervisor.getTime() - self.last_run) > 0.7:
+            self.moveHeadClock(self.last_request)
+    
+    def moveHeadClock(self, movement):
+        if movement == RIGHT or movement == DOWN:
+            increment = 1
+        elif movement == LEFT or movement == UP:
+            increment = -1
+
+        if movement == RIGHT or movement == LEFT:
+            increment *= hor_increment
+            rotation = self.sim_hor_head_motor.getSFRotation()[:3]+[round(self.hor_head_pos+increment,2)]
+            self.sim_hor_head_motor.setSFRotation(rotation)
+        elif movement == UP or movement == DOWN:
+            increment *= ver_increment
+            rotation = self.sim_ver_head_motor.getSFRotation()[:3]+[round(self.ver_head_pos+increment,2)]
+            self.sim_ver_head_motor.setSFRotation(rotation)
+        elif movement == CENTER:
+            hor_rotation = self.sim_hor_head_motor.getSFRotation()[:3]+[0]
+            ver_rotation = self.sim_ver_head_motor.getSFRotation()[:3]+[0.45]
+            self.sim_hor_head_motor.setSFRotation(hor_rotation)
+            self.sim_ver_head_motor.setSFRotation(ver_rotation)
     
     #Função chamada no loop para atualizar internamente a posição atual dos motores da cabeça
     def motorUpdate(self):
@@ -46,7 +74,7 @@ class HeadMover():
         """
         self.hor_head_pos = self.sim_hor_head_motor.getSFRotation()[3]
         self.ver_head_pos = self.sim_ver_head_motor.getSFRotation()[3]
-    
+        
     #Função chamada pelo construtor para habilitação da movimentação da cabeça
     def init_head(self):
         """
@@ -80,37 +108,13 @@ class HeadMover():
             - Enviar a nova rotação ao simulador;
             - Retornar a informação de sucesso após movimentar.
         """
-        if request.moveRequest in POSSIBLE_REQUESTS:
-            calm_down = True
-            initial_time = self.general_supervisor.getTime()
-        else:
-            calm_down = False
 
-        direction = request.moveRequest
+        self.last_request = request.moveRequest
+        self.last_run = self.general_supervisor.getTime()
 
-        if direction == RIGHT or direction == DOWN:
-            increment = 1
-        elif direction == LEFT or direction == UP:
-            increment = -1
+        self.log_msg.data = f'Atualizei na moveSimHead para {self.last_request}'
+        self.log_pub.publish(self.log_msg)
 
-        if direction == RIGHT or direction == LEFT:
-            increment *= hor_increment
-            rotation = self.sim_hor_head_motor.getSFRotation()[:3]+[round(self.hor_head_pos+increment,2)]
-            self.sim_hor_head_motor.setSFRotation(rotation)
-        elif direction == UP or direction == DOWN:
-            increment *= ver_increment
-            rotation = self.sim_ver_head_motor.getSFRotation()[:3]+[round(self.ver_head_pos+increment,2)]
-            self.sim_ver_head_motor.setSFRotation(rotation)
-        elif direction == CENTER:
-            hor_rotation = self.sim_hor_head_motor.getSFRotation()[:3]+[0]
-            ver_rotation = self.sim_ver_head_motor.getSFRotation()[:3]+[0.45]
-            self.sim_hor_head_motor.setSFRotation(hor_rotation)
-            self.sim_ver_head_motor.setSFRotation(ver_rotation)
-
-        if calm_down:
-            while self.general_supervisor.getTime()-initial_time < 0.1:
-                pass
-        
         self.response.success = True
         return self.response
 

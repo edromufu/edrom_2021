@@ -24,12 +24,23 @@ class BodyAlignmentRoutine():
         rospy.Subscriber('/transitions_and_states/state_machine', currentStateMsg, self.flagUpdate)
         rospy.Subscriber('/sensor_observer/state_machine_vars', stateMachineMsg, self.varsUpdate)
 
+        self.last_decision1 = None
+        self.last_decision2 = None
+
         self.flag = False
         self.current_hor_motor_position = 0
 
         while not rospy.is_shutdown():
             self.createRequest()
-    
+
+            if self.last_decision1 != self.request1 or self.last_decision2 != self.request2:
+
+                self.last_decision1 = self.request1
+                self.move_request(self.request1)
+
+                self.last_decision2 = self.request2
+                self.threeD_request(self.request2)
+
     def flagUpdate(self, msg):
         if msg.currentState == 'body_alignment':
             self.flag = True
@@ -40,28 +51,16 @@ class BodyAlignmentRoutine():
         self.current_hor_motor_position = msg.horMotorPosition
         
     def createRequest(self):
-
-        if self.current_hor_motor_position < 0:
-            number_of_rotation_requests = int(abs(self.current_hor_motor_position/ROTATION_STEP))
-            request1 = CENTER
-            request2 = COUNTER_CLOCKWISE
-        elif self.current_hor_motor_position > 0:
-            number_of_rotation_requests = int(abs(self.current_hor_motor_position/ROTATION_STEP))
-            request1 = CENTER
-            request2 = CLOCKWISE
-        else:
-            number_of_rotation_requests = 0
-            request1 = None
-            request2 = None
-
         if self.flag:
-            self.move_request(request1)
-
-            count = 0
-            while(count < number_of_rotation_requests):
-                self.threeD_request(request2)
-                count += 1
-
+            if self.current_hor_motor_position < 0:
+                self.request1 = CENTER
+                self.request2 = COUNTER_CLOCKWISE
+            elif self.current_hor_motor_position > 0:
+                self.request1 = CENTER
+                self.request2 = CLOCKWISE
+        else:
+            self.request1 = None
+            self.request2 = None
 
 if __name__ == '__main__':
     rospy.init_node('Body_alignment_node', anonymous=False)

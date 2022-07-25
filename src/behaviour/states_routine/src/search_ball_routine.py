@@ -22,9 +22,15 @@ class SearchBallRoutine():
 
         self.flag = False
         self.current_ball_position = 'Left'
+        self.last_decision = None
 
         while not rospy.is_shutdown():
             self.createRequest()
+
+            if self.last_decision != self.request:
+
+                self.last_decision = self.request
+                self.move_request(self.request)
     
     def flagUpdate(self, msg):
         if msg.currentState == 'search_ball':
@@ -37,19 +43,17 @@ class SearchBallRoutine():
         
     def createRequest(self):
 
-        if 'Left' in self.current_ball_position:
-            request = LEFT
-        elif 'Right' in self.current_ball_position:
-            request = RIGHT
-        elif 'Bottom' in self.current_ball_position:
-            request = DOWN
-        elif 'Top' in self.current_ball_position:
-            request = UP
-        else:
-            request = None
-
         if self.flag:
-            self.move_request(request)
+            if 'Left' in self.current_ball_position:
+                self.request = LEFT
+            elif 'Right' in self.current_ball_position:
+                self.request = RIGHT
+            elif 'Bottom' in self.current_ball_position:
+                self.request = DOWN
+            elif 'Top' in self.current_ball_position:
+                self.request = UP
+        else:
+            self.request = None
 
 
 if __name__ == '__main__':

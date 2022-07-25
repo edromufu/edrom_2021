@@ -16,9 +16,14 @@ class WalkingRoutine():
         rospy.Subscriber('/transitions_and_states/state_machine', currentStateMsg, self.flagUpdate)
 
         self.flag = False
+        self.last_decision = None
 
         while not rospy.is_shutdown():
             self.createRequest()
+
+            if self.last_decision != self.request:
+                self.last_decision = self.request
+                self.move_request(self.request)
     
     def flagUpdate(self, msg):
         if msg.currentState == 'walking':
@@ -27,9 +32,11 @@ class WalkingRoutine():
             self.flag = False
         
     def createRequest(self):
-
+        
         if self.flag:
-            self.move_request(FORWARD)
+            self.request = FORWARD
+        else:
+            self.request = None
 
 
 if __name__ == '__main__':

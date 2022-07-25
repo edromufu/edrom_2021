@@ -5,6 +5,8 @@ import rospy
 import math as m
 from controller import Supervisor
 
+from std_msgs.msg import String
+
 from modularized_bhv_msgs.srv import moveRequest, moveRequestResponse #Srv associado ao service utilizado para requisitar qualquer movimento dos motores
 
 #Setando a grafia correta das requisições para movimento de caminhada
@@ -26,7 +28,12 @@ class Robot3DMover():
         """
         self.general_supervisor = supervisor
 
+        self.last_run = 0
+        self.last_request = None
         self.init_3D()
+
+        self.log_pub = rospy.Publisher('log', String)
+        self.log_msg = String()
     
     #Função de chamada recorrente no bhv_sim
     def callClock(self):
@@ -35,7 +42,28 @@ class Robot3DMover():
         Chamar o metodo para atualizacao interna da rotacao.
         """
         self.rotationUpdate()
+        if self.last_request in POSSIBLE_REQUESTS and (self.general_supervisor.getTime() - self.last_run) > 1:
+            self.robot3DClock(self.last_request)
+    
+    def robot3DClock(self, movement):
 
+        if movement == CLOCKWISE:
+            increment = -ROTATION_STEP
+        elif movement == COUNTER_CLOCKWISE:
+            increment = ROTATION_STEP
+        
+        if movement == CLOCKWISE or movement == COUNTER_CLOCKWISE:
+            new_rotation = self.sim_3D_rotation_field.getSFRotation()[:3]+[self.robot_rotation+increment]
+            self.sim_3D_rotation_field.setSFRotation(new_rotation)
+        elif movement == FORWARD:
+            x_increment = -WALK_STEP*m.sin(self.robot_rotation)
+            z_increment = -WALK_STEP*m.cos(self.robot_rotation)
+
+            new_translation = [self.sim_3D_translation_field.getSFVec3f()[0]+x_increment,self.sim_3D_translation_field.getSFVec3f()[1],self.sim_3D_translation_field.getSFVec3f()[2]+z_increment]
+            self.sim_3D_translation_field.setSFVec3f(new_translation)
+        
+        self.last_run = self.general_supervisor.getTime()
+    
     #Função chamada no loop para atualizar internamente a rotação atual da robo
     def rotationUpdate(self):
         """
@@ -72,31 +100,11 @@ class Robot3DMover():
         -> Funcao:
         Alterar os campos de rotação e translação do node principal para simular a caminhada, atraves de:
         """
-        if request.moveRequest in POSSIBLE_REQUESTS:
-            calm_down = True
-            initial_time = self.general_supervisor.getTime()
-        else:
-            calm_down = False
-
-        if request.moveRequest == CLOCKWISE:
-            increment = -ROTATION_STEP
-        elif request.moveRequest == COUNTER_CLOCKWISE:
-            increment = ROTATION_STEP
         
-        if request.moveRequest == CLOCKWISE or request.moveRequest == COUNTER_CLOCKWISE:
-            new_rotation = self.sim_3D_rotation_field.getSFRotation()[:3]+[self.robot_rotation+increment]
-            self.sim_3D_rotation_field.setSFRotation(new_rotation)
-        '''
-        elif request.moveRequest == FORWARD:
-            x_increment = -WALK_STEP*m.sin(self.robot_rotation)
-            z_increment = -WALK_STEP*m.cos(self.robot_rotation)
-
-            new_translation = [self.sim_3D_translation_field.getSFVec3f()[0]+x_increment,self.sim_3D_translation_field.getSFVec3f()[1],self.sim_3D_translation_field.getSFVec3f()[2]+z_increment]
-            self.sim_3D_translation_field.setSFVec3f(new_translation)
-        '''
-        if calm_down:
-            while self.general_supervisor.getTime()-initial_time < 0.25:
-                pass
+        self.last_request = request.moveRequest
         
+        self.log_msg.data = f'Atualizei na moveSimRobot para {self.last_request}'
+        self.log_pub.publish(self.log_msg)
+
         self.response.success = True
         return self.response
