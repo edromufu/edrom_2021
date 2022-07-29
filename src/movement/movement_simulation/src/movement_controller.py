@@ -4,7 +4,6 @@
 import rospy
 from controller import Robot
 from movement_msgs.msg import WebotsRequestMsg
-from std_msgs.msg import Bool
 
 class Controller(object):
     ###########################FUNÇÕES DO CÓDIGO###########################
@@ -20,7 +19,6 @@ class Controller(object):
         self.motorSensorsObjectArray = []
         self.dataArray = [0]*20
         self.velocityArray = [0]*20
-        self.pastDataArray = [0]*20
 
         #Vetores de identificação e referência dos motores
         self.motorNames = [ 'RARM_0 [shoulder]', 'LARM_0 [shoulder]', 
@@ -47,11 +45,8 @@ class Controller(object):
 
         #Inicilização dos outros controladores
         rospy.Subscriber('webots/request_move', WebotsRequestMsg, self.requestMove)
-        self.sensor_motor_pub = rospy.Publisher('/webots/feedback', WebotsRequestMsg, queue_size=1)
+        self.sensor_motor_pub = rospy.Publisher('/webots/feedback', WebotsRequestMsg, queue_size=10)
         self.sensor_motor_pub_msg = WebotsRequestMsg()
-
-        self.flag_2_new_movement_pub = rospy.Publisher('movement_comm/flag', Bool, queue_size=1)
-        self.flag_2_new_movement_msg = Bool()
 
         self.getMotors()
         self.last_req_time = self.natasha.getTime()
@@ -60,7 +55,6 @@ class Controller(object):
     def start(self):
 
         while self.natasha.step(self.timeStep) != -1 and not rospy.is_shutdown():
-            self.send2Simulator()
             self.feedbackWebots()
 
     #Função que percorre a lista de nomes dos motores criando uma lista de objetos de motores do Webots
@@ -74,27 +68,23 @@ class Controller(object):
 
     #Função de callback do Webots/request_move, pega o vetor de posições enviado e coloca em uma variável manipulável no código todo
     def requestMove(self, msg):
-        self.flag_2_new_movement_msg.data = False
-        self.flag_2_new_movement_pub.publish(self.flag_2_new_movement_msg)
 
-        self.pastDataArray = self.dataArray
         for index in range(20):
             self.dataArray[index] = msg.motors_position[index]
             self.velocityArray[index] = msg.motors_velocity[index]
         
-        self.last_req_time = self.natasha.getTime()
-
-    def send2Simulator(self):
         for index in range(20):
             self.motorObjectArray[index].setVelocity(self.velocityArray[index])
             self.motorObjectArray[index].setPosition(self.dataArray[index])
-    
+
+        self.last_req_time = self.natasha.getTime()
+
+        while self.natasha.getTime() - self.last_req_time < 0.064:
+            pass
+
     def feedbackWebots(self):
         for index, motorSensor in enumerate(self.motorSensorsObjectArray):
             self.sensor_motor_pub_msg.motors_position[index] = motorSensor.getValue()
-            if self.sensor_motor_pub_msg.motors_position == self.dataArray:
-                self.flag_2_new_movement_msg.data = True
-                self.flag_2_new_movement_pub.publish(self.flag_2_new_movement_msg)
         
         self.sensor_motor_pub.publish(self.sensor_motor_pub_msg)
 

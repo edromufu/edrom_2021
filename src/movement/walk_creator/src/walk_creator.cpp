@@ -15,6 +15,7 @@ bool WalkCreator::walkRequest(movement_msgs::WalkCreatorRequestSrv::Request  &re
 
 bool WalkCreator::runWalk(const Rhoban::IKWalkParameters& params, double timeLength, double& phase, double& time)
 {
+    ros::Rate loop_rate(15.625);
     for (double t=0.0;t<=timeLength;t+=1.0/engineFrequency) {
         time += 1.0/engineFrequency;
         bool success = Rhoban::IKWalk::walk(params, 1.0/engineFrequency, phase, outputs);
@@ -26,32 +27,23 @@ bool WalkCreator::runWalk(const Rhoban::IKWalkParameters& params, double timeLen
         } else {
             positions.positions = { outputs.right_hip_yaw, outputs.left_hip_yaw,
                                     outputs.right_hip_roll, outputs.left_hip_roll, 
-                                    outputs.right_hip_pitch, outputs.left_hip_pitch,                                    
-                                    outputs.right_knee, outputs.left_knee, 
-                                    outputs.right_ankle_pitch, outputs.left_ankle_pitch, 
-                                    outputs.right_ankle_roll, outputs.left_ankle_roll
+                                    -outputs.right_hip_pitch, -outputs.left_hip_pitch,                                    
+                                    -outputs.right_knee, outputs.left_knee, 
+                                    outputs.right_ankle_roll, outputs.left_ankle_roll,
+                                    -outputs.right_ankle_pitch, outputs.left_ankle_pitch                                    
                                   };
 
-            while (!flag2Publish){
-
-            }
             walk_motor_positions_pub.publish(positions);
+            loop_rate.sleep();
         }
     }
 
     return true;
 }
 
-void WalkCreator::flagChange(const std_msgs::Bool &status)
-{
-    flag2Publish = status.data;
-}
-
 WalkCreator::WalkCreator(ros::NodeHandle nh){
     walk_motor_positions_pub = nh.advertise<movement_msgs::WalkingPositionsMsg>("/walk_creator/positions", 1000);
-    ros::Rate loop_rate(10);
 
-    flag_to_publish_positions_sub = nh.subscribe("/movement_comm/flag", &WalkCreator::flagChange, this);
     request_walk_creation = nh.advertiseService("/walk_creator/request", &WalkCreator::walkRequest, this);
 
     params.distHipToKnee = 0.093;
