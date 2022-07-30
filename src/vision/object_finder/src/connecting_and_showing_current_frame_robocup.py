@@ -29,10 +29,10 @@ class Node():
         self.publisher = rospy.Publisher('/webots_natasha/vision_inference', Webotsmsg, queue_size=100)
 
         #SE FOR NO REAL 
-        #self.get_webcam()
+        self.get_webcam()
 
         #SE FOR NO WEBOTS
-        self.connect_to_webots()
+        #self.connect_to_webots()
 
     def connect_to_webots(self):
         '''Gets the Vision topic sent from Behavior, and subscribe it.'''
@@ -71,7 +71,7 @@ class Node():
         self.opencv_bridge = CvBridge()
         while True:
             try:
-                self.current_frame = cv2.VideoCapture("/dev/video2")
+                self.current_frame = cv2.VideoCapture("/dev/video0")
                 _, self.current_frame = self.current_frame.read()
                 self.current_frame = cv2.resize(self.current_frame, (416,416))
                 #self.current_frame = cv2.blur(self.current_frame, (10,10))
