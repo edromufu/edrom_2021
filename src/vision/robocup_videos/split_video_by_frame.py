@@ -14,8 +14,8 @@ import numpy as np
 import os
 
 # Playing video from file:
-nome_do_video = "film"
-cap = cv2.VideoCapture(nome_do_video + '.avi')
+nome_do_video = "video_larc_2022_parte2"
+cap = cv2.VideoCapture(nome_do_video + '.mp4')
 
 try:
     if not os.path.exists(nome_do_video):
@@ -23,15 +23,19 @@ try:
 except OSError:
     print ('Error: Creating directory of data')
 
-currentFrame = 3258
+nome_frame=1
+currentFrame = 1
+
 while(True):
     # Capture frame-by-frame
     ret, frame = cap.read()
 
-    # Saves image of the current frame in jpg file
-    name = './' + nome_do_video + '/ball_0' + str(currentFrame) + '.jpg'
+    
 
-    if currentFrame % 10 == 0:
+    if currentFrame % 3 == 0:
+        # Saves image of the current frame in jpg file
+        name = './' + nome_do_video + '/ball_0' + str(nome_frame) + '.jpg'
+        nome_frame +=1
         print ('Creating...' + name)
         cv2.imwrite(name, frame)
 
