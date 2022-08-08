@@ -5,8 +5,7 @@ import rospy
 import math as m
 from controller import Supervisor
 
-from std_msgs.msg import String
-
+from modularized_bhv_msgs.msg import currentStateMsg
 from modularized_bhv_msgs.srv import moveRequest, moveRequestResponse #Srv associado ao service utilizado para requisitar qualquer movimento dos motores
 
 #Setando a grafia correta das requisições para movimento de caminhada
@@ -26,14 +25,17 @@ class Robot3DMover():
         Construtor:
         - Faz a chamada de funções para definir as variáveis field e ros dos motores da simulação.
         """
+
+        rospy.Subscriber('/transitions_and_states/state_machine', currentStateMsg, self.flagUpdate)
+
         self.general_supervisor = supervisor
 
         self.last_run = 0
-        self.last_request = None
-        self.init_3D()
+        self.currentState = None
+        
+        self.req_dict = {'body_alignment':None,'body_search':None,'walking':None}
 
-        self.log_pub = rospy.Publisher('log', String)
-        self.log_msg = String()
+        self.init_3D()
     
     #Função de chamada recorrente no bhv_sim
     def callClock(self):
@@ -41,10 +43,14 @@ class Robot3DMover():
         -> Funcao:
         Chamar o metodo para atualizacao interna da rotacao.
         """
+
         self.rotationUpdate()
-        if self.last_request in POSSIBLE_REQUESTS and (self.general_supervisor.getTime() - self.last_run) > 1:
-            self.robot3DClock(self.last_request)
+        if (self.general_supervisor.getTime() - self.last_run) > 1:
+            self.robot3DClock(self.req_dict[self.currentState] if self.currentState in self.req_dict.keys() else None)
     
+    def flagUpdate(self,message):
+        self.currentState = message.currentState
+
     def robot3DClock(self, movement):
 
         if movement == CLOCKWISE:
@@ -100,11 +106,7 @@ class Robot3DMover():
         -> Funcao:
         Alterar os campos de rotação e translação do node principal para simular a caminhada, atraves de:
         """
-        
-        self.last_request = request.moveRequest
-        
-        self.log_msg.data = f'Atualizei na moveSimRobot para {self.last_request}'
-        self.log_pub.publish(self.log_msg)
+        self.req_dict[request._connection_header['origin'] ]= request.moveRequest        
 
         self.response.success = True
         return self.response

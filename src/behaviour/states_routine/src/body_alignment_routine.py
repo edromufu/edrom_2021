@@ -15,12 +15,14 @@ COUNTER_CLOCKWISE = 'rotate_counter_clockwise'
 #Setando o step para cada tipo de movimento
 ROTATION_STEP = 0.1309
 
+HEADER = { 'origin' : 'body_alignment' }
+
 class BodyAlignmentRoutine():
 
     def __init__(self):
         
-        self.move_request = rospy.ServiceProxy('/bhv2mov_communicator/head_requisitions', moveRequest)
-        self.threeD_request = rospy.ServiceProxy('/bhv2mov_communicator/3D_move_requisitions', moveRequest)
+        self.move_request = rospy.ServiceProxy('/bhv2mov_communicator/head_requisitions', moveRequest, headers=HEADER)
+        self.threeD_request = rospy.ServiceProxy('/bhv2mov_communicator/3D_move_requisitions', moveRequest,headers=HEADER)
         rospy.Subscriber('/transitions_and_states/state_machine', currentStateMsg, self.flagUpdate)
         rospy.Subscriber('/sensor_observer/state_machine_vars', stateMachineMsg, self.varsUpdate)
 
@@ -33,11 +35,12 @@ class BodyAlignmentRoutine():
         while not rospy.is_shutdown():
             self.createRequest()
 
-            if self.last_decision1 != self.request1 or self.last_decision2 != self.request2:
+            if self.last_decision1 != self.request1: 
 
                 self.last_decision1 = self.request1
                 self.move_request(self.request1)
-
+            if self.last_decision2 != self.request2:
+                
                 self.last_decision2 = self.request2
                 self.threeD_request(self.request2)
 

@@ -11,12 +11,13 @@ LEFT = 'head_to_left'
 UP = 'head_to_up'
 DOWN = 'head_to_down'
 
+HEADER = { 'origin' : 'search_ball' }
 
 class SearchBallRoutine():
 
     def __init__(self):
         
-        self.move_request = rospy.ServiceProxy('/bhv2mov_communicator/head_requisitions', moveRequest)
+        self.move_request = rospy.ServiceProxy('/bhv2mov_communicator/head_requisitions', moveRequest,headers=HEADER)
         rospy.Subscriber('/transitions_and_states/state_machine', currentStateMsg, self.flagUpdate)
         rospy.Subscriber('/sensor_observer/state_machine_vars', stateMachineMsg, self.varsUpdate)
 

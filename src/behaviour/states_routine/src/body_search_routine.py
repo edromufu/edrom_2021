@@ -9,11 +9,13 @@ from modularized_bhv_msgs.srv import moveRequest
 CLOCKWISE = 'rotate_clockwise'
 COUNTER_CLOCKWISE = 'rotate_counter_clockwise'
 
+HEADER = { 'origin' : 'body_search' }
+
 class BodySearchRoutine():
 
     def __init__(self):
         
-        self.move_request = rospy.ServiceProxy('/bhv2mov_communicator/3D_move_requisitions', moveRequest)
+        self.move_request = rospy.ServiceProxy('/bhv2mov_communicator/3D_move_requisitions', moveRequest,headers=HEADER)
         rospy.Subscriber('/transitions_and_states/state_machine', currentStateMsg, self.flagUpdate)
         rospy.Subscriber('/sensor_observer/state_machine_vars', stateMachineMsg, self.varsUpdate)
 

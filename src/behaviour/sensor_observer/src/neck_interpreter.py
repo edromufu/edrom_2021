@@ -2,7 +2,6 @@
 #coding=utf-8
 
 import rospy
-from modularized_bhv_msgs.srv import headReqSrv #Srv associado ao service utilizado para requisitar movimento dos motores da cabeça ao movimento
 from modularized_bhv_msgs.msg import simMovMsg as motorMsg  #Mensagem associada ao tópico utilizado para receber info dos motores
 
 #Limites relacionados aos motores da cabeça em radianos

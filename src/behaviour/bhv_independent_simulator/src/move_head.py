@@ -3,8 +3,8 @@
 
 import rospy
 from controller import Supervisor
-from std_msgs.msg import String
 
+from modularized_bhv_msgs.msg import currentStateMsg
 from modularized_bhv_msgs.srv import moveRequest, moveRequestResponse #Srv associado ao service utilizado para requisitar qualquer movimento dos motores
 
 #Limites relacionados aos motores da cabeça em radianos
@@ -26,11 +26,13 @@ class HeadMover():
         Construtor:
         - Faz a chamada de funções para definir as variáveis field e ros dos motores da simulação.
         """
-        self.last_request = None
-        self.last_run = 0
+        rospy.Subscriber('/transitions_and_states/state_machine', currentStateMsg, self.flagUpdate)
 
-        self.log_pub = rospy.Publisher('log', String)
-        self.log_msg = String()
+        self.last_run = 0
+        self.currentState=None
+
+        self.req_dict = {'body_alignment':None,'search_ball':None}
+
         self.general_supervisor = supervisor
 
         self.init_head()
@@ -42,9 +44,12 @@ class HeadMover():
         Chamar o metodo para atualizacao interna da posicao da cabeca.
         """
         self.motorUpdate()
-        if self.last_request in POSSIBLE_REQUESTS and (self.general_supervisor.getTime() - self.last_run) > 0.7:
-            self.moveHeadClock(self.last_request)
-    
+        if (self.general_supervisor.getTime() - self.last_run) > 0.7:
+            self.moveHeadClock(self.req_dict[self.currentState] if self.currentState in self.req_dict.keys() else None)
+
+    def flagUpdate(self,message):
+        self.currentState = message.currentState
+
     def moveHeadClock(self, movement):
         if movement == RIGHT or movement == DOWN:
             increment = 1
@@ -64,7 +69,9 @@ class HeadMover():
             ver_rotation = self.sim_ver_head_motor.getSFRotation()[:3]+[0.45]
             self.sim_hor_head_motor.setSFRotation(hor_rotation)
             self.sim_ver_head_motor.setSFRotation(ver_rotation)
-    
+
+        self.last_run = self.general_supervisor.getTime()
+
     #Função chamada no loop para atualizar internamente a posição atual dos motores da cabeça
     def motorUpdate(self):
         """
@@ -108,12 +115,7 @@ class HeadMover():
             - Enviar a nova rotação ao simulador;
             - Retornar a informação de sucesso após movimentar.
         """
-
-        self.last_request = request.moveRequest
-        self.last_run = self.general_supervisor.getTime()
-
-        self.log_msg.data = f'Atualizei na moveSimHead para {self.last_request}'
-        self.log_pub.publish(self.log_msg)
+        self.req_dict[request._connection_header['origin'] ]= request.moveRequest
 
         self.response.success = True
         return self.response
