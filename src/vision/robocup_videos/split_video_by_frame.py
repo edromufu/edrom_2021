@@ -9,6 +9,7 @@ Open the main.py and edit the path to the video. Then run:
 $ python main.py
 Which will produce a folder called data with the images. There will be 2000+ images for example.mp4.
 '''
+
 import cv2
 import numpy as np
 import os
