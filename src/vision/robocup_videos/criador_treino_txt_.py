@@ -1,6 +1,6 @@
 import os
 
-os.chdir("obj")
+os.chdir("video_larc_2022_parte2")
 lista_de_arquivo = os.listdir(os.getcwd())
 lista_de_imagens = []
 
