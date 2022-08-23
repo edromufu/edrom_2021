@@ -7,6 +7,8 @@ import fall_interpreter, ball_interpreter, neck_interpreter
 #Importacao para os topicos ROS
 from modularized_bhv_msgs.msg import stateMachineMsg #Mensagem associada ao topico utilizado para receber info dos estados da robo
 
+N_SUBSCRIBERS = 4
+
 class RosPacker():
 
     def __init__(self):
@@ -37,6 +39,9 @@ class RosPacker():
         self.smVarsLastValue = [self.pFallState,self.pBallFound,self.pBallClose,
                                 self.pBallPosition,self.pHeadKickCheck,self.pPossibleHeadMovs, self.pHorMotorOutOfCenter] #?
 
+        while self.pub2StateMachine.get_num_connections() != N_SUBSCRIBERS:
+            print('Aguardando a inicilizacao dos códigos')
+            
         self.publish2StateMachine()
     
     #Loopa capturando as novas interpretações para o código

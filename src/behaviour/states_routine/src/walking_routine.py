@@ -20,6 +20,7 @@ class WalkingRoutine():
         self.flag = False
         self.last_decision = None
 
+        rospy.wait_for_service('/bhv2mov_communicator/3D_move_requisitions')
         while not rospy.is_shutdown():
             self.createRequest()
 

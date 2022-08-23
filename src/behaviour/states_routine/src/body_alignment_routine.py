@@ -15,7 +15,7 @@ COUNTER_CLOCKWISE = 'rotate_counter_clockwise'
 #Setando o step para cada tipo de movimento
 ROTATION_STEP = 0.1309
 
-HEADER = { 'origin' : 'body_alignment' }
+HEADER = { 'origin' : 'body_alignment', 'n_rotations':0}
 
 class BodyAlignmentRoutine():
 
@@ -31,6 +31,9 @@ class BodyAlignmentRoutine():
 
         self.flag = False
         self.current_hor_motor_position = 0
+
+        rospy.wait_for_service('/bhv2mov_communicator/head_requisitions')
+        rospy.wait_for_service('/bhv2mov_communicator/3D_move_requisitions')
 
         while not rospy.is_shutdown():
             self.createRequest()
@@ -55,6 +58,7 @@ class BodyAlignmentRoutine():
         
     def createRequest(self):
         if self.flag:
+            HEADER['n_rotations'] = str(int(abs(self.current_hor_motor_position/ROTATION_STEP))) 
             if self.current_hor_motor_position < 0:
                 self.request1 = CENTER
                 self.request2 = COUNTER_CLOCKWISE

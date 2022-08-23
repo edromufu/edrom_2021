@@ -24,7 +24,7 @@ class SearchBallRoutine():
         self.flag = False
         self.current_ball_position = 'Left'
         self.last_decision = None
-
+        rospy.wait_for_service('/bhv2mov_communicator/head_requisitions')
         while not rospy.is_shutdown():
             self.createRequest()
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 #coding=utf-8
 
+from re import search
 import rospy
 from controller import Supervisor
 
@@ -17,7 +18,10 @@ LEFT = 'head_to_left'
 UP = 'head_to_up'
 DOWN = 'head_to_down'
 CENTER = 'head_to_center'
-POSSIBLE_REQUESTS = [RIGHT, LEFT, UP, DOWN, CENTER]
+SEARCH = 'head_search'
+POSSIBLE_REQUESTS = [RIGHT, LEFT, UP, DOWN, CENTER, SEARCH]
+SEARCH_MOVEMENT = [CENTER, UP, CENTER, DOWN, DOWN]
+
 
 class HeadMover():
 
@@ -27,16 +31,21 @@ class HeadMover():
         - Faz a chamada de funções para definir as variáveis field e ros dos motores da simulação.
         """
         rospy.Subscriber('/transitions_and_states/state_machine', currentStateMsg, self.flagUpdate)
-
+        self.search_index = 0
         self.last_run = 0
         self.currentState=None
 
-        self.req_dict = {'body_alignment':None,'search_ball':None}
+        self.req_dict = {'body_alignment':None,'search_ball':None, 'body_search':None}
 
         self.general_supervisor = supervisor
 
         self.init_head()
-    
+
+    def searchRoutine(self):
+        current_move = SEARCH_MOVEMENT[self.search_index%len(SEARCH_MOVEMENT)]
+        self.search_index += 1
+        return current_move
+
     #Função de chamada recorrente no bhv_sim
     def callClock(self):
         """
@@ -44,27 +53,43 @@ class HeadMover():
         Chamar o metodo para atualizacao interna da posicao da cabeca.
         """
         self.motorUpdate()
-        if (self.general_supervisor.getTime() - self.last_run) > 0.7:
+        if (self.general_supervisor.getTime() - self.last_run) > 0.25:
             self.moveHeadClock(self.req_dict[self.currentState] if self.currentState in self.req_dict.keys() else None)
 
+    #Atualização da flag
     def flagUpdate(self,message):
         self.currentState = message.currentState
 
+    #Movimentação da cabeça no webots 
     def moveHeadClock(self, movement):
+        """
+        -> Funcao:
+        Alterar o campo de rotação dos nodes da cabeça para simular o movimento do pescoço, atraves de:
+            - Verificar a requisição de direção do movimento para determinar o sentido de rotação;
+            - Verificar a requisição de direção do movimento para determinar o motor a ser utilizado;
+            - Construir o novo vetor de rotação, atraves de campos já existentes e um incremento no último index;
+            - Enviar a nova rotação ao simulador;
+            - Retornar a informação de sucesso após movimentar.
+        """
+        if movement == SEARCH: 
+            movement = self.searchRoutine()
+        else:
+            self.search_index = 0
+
         if movement == RIGHT or movement == DOWN:
             increment = 1
         elif movement == LEFT or movement == UP:
             increment = -1
 
-        if movement == RIGHT or movement == LEFT:
+        if movement == RIGHT or movement == LEFT: #Movimentação da cabeça horizontalmente 
             increment *= hor_increment
             rotation = self.sim_hor_head_motor.getSFRotation()[:3]+[round(self.hor_head_pos+increment,2)]
             self.sim_hor_head_motor.setSFRotation(rotation)
-        elif movement == UP or movement == DOWN:
+        elif movement == UP or movement == DOWN: #Movimentação da cabeça verticalmente
             increment *= ver_increment
             rotation = self.sim_ver_head_motor.getSFRotation()[:3]+[round(self.ver_head_pos+increment,2)]
             self.sim_ver_head_motor.setSFRotation(rotation)
-        elif movement == CENTER:
+        elif movement == CENTER: #Posição da cabeça retorna ao centro 
             hor_rotation = self.sim_hor_head_motor.getSFRotation()[:3]+[0]
             ver_rotation = self.sim_ver_head_motor.getSFRotation()[:3]+[0.45]
             self.sim_hor_head_motor.setSFRotation(hor_rotation)
@@ -104,19 +129,14 @@ class HeadMover():
         rospy.Service('/bhv2mov_communicator/head_requisitions', moveRequest, self.moveSimHead)
         self.response = moveRequestResponse()
         
-    #Função responsável pela movimentação da cabeça de acordo com as requisições
+    #Função responsável pela captura dos request
     def moveSimHead(self, request):
         """
         -> Funcao:
-        Alterar o campo de rotação dos nodes da cabeça para simular o movimento do pescoço, atraves de:
-            - Verificar a requisição de direção do movimento para determinar o sentido de rotação;
-            - Verificar a requisição de direção do movimento para determinar o motor a ser utilizado;
-            - Construir o novo vetor de rotação, atraves de campos já existentes e um incremento no último index;
-            - Enviar a nova rotação ao simulador;
-            - Retornar a informação de sucesso após movimentar.
+        Salvar as ultimas requisições de cada codigo como variavel deste codigo, através de:
+            - Alterar no dicionário o valor da requisição da chave que fez a requisição;
         """
         self.req_dict[request._connection_header['origin'] ]= request.moveRequest
 
         self.response.success = True
         return self.response
-
