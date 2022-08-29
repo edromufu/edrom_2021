@@ -4,13 +4,13 @@
 bool WalkCreator::walkRequest(movement_msgs::WalkCreatorRequestSrv::Request  &req_params, movement_msgs::WalkCreatorRequestSrv::Response &res)
 {
     params.enabledGain = req_params.enabledGain;
-    params.stepGain = req_params.stepGain;
-    params.lateralGain = req_params.lateralGain;
-    params.turnGain = req_params.turnGain;
+    params.stepGain = req_params.stepGain*1;
+    params.lateralGain = req_params.lateralGain*0.02;
+    params.turnGain = req_params.turnGain*0.02;
 
     res.success = runWalk(params, 5.12, phase, time);
 
-    return res.success;
+    return true;
 }
 
 bool WalkCreator::runWalk(const Rhoban::IKWalkParameters& params, double timeLength, double& phase, double& time)
@@ -44,7 +44,7 @@ bool WalkCreator::runWalk(const Rhoban::IKWalkParameters& params, double timeLen
 WalkCreator::WalkCreator(ros::NodeHandle nh){
     walk_motor_positions_pub = nh.advertise<movement_msgs::WalkingPositionsMsg>("/walk_creator/positions", 1000);
 
-    request_walk_creation = nh.advertiseService("/walk_creator/request", &WalkCreator::walkRequest, this);
+    request_walk_creation = nh.advertiseService("/approved_movement_prep/IKWalk", &WalkCreator::walkRequest, this);
 
     params.distHipToKnee = 0.093;
     params.distKneeToAnkle = 0.105;

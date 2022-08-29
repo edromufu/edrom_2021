@@ -14,37 +14,25 @@ class StatsManipulator():
             return False
 
     def changeMovementStatus(self, _new_movement, _status):
-
-        if (not _status):
-            self.movList.dict_movements_listed_and_their_status[_new_movement] = _status
-            print("O status de {" ,_new_movement, "} alterado para: ",_status)
-            return
                
-        for key in self.movList.other_movements_listed:
-            if(self.checkMovementStatus(key)):
-                print("Impossivel alterar status. Movimento {" ,key, "} esta ligado")
-                return
+        for movement in self.movList.other_movements_listed:
+            if(self.movList.dict_movements_listed_and_their_status[movement]):
+                print(f"Impossivel alterar status. Movimento {movement} esta ligado")
+                return False
 
-        for key in self.movList.dict_movements_listed_and_their_status.keys():
+        for movement in self.movList.dict_movements_listed_and_their_status.keys():
             if(_new_movement == 'stop_all_motions'):
-                self.movList.dict_movements_listed_and_their_status[key] = False
+                self.movList.dict_movements_listed_and_their_status[movement] = False
+                print(f"O status de {movement} alterado para: {self.movList.dict_movements_listed_and_their_status[movement]}")
 
-            elif (key == _new_movement):
-                self.movList.dict_movements_listed_and_their_status[key] = _status
-                print("O status de {" ,key, "} alterado para: ",_status)
+            elif (movement == _new_movement):
+                self.movList.dict_movements_listed_and_their_status[movement] = _status
+                print(f"O status de {movement} alterado para: {self.movList.dict_movements_listed_and_their_status[movement]}")
             else:
-                self.movList.dict_movements_listed_and_their_status[key] = False
+                self.movList.dict_movements_listed_and_their_status[movement] = False
+                print(f"O status de {movement} alterado para: {self.movList.dict_movements_listed_and_their_status[movement]}")
                 
-        return
-        
-    def checkMovementStatus(self, movement):
-        
-        print("Movimento a ser checado", movement)
-        for key in self.movList.dict_movements_listed_and_their_status.keys():
-            if (key == movement):
-                return self.movList.dict_movements_listed_and_their_status[key]
-        
-        return False
+        return True
         
     def showAllStatus(self):
 

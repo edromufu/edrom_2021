@@ -25,13 +25,14 @@ class MovementCommunication():
         print("\nO movimento solicitado existe:",movement_exists)
 
         if movement_exists:
-            self.changeStatus(requisition.required_movement,requisition.required_status)
+            service_response = self.changeStatus(requisition.required_movement,requisition.required_status)
             
             if requisition.required_status:
-                self.srv_comunication_beh.response = self.sendMovement(requisition.required_movement)
+                service_response = self.sendMovement(requisition.required_movement)
         else:
-            self.srv_comunication_beh.response = False
-        
+            service_response = False
+            
+        self.srv_comunication_beh.response = service_response
         return self.srv_comunication_beh
 
     def checkExistence(self, movement):
@@ -40,7 +41,7 @@ class MovementCommunication():
 
     def changeStatus(self,movement,status):
 
-        self.manipulator.changeMovementStatus(movement,status)
+        return self.manipulator.changeMovementStatus(movement,status)
     
     def sendMovement(self, movement):
         rospy.wait_for_service('/movement/approved_movement')
@@ -51,7 +52,7 @@ class MovementCommunication():
             return client_call.response
 
         except rospy.ServiceException as e:
-            print(f'Chamada do service para execução de movimento aprovado falhou: {e}')
+            return False
 
         
 if __name__ == "__main__":

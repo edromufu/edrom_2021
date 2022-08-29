@@ -31,8 +31,6 @@ class Conversion2OpenCm():
 
         return position_in_motor_position
 
-
-
 if __name__ == "__main__":
     rospy.init_node('Conversion_to_opencm_node', anonymous=False)
 

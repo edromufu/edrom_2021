@@ -6,27 +6,31 @@
             {
                 "walk_forward":
                 {
-                    "x": 1,
-                    "y": 0,
-                    "theta": 0
+                    "enabledGain": 1,
+                    "stepGain": 1,
+                    "lateralGain": 0,
+                    "turnGain": 0
                 },
                 "rotate_clockwise":
                 {
-                    "x": 0,
-                    "y": 0,
-                    "theta": 1
+                    "enabledGain": 1,
+                    "stepGain": 0,
+                    "lateralGain": 0,
+                    "turnGain": -1
                 },
                 "rotate_counter_clockwise":
                 {
-                    "x": 0,
-                    "y": 0,
-                    "theta": -1
+                    "enabledGain": 1,
+                    "stepGain": 0,
+                    "lateralGain": 0,
+                    "turnGain": 1
                 },
                 "stop_walk":
                 {
-                    "x": 0,
-                    "y": 0,
-                    "theta": 0
+                    "enabledGain": 0,
+                    "stepGain": 0,
+                    "lateralGain": 0,
+                    "turnGain": 0
                 }
             }
     },

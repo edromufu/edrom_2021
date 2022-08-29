@@ -5,8 +5,8 @@ import rospy
 import json
 import os
 
-from movement_msgs.srv import ApprovedMovementSrv, ApprovedMovementSrvResponse
-from movement_msgs.msg import WalkingParamsMsg, HeadParamsMsg
+from movement_msgs.srv import ApprovedMovementSrv, ApprovedMovementSrvResponse, WalkCreatorRequestSrv
+from movement_msgs.msg import HeadParamsMsg
 
 str_walking_movs_class = 'walking_movements'
 str_head_movs_class = 'head_movements'
@@ -21,7 +21,8 @@ class MovementPreparation():
         rospy.Service('/movement/approved_movement', ApprovedMovementSrv, self.prepareMovement)
         self.serviceReturn = ApprovedMovementSrvResponse()
 
-        self.walking_params_publisher = rospy.Publisher('/approved_movement_prep/IKWalk', WalkingParamsMsg, queue_size=10)
+        rospy.wait_for_service('/approved_movement_prep/IKWalk')
+        self.walking_params_client = rospy.ServiceProxy('/approved_movement_prep/IKWalk', WalkCreatorRequestSrv)
         self.head_params_publisher = rospy.Publisher('/approved_movement_prep/XYHead', HeadParamsMsg, queue_size=10)
         
         self.params_data = self.load_json_params()
@@ -48,24 +49,22 @@ class MovementPreparation():
                 func_to_call = self.params_data[mov_class][str_mov_class_func]
 
                 if func_to_call == self.walking_movements_func:
-                    self.walkingParamsPublish(self.params_data[mov_class][str_mov_params_field][request.approved_movement])
+                    self.serviceReturn.response = self.walkingParamsRequest(self.params_data[mov_class][str_mov_params_field][request.approved_movement])
 
                 elif func_to_call == self.head_movements_func:
                     self.headParamsPublish(self.params_data[mov_class][str_mov_params_field][request.approved_movement])
+                    self.serviceReturn.response = True
 
                 elif func_to_call == self.body_alignment_func:
                     self.bodyAlignmentPublish(self.params_data[mov_class][str_mov_params_field][request.approved_movement])  
-
-                self.serviceReturn.response = True
+                    self.serviceReturn.response = True
+                
                 return self.serviceReturn
     
-    def walkingParamsPublish(self, params):
-        params2publish = WalkingParamsMsg()
-        params2publish.x = params['x']
-        params2publish.y = params['y']
-        params2publish.theta = params['theta']
-
-        self.walking_params_publisher.publish(params2publish)
+    def walkingParamsRequest(self, params):
+        client_call = self.walking_params_client(params['enabledGain'],params['stepGain'],params['lateralGain'],params['turnGain']).success
+        
+        return client_call
     
     def headParamsPublish(self, params):
         params2publish = HeadParamsMsg()
@@ -75,20 +74,18 @@ class MovementPreparation():
         self.head_params_publisher.publish(params2publish)
     
     def bodyAlignmentPublish(self, params):
-        walking_params2publish = WalkingParamsMsg()
         head_params2publish = HeadParamsMsg()
 
         walking_params_from_json = self.params_data[str_walking_movs_class][str_mov_params_field][params[str_walking_movs_class]]
-        walking_params2publish.x = walking_params_from_json['x']
-        walking_params2publish.y = walking_params_from_json['y']
-        walking_params2publish.theta = walking_params_from_json['theta']
 
         head_params_from_json = self.params_data[str_head_movs_class][str_mov_params_field][params[str_head_movs_class]]
         head_params2publish.direction = head_params_from_json['direction']
         head_params2publish.pattern = head_params_from_json['pattern']
 
-        self.walking_params_publisher.publish(walking_params2publish)
+        client_call = self.walking_params_client(walking_params_from_json['enabledGain'],walking_params_from_json['stepGain'],walking_params_from_json['lateralGain'],walking_params_from_json['turnGain']).success
         self.head_params_publisher.publish(head_params2publish)
+
+        return client_call
 
 if __name__ == "__main__":
     rospy.init_node('Approved_movement_prep_node', anonymous=False)
