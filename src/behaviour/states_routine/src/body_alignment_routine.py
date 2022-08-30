@@ -58,7 +58,7 @@ class BodyAlignmentRoutine():
         
     def createRequest(self):
         if self.flag:
-            HEADER['n_rotations'] = str(int(abs(self.current_hor_motor_position/ROTATION_STEP))) 
+            HEADER['n_rotations'] = str(round(abs(self.current_hor_motor_position/ROTATION_STEP))) 
             if self.current_hor_motor_position < 0:
                 self.request1 = CENTER
                 self.request2 = COUNTER_CLOCKWISE

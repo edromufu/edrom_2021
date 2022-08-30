@@ -70,7 +70,8 @@ class BallInterpreter():
         if(self.countFound > timesSecurity):
             self.ballFound = False
             self.ballClose = False
-            self.ballRelativePosition = 'Left'
+            if 'Left' not in self.ballRelativePosition and 'Right' not in self.ballRelativePosition:
+                self.ballRelativePosition = firstSearch
 
         if(msg.found):
             #Reseta o contador de informar que a bola foi perdida, pois encontrou :)

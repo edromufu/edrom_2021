@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 #coding=utf-8
 
-from re import search
 import rospy
 from controller import Supervisor
 
@@ -136,7 +135,7 @@ class HeadMover():
         Salvar as ultimas requisições de cada codigo como variavel deste codigo, através de:
             - Alterar no dicionário o valor da requisição da chave que fez a requisição;
         """
-        self.req_dict[request._connection_header['origin'] ]= request.moveRequest
+        self.req_dict[request._connection_header['origin']]= request.moveRequest
 
         self.response.success = True
         return self.response
