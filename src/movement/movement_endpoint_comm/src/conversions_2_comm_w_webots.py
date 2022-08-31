@@ -28,7 +28,6 @@ class Conversion2Webots():
     def calculateNewVelocity(self, current_position, new_position):
         velocities = []
         
-
         for index, new_pos in enumerate(new_position):
             velocities.append(abs((new_pos-current_position[index])/self.time_step))
         

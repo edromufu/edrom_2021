@@ -52,12 +52,9 @@ WalkCreator::WalkCreator(ros::NodeHandle nh){
     params.distFeetLateral = 0.092;
 
     params.freq = 1.7;
-    params.enabledGain = 1.0;
     params.supportPhaseRatio = 0.0;
     params.footYOffset = 0.025;
-    params.stepGain = 0.0;
     params.riseGain = 0.035;
-    params.lateralGain = 0.0;
     params.trunkZOffset = 0.02;
     params.swingGain = 0.02;
     params.swingRollGain = 0.0;
