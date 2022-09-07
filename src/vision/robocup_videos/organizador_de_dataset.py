@@ -1,6 +1,6 @@
 import os
 
-os.chdir("video_larc_2022_parte2")
+os.chdir("frames_larc_2022_parte3")
 lista_de_arquivo = os.listdir(os.getcwd())
 lista_de_imagens = []
 
@@ -20,9 +20,9 @@ lista_de_treino = lista_de_imagens[:quant_treino]
 lista_de_validacao = lista_de_imagens[quant_treino:quant_treino + quant_validacao]
 lista_de_avaliacao = lista_de_imagens[quant_treino+ quant_validacao:]
 
-count_treino = 1
-count_validacao = 1
-count_avaliacao = 1
+count_treino = 1520
+count_validacao = 435
+count_avaliacao = 219
 
 for arquivo in lista_de_arquivo:
     if arquivo in lista_de_treino:
