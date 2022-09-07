@@ -72,13 +72,14 @@ class Robot3DMover():
             if movement == CLOCKWISE or movement == COUNTER_CLOCKWISE:
                 new_rotation = self.sim_3D_rotation_field.getSFRotation()[:3]+[self.robot_rotation+increment]
                 self.sim_3D_rotation_field.setSFRotation(new_rotation)
-            #Andar em linha reta 
-            elif movement == FORWARD:
-                x_increment = -WALK_STEP*m.sin(self.robot_rotation)
-                z_increment = -WALK_STEP*m.cos(self.robot_rotation)
+        
+        #Andar em linha reta 
+        if movement == FORWARD:
+            x_increment = -WALK_STEP*m.sin(self.robot_rotation)
+            z_increment = -WALK_STEP*m.cos(self.robot_rotation)
 
-                new_translation = [self.sim_3D_translation_field.getSFVec3f()[0]+x_increment,self.sim_3D_translation_field.getSFVec3f()[1],self.sim_3D_translation_field.getSFVec3f()[2]+z_increment]
-                self.sim_3D_translation_field.setSFVec3f(new_translation)
+            new_translation = [self.sim_3D_translation_field.getSFVec3f()[0]+x_increment,self.sim_3D_translation_field.getSFVec3f()[1],self.sim_3D_translation_field.getSFVec3f()[2]+z_increment]
+            self.sim_3D_translation_field.setSFVec3f(new_translation)
         
         self.last_run = self.general_supervisor.getTime()
     

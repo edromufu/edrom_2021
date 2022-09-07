@@ -52,7 +52,7 @@ class HeadMover():
         Chamar o metodo para atualizacao interna da posicao da cabeca.
         """
         self.motorUpdate()
-        if (self.general_supervisor.getTime() - self.last_run) > 0.25:
+        if (self.general_supervisor.getTime() - self.last_run) > 0.35:
             self.moveHeadClock(self.req_dict[self.currentState] if self.currentState in self.req_dict.keys() else None)
 
     #Atualização da flag
@@ -92,7 +92,8 @@ class HeadMover():
             hor_rotation = self.sim_hor_head_motor.getSFRotation()[:3]+[0]
             ver_rotation = self.sim_ver_head_motor.getSFRotation()[:3]+[0.45]
             self.sim_hor_head_motor.setSFRotation(hor_rotation)
-            self.sim_ver_head_motor.setSFRotation(ver_rotation)
+            if not self.currentState == 'body_alignment':
+                self.sim_ver_head_motor.setSFRotation(ver_rotation)
 
         self.last_run = self.general_supervisor.getTime()
 
