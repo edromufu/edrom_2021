@@ -32,6 +32,7 @@ add_service_files(
   ApprovedMovementSrv.srv
   WalkCreatorRequestSrv.srv
   CommandToOpenCMSrv.srv
+  WalkTestParametersSrv.srv
 )
 
 ## Generate actions in the 'action' folder

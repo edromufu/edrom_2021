@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import rospy
-from movement_msgs.msgs import OpencmResponseMsg, WalkingPositionsMsg, OpencmRequestMsg
+from movement_msgs.msg import OpencmResponseMsg, WalkingPositionsMsg, OpencmRequestMsg
 
 class Conversion2OpenCm():
 

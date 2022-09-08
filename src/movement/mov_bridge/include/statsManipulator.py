@@ -30,7 +30,6 @@ class StatsManipulator():
                 print(f"O status de {movement} alterado para: {self.movList.dict_movements_listed_and_their_status[movement]}")
             else:
                 self.movList.dict_movements_listed_and_their_status[movement] = False
-                print(f"O status de {movement} alterado para: {self.movList.dict_movements_listed_and_their_status[movement]}")
                 
         return True
         
