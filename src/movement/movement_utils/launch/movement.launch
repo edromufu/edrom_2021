@@ -16,6 +16,8 @@
     <node name="walk_test_interface" pkg="movement_interface" type="walking_interface.py" output="screen" if="$(eval arg('walk_test'))">  </node>
 
     <!-- Códigos de criação de movimento -->
-    <node name="walk_creator" pkg="walk_creator" type="walk_creator" output="screen" >   </node>
+    <node name="walk_creator" pkg="walk_creator" type="walk_creator" output="screen" > 
+        <param name="interface" value="$(eval arg('walk_test'))" />
+    </node>
 
 </launch>

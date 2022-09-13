@@ -179,7 +179,7 @@
        <item>
         <widget class="QStackedWidget" name="windows">
          <property name="currentIndex">
-          <number>0</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="walk_page">
           <layout class="QHBoxLayout" name="horizontalLayout_4">

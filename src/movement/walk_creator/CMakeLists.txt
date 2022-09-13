@@ -7,6 +7,8 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
 )
 
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(JSONCPP jsoncpp)
 
 catkin_package(
   INCLUDE_DIRS include
@@ -19,6 +21,7 @@ catkin_package(
 include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
+  ${JSONCPP_INCLUDE_DIRS}
 )
 
 #Sources files
@@ -47,4 +50,4 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall")
 #Build example application
 add_executable(walk_creator 
     ${SOURCES_FILES_WALK} ${SOURCES_FILES_EXAMPLE})
-target_link_libraries(walk_creator ${catkin_LIBRARIES})
+target_link_libraries(walk_creator ${catkin_LIBRARIES} ${JSONCPP_LIBRARIES})

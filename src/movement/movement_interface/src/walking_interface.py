@@ -9,6 +9,7 @@ from PyQt5.QtWidgets import *
 
 import sys
 import rospy
+import time
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -16,7 +17,11 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.setWindowTitle('Interface de Teste de Caminhada')
-    
+
+        self.client_walk = rospy.ServiceProxy('/movement/mov_bridge/commands2movement', BehRequestSrv)
+        self.client_parameters = rospy.ServiceProxy('/movement_interface/walking_params', WalkTestParametersSrv)
+        rospy.Service('/walk_creator/walking_params', WalkTestParametersSrv, self.receiveParameters)
+
         self.ui.gain_window_btn.clicked.connect(lambda: self.ui.windows.setCurrentWidget(self.ui.gain_page))
         self.ui.walk_window_btn.clicked.connect(lambda: self.ui.windows.setCurrentWidget(self.ui.walk_page))
         self.ui.parameters_window_btn.clicked.connect(lambda: self.ui.windows.setCurrentWidget(self.ui.parameters_page))
@@ -32,8 +37,38 @@ class MainWindow(QMainWindow):
                     object_variable.setRange(-999,999)
                 object_variable.setDecimals(4)      
 
-        self.client_walk = rospy.ServiceProxy('/movement/mov_bridge/commands2movement', BehRequestSrv)
-        self.client_parameters = rospy.ServiceProxy('/movement_interface/walking_params', WalkTestParametersSrv)
+    def receiveParameters(self, req):
+        try:
+            self.dict_req = dict(zip(req.__slots__, req.__getstate__()))
+            self.setCurrentParametersPageValues()
+            self.setCurrentGainPageValues()
+
+            return True
+        except Exception as e:
+            return e
+
+    def setCurrentParametersPageValues(self):
+        for widget in self.ui.scrollAreaWidgetContents.findChildren(QFrame):
+            if 'label' in widget.objectName():
+                text = widget.text()
+                
+                if text in self.parameters_list:
+                    frame = widget.parent()
+                    label_current_value = frame.findChildren(QLabel)[1]
+
+                    label_current_value.setText(str(round(self.dict_req[text],4)))   
+
+    def setCurrentGainPageValues(self):
+        for widget in self.ui.gain_page.findChildren(QFrame):
+
+            if 'label' in widget.objectName():
+                text = widget.text()
+
+                if text in self.parameters_list:
+                    frame = widget.parent()
+                    label_current_value = frame.findChildren(QLabel)[1]
+
+                    label_current_value.setText(str(round(self.dict_req[text],4)))
 
     def sendParameters(self):
         
@@ -52,9 +87,7 @@ class MainWindow(QMainWindow):
         else:
             self.ui.update_window_btn.setStyleSheet("QPushButton{background-color: rgb(245,66,66);}")
         
-
     def captureParametersPageValues(self):
-
         for widget in self.ui.scrollAreaWidgetContents.findChildren(QFrame):
             if 'label' in widget.objectName():
                 text = widget.text()
