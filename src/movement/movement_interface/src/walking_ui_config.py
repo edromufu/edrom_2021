@@ -20,6 +20,10 @@ class Ui_MainWindow(object):
         MainWindow.resize(800, 600)
         MainWindow.setMaximumSize(QSize(800, 16777215))
         MainWindow.setStyleSheet(u"")
+        self.save_action = QAction(MainWindow)
+        self.save_action.setObjectName(u"save_action")
+        self.load_action = QAction(MainWindow)
+        self.load_action.setObjectName(u"load_action")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.centralwidget.setStyleSheet(u"")
@@ -238,7 +242,7 @@ class Ui_MainWindow(object):
         self.doubleSpinBox_65.setStyleSheet(u"")
         self.doubleSpinBox_65.setAlignment(Qt.AlignCenter)
         self.doubleSpinBox_65.setMaximum(100.000000000000000)
-        self.doubleSpinBox_65.setValue(0.020000000000000)
+        self.doubleSpinBox_65.setValue(0.000000000000000)
 
         self.horizontalLayout_68.addWidget(self.doubleSpinBox_65)
 
@@ -277,7 +281,7 @@ class Ui_MainWindow(object):
         self.doubleSpinBox_66.setMaximumSize(QSize(130, 16777215))
         self.doubleSpinBox_66.setStyleSheet(u"")
         self.doubleSpinBox_66.setAlignment(Qt.AlignCenter)
-        self.doubleSpinBox_66.setValue(0.020000000000000)
+        self.doubleSpinBox_66.setValue(0.000000000000000)
 
         self.horizontalLayout_69.addWidget(self.doubleSpinBox_66)
 
@@ -317,7 +321,7 @@ class Ui_MainWindow(object):
         self.doubleSpinBox_76.setStyleSheet(u"")
         self.doubleSpinBox_76.setAlignment(Qt.AlignCenter)
         self.doubleSpinBox_76.setDecimals(2)
-        self.doubleSpinBox_76.setValue(0.020000000000000)
+        self.doubleSpinBox_76.setValue(0.000000000000000)
 
         self.horizontalLayout_79.addWidget(self.doubleSpinBox_76)
 
@@ -1592,18 +1596,17 @@ class Ui_MainWindow(object):
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
         self.menubar.setGeometry(QRect(0, 0, 800, 22))
-        self.save_btn = QMenu(self.menubar)
-        self.save_btn.setObjectName(u"save_btn")
-        self.load_btn = QMenu(self.menubar)
-        self.load_btn.setObjectName(u"load_btn")
+        self.file_menu = QMenu(self.menubar)
+        self.file_menu.setObjectName(u"file_menu")
         MainWindow.setMenuBar(self.menubar)
 
-        self.menubar.addAction(self.save_btn.menuAction())
-        self.menubar.addAction(self.load_btn.menuAction())
+        self.menubar.addAction(self.file_menu.menuAction())
+        self.file_menu.addAction(self.save_action)
+        self.file_menu.addAction(self.load_action)
 
         self.retranslateUi(MainWindow)
 
-        self.windows.setCurrentIndex(0)
+        self.windows.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -1612,6 +1615,8 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
         MainWindow.setWindowFilePath("")
+        self.save_action.setText(QCoreApplication.translate("MainWindow", u"Salvar..", None))
+        self.load_action.setText(QCoreApplication.translate("MainWindow", u"Carregar...", None))
         self.walk_window_btn.setText(QCoreApplication.translate("MainWindow", u"Caminhada", None))
         self.gain_window_btn.setText(QCoreApplication.translate("MainWindow", u"Ganho", None))
         self.parameters_window_btn.setText(QCoreApplication.translate("MainWindow", u"Parametros", None))
@@ -1737,7 +1742,6 @@ class Ui_MainWindow(object):
         self.label.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p align=\"center\"><span style=\" font-size:12pt;\">Par\u00e2metro</span></p></body></html>", None))
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p align=\"center\"><span style=\" font-size:12pt;\">Valor<br/>atual</span></p></body></html>", None))
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p align=\"center\"><span style=\" font-size:12pt;\">Novo<br/>valor</span></p></body></html>", None))
-        self.save_btn.setTitle(QCoreApplication.translate("MainWindow", u"Salvar..", None))
-        self.load_btn.setTitle(QCoreApplication.translate("MainWindow", u"Carregar...", None))
+        self.file_menu.setTitle(QCoreApplication.translate("MainWindow", u"Arquivos", None))
     # retranslateUi
 

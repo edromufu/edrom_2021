@@ -8,9 +8,9 @@
     },
     "step_parameters":
     {
-        "step": 0.02,
-        "lateral": 0.02,
-        "turn": 0.02
+        "stepGain": 0.02,
+        "lateralGain": 0.02,
+        "turnGain": 0.02
     },
     "walk_parameters":
     {

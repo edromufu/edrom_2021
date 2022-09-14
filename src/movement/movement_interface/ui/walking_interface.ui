@@ -179,7 +179,7 @@
        <item>
         <widget class="QStackedWidget" name="windows">
          <property name="currentIndex">
-          <number>2</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="walk_page">
           <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -559,7 +559,7 @@ font: 24px;
                  <double>100.000000000000000</double>
                 </property>
                 <property name="value">
-                 <double>0.020000000000000</double>
+                 <double>0.000000000000000</double>
                 </property>
                </widget>
               </item>
@@ -670,7 +670,7 @@ font: 24px;
                  <set>Qt::AlignCenter</set>
                 </property>
                 <property name="value">
-                 <double>0.020000000000000</double>
+                 <double>0.000000000000000</double>
                 </property>
                </widget>
               </item>
@@ -784,7 +784,7 @@ font: 24px;
                  <number>2</number>
                 </property>
                 <property name="value">
-                 <double>0.020000000000000</double>
+                 <double>0.000000000000000</double>
                 </property>
                </widget>
               </item>
@@ -4275,19 +4275,25 @@ font: 24px;
      <height>22</height>
     </rect>
    </property>
-   <widget class="QMenu" name="save_btn">
+   <widget class="QMenu" name="file_menu">
     <property name="title">
-     <string>Salvar..</string>
+     <string>Arquivos</string>
     </property>
+    <addaction name="save_action"/>
+    <addaction name="load_action"/>
    </widget>
-   <widget class="QMenu" name="load_btn">
-    <property name="title">
-     <string>Carregar...</string>
-    </property>
-   </widget>
-   <addaction name="save_btn"/>
-   <addaction name="load_btn"/>
+   <addaction name="file_menu"/>
   </widget>
+  <action name="save_action">
+   <property name="text">
+    <string>Salvar..</string>
+   </property>
+  </action>
+  <action name="load_action">
+   <property name="text">
+    <string>Carregar...</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

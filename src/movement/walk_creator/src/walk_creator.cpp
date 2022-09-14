@@ -134,9 +134,9 @@ void WalkCreator::initParams()
     params.distAnkleToGround = paramsJson["structural_parameters"]["distAnkleToGround"].asDouble();
     params.distFeetLateral = paramsJson["structural_parameters"]["distFeetLateral"].asDouble();
 
-    step = paramsJson["step_parameters"]["step"].asDouble();
-    lateral = paramsJson["step_parameters"]["lateral"].asDouble();
-    turn = paramsJson["step_parameters"]["turn"].asDouble();
+    step = paramsJson["step_parameters"]["stepGain"].asDouble();
+    lateral = paramsJson["step_parameters"]["lateralGain"].asDouble();
+    turn = paramsJson["step_parameters"]["turnGain"].asDouble();
 }
 
 bool WalkCreator::walkRequest(movement_msgs::WalkCreatorRequestSrv::Request  &req_params, movement_msgs::WalkCreatorRequestSrv::Response &res)
@@ -190,12 +190,11 @@ WalkCreator::WalkCreator(ros::NodeHandle nh)
     request_parameters_update = nh.advertiseService("/movement_interface/walking_params", &WalkCreator::parametersUpdateRequest, this);
 
     initParams();
-    reqEqualsParam();
 
     if(interfaceOn)
     {
-        sleep(30);
-        std::cout << "Passou o tempo";
+        ros::service::waitForService("/walk_creator/walking_params");
+        reqEqualsParam();
         interface_parameters_update.call(parameters2update);
     }
 }
