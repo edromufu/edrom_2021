@@ -28,7 +28,7 @@ class MovementCommunication():
             service_response = self.changeStatus(requisition.required_movement,requisition.required_status)
             
             if requisition.required_status:
-                service_response = self.sendMovement(requisition.required_movement)
+                service_response = self.sendMovement(requisition.required_movement)             
         else:
             service_response = False
             
