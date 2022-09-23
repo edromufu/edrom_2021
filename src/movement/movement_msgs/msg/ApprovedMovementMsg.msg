@@ -1,5 +1,2 @@
 string approved_movement
 
----
-
-bool response

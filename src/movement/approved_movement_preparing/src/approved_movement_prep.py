@@ -5,8 +5,8 @@ import rospy
 import json
 import os
 
-from movement_msgs.srv import ApprovedMovementSrv, ApprovedMovementSrvResponse, WalkCreatorRequestSrv
-from movement_msgs.msg import HeadParamsMsg
+from movement_msgs.srv import WalkCreatorRequestSrv
+from movement_msgs.msg import HeadParamsMsg, ApprovedMovementMsg
 
 str_walking_movs_class = 'walking_movements'
 str_head_movs_class = 'head_movements'
@@ -18,8 +18,7 @@ str_mov_params_field = 'params_all_kinds'
 class MovementPreparation():
 
     def __init__(self):
-        rospy.Service('/movement/approved_movement', ApprovedMovementSrv, self.prepareMovement)
-        self.serviceReturn = ApprovedMovementSrvResponse()
+        rospy.Subscriber('/movement/approved_movement', ApprovedMovementMsg, self.prepareMovement)
 
         rospy.wait_for_service('/approved_movement_prep/IKWalk')
         self.walking_params_client = rospy.ServiceProxy('/approved_movement_prep/IKWalk', WalkCreatorRequestSrv)
@@ -49,21 +48,16 @@ class MovementPreparation():
                 func_to_call = self.params_data[mov_class][str_mov_class_func]
 
                 if func_to_call == self.walking_movements_func:
-                    self.serviceReturn.response = self.walkingParamsRequest(self.params_data[mov_class][str_mov_params_field][request.approved_movement])
-
+                    self.walkingParamsRequest(self.params_data[mov_class][str_mov_params_field][request.approved_movement])
+                    
                 elif func_to_call == self.head_movements_func:
                     self.headParamsPublish(self.params_data[mov_class][str_mov_params_field][request.approved_movement])
-                    self.serviceReturn.response = True
 
                 elif func_to_call == self.body_alignment_func:
                     self.bodyAlignmentPublish(self.params_data[mov_class][str_mov_params_field][request.approved_movement])  
-                    self.serviceReturn.response = True
-                
-                return self.serviceReturn
     
     def walkingParamsRequest(self, params):
         client_call = self.walking_params_client(params['enabledGain'],params['stepGain'],params['lateralGain'],params['turnGain']).success
-        
         return client_call
     
     def headParamsPublish(self, params):

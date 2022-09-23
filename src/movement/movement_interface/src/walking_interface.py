@@ -147,13 +147,15 @@ class MainWindow(QMainWindow):
         self.captureGainPageValues()
         self.parameters_dict['currentWalk'] = self.ui.buttonGroup.checkedButton().text()
 
+        if self.parameters_dict['currentWalk'] != 'emergency_shutdown':
+            self.client_parameters(*self.parameters_dict.values())
+
         resp1 = self.client_walk(self.parameters_dict['currentWalk'], True)
-        resp2 = self.client_parameters(*self.parameters_dict.values())
 
         if self.parameters_dict['currentWalk'] == 'emergency_shutdown':
             self.client_walk(self.parameters_dict['currentWalk'], False)
         
-        if resp1 and resp2:
+        if resp1.response:
             self.ui.update_window_btn.setStyleSheet("QPushButton{background-color: rgb(66,245,155);}")
         else:
             self.ui.update_window_btn.setStyleSheet("QPushButton{background-color: rgb(245,66,66);}")

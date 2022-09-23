@@ -3,6 +3,7 @@
 
 import rospy
 from movement_msgs.msg import WalkingPositionsMsg, WebotsRequestMsg
+from std_msgs.msg import Bool
 
 class Conversion2Webots():
     time_step = 0.064
@@ -12,18 +13,24 @@ class Conversion2Webots():
         
         rospy.Subscriber('/webots/feedback', WebotsRequestMsg, self.currentMotorsPositionCapture)
         rospy.Subscriber('/walk_creator/positions', WalkingPositionsMsg, self.newPositionRequest)
+        rospy.Subscriber('/mov_bridge/is_motion_stopped', Bool, self.updateIsMotionStopped)
         self.pub_to_webots = rospy.Publisher('webots/request_move', WebotsRequestMsg, queue_size=100)
         self.pub_to_webots_msg = WebotsRequestMsg()
+        self.allow_pub = True
+
+    def updateIsMotionStopped(self, msg):
+        self.allow_pub = not msg.data
 
     def currentMotorsPositionCapture(self, msg):
         self.current_position = list(msg.motors_position)
 
     def newPositionRequest(self, msg):
-        self.pub_to_webots_msg.motors_position = self.current_position[:6] + list(msg.positions) + self.current_position[18:]
-        
-        self.pub_to_webots_msg.motors_velocity = self.calculateNewVelocity(self.current_position,self.pub_to_webots_msg.motors_position)
+        if self.allow_pub:
+            self.pub_to_webots_msg.motors_position = self.current_position[:6] + list(msg.positions) + self.current_position[18:]
+            
+            self.pub_to_webots_msg.motors_velocity = self.calculateNewVelocity(self.current_position,self.pub_to_webots_msg.motors_position)
 
-        self.pub_to_webots.publish(self.pub_to_webots_msg)
+            self.pub_to_webots.publish(self.pub_to_webots_msg)
 
     def calculateNewVelocity(self, current_position, new_position):
         velocities = []

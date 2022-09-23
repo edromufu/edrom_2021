@@ -1,6 +1,9 @@
 <launch>
     <!-- Códigos de comunicação de fora do movimento e geração de tipos de movimento -->
-	<node name="mov_bridge" pkg="mov_bridge" type="mov_bridge.py" output="screen" >   </node>
+	<node name="mov_bridge" pkg="mov_bridge" type="mov_bridge.py" output="screen" >
+        <param name="simulation" value="$(eval arg('simulation'))" />
+    </node>
+
 	<node name="movement_preparing" pkg="approved_movement_preparing" type="approved_movement_prep.py" output="log" >    </node>
     
     <!-- Códigos de comunicação de com os controladores da simulação e da robô física -->

@@ -3,6 +3,7 @@
 
 import rospy
 from movement_msgs.msg import OpencmResponseMsg, WalkingPositionsMsg, OpencmRequestMsg
+from std_msgs.msg import Bool
 
 class Conversion2OpenCm():
 
@@ -11,18 +12,28 @@ class Conversion2OpenCm():
         
         rospy.Subscriber('opencm/response', OpencmResponseMsg, self.currentMotorsPositionCapture)
         rospy.Subscriber('/walk_creator/positions', WalkingPositionsMsg, self.newPositionRequest)
+        rospy.Subscriber('/mov_bridge/is_motion_stopped', Bool, self.updateIsMotionStopped)
         self.pub_to_opencm = rospy.Publisher('opencm/request_move', OpencmRequestMsg, queue_size=1)
         self.pub_to_opencm_msg = OpencmRequestMsg()
+
+        self.allow_pub = True
+
+    def updateIsMotionStopped(self, msg):
+        if msg.data:
+            self.allow_pub = False
+        else:
+            self.allow_pub = True
 
     def currentMotorsPositionCapture(self, msg):
         self.current_position = msg.motors_position
     
     def newPositionRequest(self, msg):
-        request_position_in_rad = msg.positions
+        if self.allow_pub:
+            request_position_in_rad = msg.positions
 
-        self.pub_to_opencm_msg.motors_position = self.convertRad2MotorPosition(request_position_in_rad)
-        
-        self.pub_to_opencm_msg.motors_velocity = self.calculateNewVelocity(self.current_position,self.pub_to_opencm_msg.motors_position)
+            self.pub_to_opencm_msg.motors_position = self.convertRad2MotorPosition(request_position_in_rad)
+            
+            self.pub_to_opencm_msg.motors_velocity = self.calculateNewVelocity(self.current_position,self.pub_to_opencm_msg.motors_position)
 
     def convertRad2MotorPosition(self, position_in_rad):
 

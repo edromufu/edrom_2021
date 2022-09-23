@@ -122,6 +122,7 @@ void loop()
     {
       torqueEnable();
       setupDynamixel(); 
+      command = position_dt;
     }
 
     else if(command == position_dt) 
