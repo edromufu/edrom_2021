@@ -146,8 +146,7 @@ struct Definition< ::movement_msgs::WalkCreatorRequestSrvResponse_<ContainerAllo
 {
   static const char* value()
   {
-    return "\n"
-"bool success\n"
+    return "bool success\n"
 ;
   }
 

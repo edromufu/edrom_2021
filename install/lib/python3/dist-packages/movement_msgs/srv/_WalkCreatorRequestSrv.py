@@ -138,8 +138,7 @@ class WalkCreatorRequestSrvResponse(genpy.Message):
   _md5sum = "358e233cde0c8a8bcfea4ce193f8fc15"
   _type = "movement_msgs/WalkCreatorRequestSrvResponse"
   _has_header = False  # flag to mark the presence of a Header object
-  _full_text = """
-bool success
+  _full_text = """bool success
 """
   __slots__ = ['success']
   _slot_types = ['bool']

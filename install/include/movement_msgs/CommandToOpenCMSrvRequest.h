@@ -24,16 +24,16 @@ struct CommandToOpenCMSrvRequest_
   typedef CommandToOpenCMSrvRequest_<ContainerAllocator> Type;
 
   CommandToOpenCMSrvRequest_()
-    : opencm_command(0)  {
+    : opencm_command()  {
     }
   CommandToOpenCMSrvRequest_(const ContainerAllocator& _alloc)
-    : opencm_command(0)  {
+    : opencm_command(_alloc)  {
   (void)_alloc;
     }
 
 
 
-   typedef int16_t _opencm_command_type;
+   typedef std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other >  _opencm_command_type;
   _opencm_command_type opencm_command;
 
 
@@ -98,12 +98,12 @@ struct IsMessage< ::movement_msgs::CommandToOpenCMSrvRequest_<ContainerAllocator
 
 template <class ContainerAllocator>
 struct IsFixedSize< ::movement_msgs::CommandToOpenCMSrvRequest_<ContainerAllocator> >
-  : TrueType
+  : FalseType
   { };
 
 template <class ContainerAllocator>
 struct IsFixedSize< ::movement_msgs::CommandToOpenCMSrvRequest_<ContainerAllocator> const>
-  : TrueType
+  : FalseType
   { };
 
 template <class ContainerAllocator>
@@ -122,12 +122,12 @@ struct MD5Sum< ::movement_msgs::CommandToOpenCMSrvRequest_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "a989f0fa19549b89789ef4a2cbd63db3";
+    return "667104249a6d6bc22799056893a3d6dd";
   }
 
   static const char* value(const ::movement_msgs::CommandToOpenCMSrvRequest_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0xa989f0fa19549b89ULL;
-  static const uint64_t static_value2 = 0x789ef4a2cbd63db3ULL;
+  static const uint64_t static_value1 = 0x667104249a6d6bc2ULL;
+  static const uint64_t static_value2 = 0x2799056893a3d6ddULL;
 };
 
 template<class ContainerAllocator>
@@ -146,7 +146,7 @@ struct Definition< ::movement_msgs::CommandToOpenCMSrvRequest_<ContainerAllocato
 {
   static const char* value()
   {
-    return "int16 opencm_command\n"
+    return "string opencm_command\n"
 ;
   }
 
@@ -185,7 +185,7 @@ struct Printer< ::movement_msgs::CommandToOpenCMSrvRequest_<ContainerAllocator> 
   template<typename Stream> static void stream(Stream& s, const std::string& indent, const ::movement_msgs::CommandToOpenCMSrvRequest_<ContainerAllocator>& v)
   {
     s << indent << "opencm_command: ";
-    Printer<int16_t>::stream(s, indent + "  ", v.opencm_command);
+    Printer<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::stream(s, indent + "  ", v.opencm_command);
   }
 };
 

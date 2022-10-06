@@ -1,3 +1,5 @@
+from ._ApprovedMovementMsg import *
+from ._BehRequestInterface import *
 from ._EndEffMsg import *
 from ._EndEffStateMsg import *
 from ._FFTMsg import *
@@ -26,3 +28,4 @@ from ._WalkingMsg import *
 from ._WalkingParamsMsg import *
 from ._WalkingPositionsMsg import *
 from ._WebotsMsg import *
+from ._WebotsRequestMsg import *

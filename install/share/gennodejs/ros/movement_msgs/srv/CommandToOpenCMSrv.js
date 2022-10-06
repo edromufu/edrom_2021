@@ -28,7 +28,7 @@ class CommandToOpenCMSrvRequest {
         this.opencm_command = initObj.opencm_command
       }
       else {
-        this.opencm_command = 0;
+        this.opencm_command = '';
       }
     }
   }
@@ -36,7 +36,7 @@ class CommandToOpenCMSrvRequest {
   static serialize(obj, buffer, bufferOffset) {
     // Serializes a message object of type CommandToOpenCMSrvRequest
     // Serialize message field [opencm_command]
-    bufferOffset = _serializer.int16(obj.opencm_command, buffer, bufferOffset);
+    bufferOffset = _serializer.string(obj.opencm_command, buffer, bufferOffset);
     return bufferOffset;
   }
 
@@ -45,12 +45,14 @@ class CommandToOpenCMSrvRequest {
     let len;
     let data = new CommandToOpenCMSrvRequest(null);
     // Deserialize message field [opencm_command]
-    data.opencm_command = _deserializer.int16(buffer, bufferOffset);
+    data.opencm_command = _deserializer.string(buffer, bufferOffset);
     return data;
   }
 
   static getMessageSize(object) {
-    return 2;
+    let length = 0;
+    length += _getByteLength(object.opencm_command);
+    return length + 4;
   }
 
   static datatype() {
@@ -60,13 +62,13 @@ class CommandToOpenCMSrvRequest {
 
   static md5sum() {
     //Returns md5sum for a message object
-    return 'a989f0fa19549b89789ef4a2cbd63db3';
+    return '667104249a6d6bc22799056893a3d6dd';
   }
 
   static messageDefinition() {
     // Returns full string definition for message
     return `
-    int16 opencm_command
+    string opencm_command
     
     `;
   }
@@ -81,7 +83,7 @@ class CommandToOpenCMSrvRequest {
       resolved.opencm_command = msg.opencm_command;
     }
     else {
-      resolved.opencm_command = 0
+      resolved.opencm_command = ''
     }
 
     return resolved;
@@ -162,6 +164,6 @@ class CommandToOpenCMSrvResponse {
 module.exports = {
   Request: CommandToOpenCMSrvRequest,
   Response: CommandToOpenCMSrvResponse,
-  md5sum() { return '006dfbee25aeee1268324ecc4e306ddb'; },
+  md5sum() { return '4de78da2a6cc02a56fee1788f2bfe738'; },
   datatype() { return 'movement_msgs/CommandToOpenCMSrv'; }
 };

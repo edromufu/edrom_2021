@@ -25,10 +25,10 @@
 (defmethod movement_msgs::CommandToOpenCMSrvRequest
   (:init
    (&key
-    ((:opencm_command __opencm_command) 0)
+    ((:opencm_command __opencm_command) "")
     )
    (send-super :init)
-   (setq _opencm_command (round __opencm_command))
+   (setq _opencm_command (string __opencm_command))
    self)
   (:opencm_command
    (&optional __opencm_command)
@@ -36,21 +36,21 @@
   (:serialization-length
    ()
    (+
-    ;; int16 _opencm_command
-    2
+    ;; string _opencm_command
+    4 (length _opencm_command)
     ))
   (:serialize
    (&optional strm)
    (let ((s (if strm strm
               (make-string-output-stream (send self :serialization-length)))))
-     ;; int16 _opencm_command
-       (write-word _opencm_command s)
+     ;; string _opencm_command
+       (write-long (length _opencm_command) s) (princ _opencm_command s)
      ;;
      (if (null strm) (get-output-stream-string s))))
   (:deserialize
    (buf &optional (ptr- 0))
-   ;; int16 _opencm_command
-     (setq _opencm_command (sys::peek buf ptr- :short)) (incf ptr- 2)
+   ;; string _opencm_command
+     (let (n) (setq n (sys::peek buf ptr- :integer)) (incf ptr- 4) (setq _opencm_command (subseq buf ptr- (+ ptr- n))) (incf ptr- n))
    ;;
    self)
   )
@@ -96,7 +96,7 @@
   :super ros::object
   :slots ())
 
-(setf (get movement_msgs::CommandToOpenCMSrv :md5sum-) "006dfbee25aeee1268324ecc4e306ddb")
+(setf (get movement_msgs::CommandToOpenCMSrv :md5sum-) "4de78da2a6cc02a56fee1788f2bfe738")
 (setf (get movement_msgs::CommandToOpenCMSrv :datatype-) "movement_msgs/CommandToOpenCMSrv")
 (setf (get movement_msgs::CommandToOpenCMSrv :request) movement_msgs::CommandToOpenCMSrvRequest)
 (setf (get movement_msgs::CommandToOpenCMSrv :response) movement_msgs::CommandToOpenCMSrvResponse)
@@ -104,24 +104,24 @@
 (defmethod movement_msgs::CommandToOpenCMSrvRequest
   (:response () (instance movement_msgs::CommandToOpenCMSrvResponse :init)))
 
-(setf (get movement_msgs::CommandToOpenCMSrvRequest :md5sum-) "006dfbee25aeee1268324ecc4e306ddb")
+(setf (get movement_msgs::CommandToOpenCMSrvRequest :md5sum-) "4de78da2a6cc02a56fee1788f2bfe738")
 (setf (get movement_msgs::CommandToOpenCMSrvRequest :datatype-) "movement_msgs/CommandToOpenCMSrvRequest")
 (setf (get movement_msgs::CommandToOpenCMSrvRequest :definition-)
-      "int16 opencm_command
+      "string opencm_command
 ---
 bool command_executed
 ")
 
-(setf (get movement_msgs::CommandToOpenCMSrvResponse :md5sum-) "006dfbee25aeee1268324ecc4e306ddb")
+(setf (get movement_msgs::CommandToOpenCMSrvResponse :md5sum-) "4de78da2a6cc02a56fee1788f2bfe738")
 (setf (get movement_msgs::CommandToOpenCMSrvResponse :datatype-) "movement_msgs/CommandToOpenCMSrvResponse")
 (setf (get movement_msgs::CommandToOpenCMSrvResponse :definition-)
-      "int16 opencm_command
+      "string opencm_command
 ---
 bool command_executed
 ")
 
 
 
-(provide :movement_msgs/CommandToOpenCMSrv "006dfbee25aeee1268324ecc4e306ddb")
+(provide :movement_msgs/CommandToOpenCMSrv "4de78da2a6cc02a56fee1788f2bfe738")
 
 

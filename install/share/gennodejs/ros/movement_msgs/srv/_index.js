@@ -1,13 +1,13 @@
 
 "use strict";
 
-let ApprovedMovementSrv = require('./ApprovedMovementSrv.js')
+let WalkTestParametersSrv = require('./WalkTestParametersSrv.js')
 let BehRequestSrv = require('./BehRequestSrv.js')
 let WalkCreatorRequestSrv = require('./WalkCreatorRequestSrv.js')
 let CommandToOpenCMSrv = require('./CommandToOpenCMSrv.js')
 
 module.exports = {
-  ApprovedMovementSrv: ApprovedMovementSrv,
+  WalkTestParametersSrv: WalkTestParametersSrv,
   BehRequestSrv: BehRequestSrv,
   WalkCreatorRequestSrv: WalkCreatorRequestSrv,
   CommandToOpenCMSrv: CommandToOpenCMSrv,

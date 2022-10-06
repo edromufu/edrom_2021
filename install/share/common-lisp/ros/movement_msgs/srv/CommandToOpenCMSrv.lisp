@@ -10,8 +10,8 @@
   ((opencm_command
     :reader opencm_command
     :initarg :opencm_command
-    :type cl:fixnum
-    :initform 0))
+    :type cl:string
+    :initform ""))
 )
 
 (cl:defclass CommandToOpenCMSrv-request (<CommandToOpenCMSrv-request>)
@@ -28,17 +28,23 @@
   (opencm_command m))
 (cl:defmethod roslisp-msg-protocol:serialize ((msg <CommandToOpenCMSrv-request>) ostream)
   "Serializes a message object of type '<CommandToOpenCMSrv-request>"
-  (cl:let* ((signed (cl:slot-value msg 'opencm_command)) (unsigned (cl:if (cl:< signed 0) (cl:+ signed 65536) signed)))
-    (cl:write-byte (cl:ldb (cl:byte 8 0) unsigned) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 8) unsigned) ostream)
-    )
+  (cl:let ((__ros_str_len (cl:length (cl:slot-value msg 'opencm_command))))
+    (cl:write-byte (cl:ldb (cl:byte 8 0) __ros_str_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 8) __ros_str_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 16) __ros_str_len) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 24) __ros_str_len) ostream))
+  (cl:map cl:nil #'(cl:lambda (c) (cl:write-byte (cl:char-code c) ostream)) (cl:slot-value msg 'opencm_command))
 )
 (cl:defmethod roslisp-msg-protocol:deserialize ((msg <CommandToOpenCMSrv-request>) istream)
   "Deserializes a message object of type '<CommandToOpenCMSrv-request>"
-    (cl:let ((unsigned 0))
-      (cl:setf (cl:ldb (cl:byte 8 0) unsigned) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 8) unsigned) (cl:read-byte istream))
-      (cl:setf (cl:slot-value msg 'opencm_command) (cl:if (cl:< unsigned 32768) unsigned (cl:- unsigned 65536))))
+    (cl:let ((__ros_str_len 0))
+      (cl:setf (cl:ldb (cl:byte 8 0) __ros_str_len) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 8) __ros_str_len) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 16) __ros_str_len) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 24) __ros_str_len) (cl:read-byte istream))
+      (cl:setf (cl:slot-value msg 'opencm_command) (cl:make-string __ros_str_len))
+      (cl:dotimes (__ros_str_idx __ros_str_len msg)
+        (cl:setf (cl:char (cl:slot-value msg 'opencm_command) __ros_str_idx) (cl:code-char (cl:read-byte istream)))))
   msg
 )
 (cl:defmethod roslisp-msg-protocol:ros-datatype ((msg (cl:eql '<CommandToOpenCMSrv-request>)))
@@ -49,19 +55,19 @@
   "movement_msgs/CommandToOpenCMSrvRequest")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql '<CommandToOpenCMSrv-request>)))
   "Returns md5sum for a message object of type '<CommandToOpenCMSrv-request>"
-  "006dfbee25aeee1268324ecc4e306ddb")
+  "4de78da2a6cc02a56fee1788f2bfe738")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql 'CommandToOpenCMSrv-request)))
   "Returns md5sum for a message object of type 'CommandToOpenCMSrv-request"
-  "006dfbee25aeee1268324ecc4e306ddb")
+  "4de78da2a6cc02a56fee1788f2bfe738")
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql '<CommandToOpenCMSrv-request>)))
   "Returns full string definition for message of type '<CommandToOpenCMSrv-request>"
-  (cl:format cl:nil "int16 opencm_command~%~%~%"))
+  (cl:format cl:nil "string opencm_command~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql 'CommandToOpenCMSrv-request)))
   "Returns full string definition for message of type 'CommandToOpenCMSrv-request"
-  (cl:format cl:nil "int16 opencm_command~%~%~%"))
+  (cl:format cl:nil "string opencm_command~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:serialization-length ((msg <CommandToOpenCMSrv-request>))
   (cl:+ 0
-     2
+     4 (cl:length (cl:slot-value msg 'opencm_command))
 ))
 (cl:defmethod roslisp-msg-protocol:ros-message-to-list ((msg <CommandToOpenCMSrv-request>))
   "Converts a ROS message object to a list"
@@ -107,10 +113,10 @@
   "movement_msgs/CommandToOpenCMSrvResponse")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql '<CommandToOpenCMSrv-response>)))
   "Returns md5sum for a message object of type '<CommandToOpenCMSrv-response>"
-  "006dfbee25aeee1268324ecc4e306ddb")
+  "4de78da2a6cc02a56fee1788f2bfe738")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql 'CommandToOpenCMSrv-response)))
   "Returns md5sum for a message object of type 'CommandToOpenCMSrv-response"
-  "006dfbee25aeee1268324ecc4e306ddb")
+  "4de78da2a6cc02a56fee1788f2bfe738")
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql '<CommandToOpenCMSrv-response>)))
   "Returns full string definition for message of type '<CommandToOpenCMSrv-response>"
   (cl:format cl:nil "bool command_executed~%~%~%"))

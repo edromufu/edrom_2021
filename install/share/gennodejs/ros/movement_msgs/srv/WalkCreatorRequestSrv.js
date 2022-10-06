@@ -194,7 +194,6 @@ class WalkCreatorRequestSrvResponse {
   static messageDefinition() {
     // Returns full string definition for message
     return `
-    
     bool success
     
     `;

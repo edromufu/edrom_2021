@@ -186,10 +186,10 @@
   "2ef0cc05178b854a3a3baabade41abc2")
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql '<WalkCreatorRequestSrv-response>)))
   "Returns full string definition for message of type '<WalkCreatorRequestSrv-response>"
-  (cl:format cl:nil "~%bool success~%~%~%"))
+  (cl:format cl:nil "bool success~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql 'WalkCreatorRequestSrv-response)))
   "Returns full string definition for message of type 'WalkCreatorRequestSrv-response"
-  (cl:format cl:nil "~%bool success~%~%~%"))
+  (cl:format cl:nil "bool success~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:serialization-length ((msg <WalkCreatorRequestSrv-response>))
   (cl:+ 0
      1

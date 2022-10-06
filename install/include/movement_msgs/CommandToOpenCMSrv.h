@@ -40,7 +40,7 @@ template<>
 struct MD5Sum< ::movement_msgs::CommandToOpenCMSrv > {
   static const char* value()
   {
-    return "006dfbee25aeee1268324ecc4e306ddb";
+    return "4de78da2a6cc02a56fee1788f2bfe738";
   }
 
   static const char* value(const ::movement_msgs::CommandToOpenCMSrv&) { return value(); }
