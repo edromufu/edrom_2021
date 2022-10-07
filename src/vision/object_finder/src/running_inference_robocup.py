@@ -43,7 +43,7 @@ def set_model_input(net):
 
     #o pedro mandou tirar o underline e botar ponto!
     model = cv2.dnn.DetectionModel(net)
-    model.setInputParams(size=(416, 416), scale=1/255, swapRB=True)
+    model.setInputParams(size=(416,416), scale=1/255, swapRB=True)
     
     return model
 
@@ -67,27 +67,28 @@ def draw_results(frame, classes, scores, boxes):
 
     # Draw the bounding boxes
     
+    #i = scores.index(max(scores))
     for i in range(len(boxes)):
         [x_top, y_top, roi_width, roi_height] = boxes[i]
         p1 = (x_top, y_top)
         p2 = (x_top + roi_width, y_top + roi_height)
         p3 = (x_top, y_top - 5)
-        
+            
         cv2.rectangle(frame, p1, p2, outline_color_list[classes[i]], 2)
         
         confidence = str(round(float(scores[i]), 2))
         
-        if classes[i] == 0:
-            label = "Ball"
+        #if classes[i] == 0:
+        label = "Ball"
             
-        elif classes[i] == 1:
+        '''elif classes[i] == 1:
             label = "Left_goalpost"
         else:
             label = "Right_goalpost"
-        
-        cv2.putText(frame, label + " " + confidence, p3, cv2.FONT_HERSHEY_PLAIN, 1, (255,255,255), 1)
-    
+        '''
+    #cv2.putText(frame, label + " " + confidence, p3, cv2.FONT_HERSHEY_PLAIN, 1, (255,255,255), 1)
+
 
 def create_binary_image(net, current_frame):
 
-    return cv2.dnn.blobFromImage(current_frame, size = (416, 416))
+    return cv2.dnn.blobFromImage(current_frame, size = (1920, 1080))

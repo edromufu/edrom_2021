@@ -90,18 +90,16 @@ class Node():
         '''Sends the current frame to the inference code.'''
         #self.binary_image = ri.create_binary_image(self.net, self.current_frame)
 
-        try:
-            self.classes, self.scores, self.boxes, self.fps = ri.detect_model(self.model, self.current_frame)
-            self.show_result_frame()
-            self.publish_results()
-        except Exception:
-            pass
+
+        self.classes, self.scores, self.boxes, self.fps = ri.detect_model(self.model, self.current_frame)
+        self.show_result_frame()
+        self.publish_results()
+
 
     def show_result_frame(self):
         '''Shows the result frame obtained from neural network on OpenCV window.'''
 
         ri.draw_results(self.current_frame, self.classes, self.scores, self.boxes)
-
         cv2.imshow("Current Frame", self.current_frame)
         cv2.waitKey(1)
 
