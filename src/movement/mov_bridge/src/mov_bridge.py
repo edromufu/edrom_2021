@@ -42,6 +42,7 @@ class MovementCommunication():
                 if requisition.required_movement == 'emergency_shutdown':
                     if not self.is_simulation:
                         self.client_torque_disable('shutdown_now')
+                        
                     else:
                         self.stop_motions_msg.data = True
                         self.stop_motions_pub.publish(self.stop_motions_msg)
@@ -53,7 +54,7 @@ class MovementCommunication():
                 else:
                     if not self.is_simulation:
                         self.client_torque_disable('reborn')
-
+                        
                     self.stop_motions_msg.data = False
                     self.stop_motions_pub.publish(self.stop_motions_msg)
 

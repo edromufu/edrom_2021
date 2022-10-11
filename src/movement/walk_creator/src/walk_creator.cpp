@@ -165,10 +165,10 @@ bool WalkCreator::runWalk(const Rhoban::IKWalkParameters& params, double timeLen
         } else {
             positions.positions = { outputs.right_hip_yaw, outputs.left_hip_yaw,
                                     outputs.right_hip_roll, outputs.left_hip_roll, 
-                                    -outputs.right_hip_pitch, -outputs.left_hip_pitch,                                    
-                                    -outputs.right_knee, outputs.left_knee, 
+                                    outputs.right_hip_pitch, outputs.left_hip_pitch,                                    
+                                    outputs.right_knee, outputs.left_knee, 
                                     outputs.right_ankle_roll, outputs.left_ankle_roll,
-                                    -outputs.right_ankle_pitch, outputs.left_ankle_pitch                                    
+                                    outputs.right_ankle_pitch, outputs.left_ankle_pitch                                    
                                   };
 
             walk_motor_positions_pub.publish(positions);

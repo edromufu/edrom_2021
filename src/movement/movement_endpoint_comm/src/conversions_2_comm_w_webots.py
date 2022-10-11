@@ -5,6 +5,8 @@ import rospy
 from movement_msgs.msg import WalkingPositionsMsg, WebotsRequestMsg
 from std_msgs.msg import Bool
 
+MOTOR_ROTATION_ORIENTATION = [1,1,1,1,-1,-1,-1,1,1,1,-1,1]
+
 class Conversion2Webots():
     time_step = 0.064
 
@@ -26,7 +28,10 @@ class Conversion2Webots():
 
     def newPositionRequest(self, msg):
         if self.allow_pub:
-            self.pub_to_webots_msg.motors_position = self.current_position[:6] + list(msg.positions) + self.current_position[18:]
+            self.pub_to_webots_msg.motors_position = self.current_position[:6]
+            for index, position in msg.positions:
+                self.pub_to_webots_msg.motors_position.append(position*MOTOR_ROTATION_ORIENTATION[index]) 
+            self.pub_to_webots_msg.motors_position.append(self.current_position[18:])
             
             self.pub_to_webots_msg.motors_velocity = self.calculateNewVelocity(self.current_position,self.pub_to_webots_msg.motors_position)
 

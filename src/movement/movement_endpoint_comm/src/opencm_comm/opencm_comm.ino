@@ -130,11 +130,13 @@ void loop()
             openCmWb.syncWrite(0,&openCmData[0]);
         }   
     }
+    /*
     else if(command == feedback && !has_executed)
     {
-        feedbackMotor();
+        
         has_executed = true;
-    }
+    }*/
+    feedbackMotor();
     nh.spinOnce();
 }
 
