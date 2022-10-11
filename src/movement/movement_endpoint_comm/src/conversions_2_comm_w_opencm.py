@@ -11,7 +11,7 @@ MOTORS_ZERO = [2060, 1919, 1959, 2016, 2075, 2048, 2152, 2053, 2022, 2051, 2076,
 class Conversion2OpenCm():
 
     def __init__(self):
-        self.current_position = None
+        self.current_position = [2048]*20
         
         rospy.Subscriber('opencm/response', OpencmResponseMsg, self.currentMotorsPositionCapture)
         rospy.Subscriber('/walk_creator/positions', WalkingPositionsMsg, self.newPositionRequest)

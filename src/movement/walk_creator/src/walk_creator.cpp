@@ -1,5 +1,4 @@
 #include "walk_creator.h"
-#include "movement_msgs/WalkingPositionsMsg.h"
 
 bool WalkCreator::parametersUpdateRequest(movement_msgs::WalkTestParametersSrv::Request  &req, movement_msgs::WalkTestParametersSrv::Response &res)
 {
@@ -139,16 +138,14 @@ void WalkCreator::initParams()
     turn = paramsJson["step_parameters"]["turnGain"].asDouble();
 }
 
-bool WalkCreator::walkRequest(movement_msgs::WalkCreatorRequestSrv::Request  &req_params, movement_msgs::WalkCreatorRequestSrv::Response &res)
+void WalkCreator::walkRequest(const movement_msgs::WalkCreatorRequestMsg& msg)
 {
-    params.enabledGain = req_params.enabledGain;
-    params.stepGain = req_params.stepGain*step;
-    params.lateralGain = req_params.lateralGain*lateral;
-    params.turnGain = req_params.turnGain*turn;
+    params.enabledGain = msg.enabledGain;
+    params.stepGain = msg.stepGain*step;
+    params.lateralGain = msg.lateralGain*lateral;
+    params.turnGain = msg.turnGain*turn;
 
-    res.success = runWalk(params, 5.12, phase, time);
-
-    return true;
+    runWalk(params, 5.12, phase, time);
 }
 
 bool WalkCreator::runWalk(const Rhoban::IKWalkParameters& params, double timeLength, double& phase, double& time)
@@ -186,7 +183,7 @@ WalkCreator::WalkCreator(ros::NodeHandle nh)
     walk_motor_positions_pub = nh.advertise<movement_msgs::WalkingPositionsMsg>("/walk_creator/positions", 1000);
     interface_parameters_update = nh.serviceClient<movement_msgs::WalkTestParametersSrv>("/walk_creator/walking_params");
 
-    request_walk_creation = nh.advertiseService("/approved_movement_prep/IKWalk", &WalkCreator::walkRequest, this);
+    request_walk_creation = nh.subscribe("/approved_movement_prep/IKWalk", 10, &WalkCreator::walkRequest, this);
     request_parameters_update = nh.advertiseService("/movement_interface/walking_params", &WalkCreator::parametersUpdateRequest, this);
 
     initParams();

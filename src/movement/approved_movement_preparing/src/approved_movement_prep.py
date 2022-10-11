@@ -5,8 +5,7 @@ import rospy
 import json
 import os
 
-from movement_msgs.srv import WalkCreatorRequestSrv
-from movement_msgs.msg import HeadParamsMsg, ApprovedMovementMsg
+from movement_msgs.msg import HeadParamsMsg, ApprovedMovementMsg, WalkCreatorRequestMsg
 
 str_walking_movs_class = 'walking_movements'
 str_head_movs_class = 'head_movements'
@@ -20,8 +19,7 @@ class MovementPreparation():
     def __init__(self):
         rospy.Subscriber('/movement/approved_movement', ApprovedMovementMsg, self.prepareMovement)
 
-        rospy.wait_for_service('/approved_movement_prep/IKWalk')
-        self.walking_params_client = rospy.ServiceProxy('/approved_movement_prep/IKWalk', WalkCreatorRequestSrv)
+        self.walking_params_publisher = rospy.Publisher('/approved_movement_prep/IKWalk', WalkCreatorRequestMsg, queue_size=10)
         self.head_params_publisher = rospy.Publisher('/approved_movement_prep/XYHead', HeadParamsMsg, queue_size=10)
         
         self.params_data = self.load_json_params()
@@ -57,8 +55,13 @@ class MovementPreparation():
                     self.bodyAlignmentPublish(self.params_data[mov_class][str_mov_params_field][request.approved_movement])  
     
     def walkingParamsRequest(self, params):
-        client_call = self.walking_params_client(params['enabledGain'],params['stepGain'],params['lateralGain'],params['turnGain']).success
-        return client_call
+        params2publish = WalkCreatorRequestMsg()
+        params2publish.enabledGain = params['enabledGain']
+        params2publish.stepGain = params['stepGain']
+        params2publish.lateralGain = params['lateralGain']
+        params2publish.turnGain = params['turnGain']
+
+        self.walking_params_publisher.publish(params2publish)
     
     def headParamsPublish(self, params):
         params2publish = HeadParamsMsg()
@@ -71,15 +74,10 @@ class MovementPreparation():
         head_params2publish = HeadParamsMsg()
 
         walking_params_from_json = self.params_data[str_walking_movs_class][str_mov_params_field][params[str_walking_movs_class]]
-
         head_params_from_json = self.params_data[str_head_movs_class][str_mov_params_field][params[str_head_movs_class]]
-        head_params2publish.direction = head_params_from_json['direction']
-        head_params2publish.pattern = head_params_from_json['pattern']
 
-        client_call = self.walking_params_client(walking_params_from_json['enabledGain'],walking_params_from_json['stepGain'],walking_params_from_json['lateralGain'],walking_params_from_json['turnGain']).success
-        self.head_params_publisher.publish(head_params2publish)
-
-        return client_call
+        self.walkingParamsRequest(walking_params_from_json)
+        self.headParamsPublish(head_params_from_json)
 
 if __name__ == "__main__":
     rospy.init_node('Approved_movement_prep_node', anonymous=False)

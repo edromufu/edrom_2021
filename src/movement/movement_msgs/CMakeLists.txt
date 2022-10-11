@@ -24,13 +24,13 @@ add_message_files(
   OpencmResponseMsg.msg
   WebotsRequestMsg.msg
   ApprovedMovementMsg.msg
+  WalkCreatorRequestMsg.msg
   )
 
 ## Generate services in the 'srv' folder
 add_service_files(
   FILES
   BehRequestSrv.srv
-  WalkCreatorRequestSrv.srv
   CommandToOpenCMSrv.srv
   WalkTestParametersSrv.srv
 )
