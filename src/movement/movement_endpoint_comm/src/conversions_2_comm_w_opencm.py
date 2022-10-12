@@ -23,17 +23,15 @@ class Conversion2OpenCm():
         self.pub_to_opencm_msg = OpencmRequestMsg()
 
     def currentMotorsPositionCapture(self, msg):
-        self.current_position = msg.motors_position
-        print('Atualizando posição atual no código de conversão.')
+        self.current_position = list(msg.motors_position)
 
     def newPositionRequest(self, msg):
-        response = self.client_to_request_opencm_command('feedback')
-        self.client_to_request_opencm_command('position_dt')
+        #response = self.client_to_request_opencm_command('feedback')
+        #self.client_to_request_opencm_command('position_dt')
 
         request_position_in_motor_position = self.convertRad2MotorPosition(msg.positions)
 
-        self.pub_to_opencm_msg.motors_position = self.current_position[:6] + request_position_in_motor_position + self.current_position[18:]
-        print('Montando o vetor de posições com a posição atual no código de conversão.')
+        self.pub_to_opencm_msg.motors_position = self.current_position[:6] + list(request_position_in_motor_position) + self.current_position[18:]
         
         self.pub_to_opencm_msg.motors_velocity = [20]*20
 

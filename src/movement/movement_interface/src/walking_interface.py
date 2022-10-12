@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 #coding=utf-8
 from walking_ui_config import Ui_MainWindow
-from movement_msgs.srv import WalkTestParametersSrv, BehRequestSrv
+from movement_msgs.srv import WalkTestParametersSrv
+from movement_msgs.msg import ApprovedMovementMsg
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import *
@@ -17,7 +18,9 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self)
         self.setWindowTitle('Interface de Teste de Caminhada')
 
-        self.client_walk = rospy.ServiceProxy('/movement/mov_bridge/commands2movement', BehRequestSrv)
+        self.pub_walk = rospy.Publisher('/movement/approved_movement', ApprovedMovementMsg, queue_size=10)
+        self.pub_walk_msg = ApprovedMovementMsg()
+
         self.client_parameters = rospy.ServiceProxy('/movement_interface/walking_params', WalkTestParametersSrv)
         rospy.Service('/walk_creator/walking_params', WalkTestParametersSrv, self.receiveParameters)
 
@@ -149,16 +152,8 @@ class MainWindow(QMainWindow):
 
         if self.parameters_dict['currentWalk'] != 'emergency_shutdown':
             self.client_parameters(*self.parameters_dict.values())
-
-        resp1 = self.client_walk(self.parameters_dict['currentWalk'], True)
-
-        if self.parameters_dict['currentWalk'] == 'emergency_shutdown':
-            self.client_walk(self.parameters_dict['currentWalk'], False)
-        
-        if resp1.response:
-            self.ui.update_window_btn.setStyleSheet("QPushButton{background-color: rgb(66,245,155);}")
-        else:
-            self.ui.update_window_btn.setStyleSheet("QPushButton{background-color: rgb(245,66,66);}")
+            self.pub_walk_msg.approved_movement = self.parameters_dict['currentWalk']
+            self.pub_walk.publish(self.pub_walk_msg)
         
     def captureParametersPageValues(self):
         for widget in self.ui.scrollAreaWidgetContents.findChildren(QFrame):
