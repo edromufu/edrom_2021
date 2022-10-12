@@ -10,6 +10,11 @@
     <arg name="simulation" default="false" />
     <node name="movement_final_comm" pkg="movement_endpoint_comm" type="conversions_2_comm_w_webots.py" output="screen" if="$(eval arg('simulation'))">  </node>
     <node name="movement_final_comm" pkg="movement_endpoint_comm" type="conversions_2_comm_w_opencm.py" output="screen" if="$(eval arg('simulation') == false)">  </node>
+    
+    <!-- OpenCM física -->
+    <node name="opencm" pkg="rosserial_python" type="serial_node.py" output="screen" if="$(eval arg('simulation') == false)">
+        <param name="port" value="/dev/ttyACM0" />
+    </node>
 
     <!-- Webots -->
 	<include file="$(find movement_simulation)/launch/movement_simulator.launch" if="$(eval arg('simulation'))"> </include>

@@ -3,7 +3,7 @@
 
 import rospy
 from movement_msgs.msg import OpencmResponseMsg, WalkingPositionsMsg, OpencmRequestMsg
-from std_msgs.msg import Bool
+from movement_msgs.srv import CommandToOpenCMSrv
 
 MOTOR_ROTATION_ORIENTATION = [-1,-1,1,1,1,-1,-1,1,-1,-1,-1,1]
 MOTORS_ZERO = [2060, 1919, 1959, 2016, 2075, 2048, 2152, 2053, 2022, 2051, 2076, 2009]
@@ -11,34 +11,33 @@ MOTORS_ZERO = [2060, 1919, 1959, 2016, 2075, 2048, 2152, 2053, 2022, 2051, 2076,
 class Conversion2OpenCm():
 
     def __init__(self):
-        self.current_position = [2048]*20
-        
+        self.current_position = [2048]*6 + MOTORS_ZERO + [2048]*2
+
+        rospy.wait_for_service('opencm/request_command')
+        self.client_to_request_opencm_command = rospy.ServiceProxy('opencm/request_command', CommandToOpenCMSrv)
+
         rospy.Subscriber('opencm/response', OpencmResponseMsg, self.currentMotorsPositionCapture)
         rospy.Subscriber('/walk_creator/positions', WalkingPositionsMsg, self.newPositionRequest)
-        rospy.Subscriber('/mov_bridge/is_motion_stopped', Bool, self.updateIsMotionStopped)
-        self.pub_to_opencm = rospy.Publisher('opencm/request_move', OpencmRequestMsg, queue_size=1)
+
+        self.pub_to_opencm = rospy.Publisher('opencm/request_move', OpencmRequestMsg, queue_size=10)
         self.pub_to_opencm_msg = OpencmRequestMsg()
-
-        self.allow_pub = True
-
-    def updateIsMotionStopped(self, msg):
-        if msg.data:
-            self.allow_pub = False
-        else:
-            self.allow_pub = True
 
     def currentMotorsPositionCapture(self, msg):
         self.current_position = msg.motors_position
-    
+        print('Atualizando posição atual no código de conversão.')
+
     def newPositionRequest(self, msg):
-        if self.allow_pub:
-            request_position_in_motor_position = self.convertRad2MotorPosition(msg.positions)
+        response = self.client_to_request_opencm_command('feedback')
+        self.client_to_request_opencm_command('position_dt')
 
-            self.pub_to_opencm_msg.motors_position = list(self.current_position[:6]) + list(request_position_in_motor_position) + list(self.current_position[18:])
+        request_position_in_motor_position = self.convertRad2MotorPosition(msg.positions)
 
-            self.pub_to_opencm_msg.motors_velocity = [20]*20
+        self.pub_to_opencm_msg.motors_position = self.current_position[:6] + request_position_in_motor_position + self.current_position[18:]
+        print('Montando o vetor de posições com a posição atual no código de conversão.')
+        
+        self.pub_to_opencm_msg.motors_velocity = [20]*20
 
-            self.pub_to_opencm.publish(self.pub_to_opencm_msg)
+        self.pub_to_opencm.publish(self.pub_to_opencm_msg)
 
     def convertRad2MotorPosition(self, position_in_rad):
 

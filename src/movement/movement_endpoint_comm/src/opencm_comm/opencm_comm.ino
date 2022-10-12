@@ -23,9 +23,12 @@ enum Command {
     live, position_dt, shutdown_now, reborn, feedback
 };
 
-char buffer [35];
-int32_t data[DOF] = {0};
-int32_t vel[DOF] = {0}; 
+int32_t data[DOF] = {2048, 1050, 2048, 2200, 2048, 2048,
+                     2060, 1919, 1959, 2016, 2075, 2048, 2152, 2053, 2022, 2051, 2076, 2009,
+                     2048, 2048};
+int32_t vel[DOF] = {40, 40, 40, 40, 40, 40,
+                    40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40,
+                    40, 40}; 
 bool has_executed = true;
 Command command;
 
@@ -38,37 +41,42 @@ void requestMovement(const movement_msgs::OpencmRequestMsg& rqt);
 // Service para alteração do estado de execução da opencm entre os commands enumerados
 void resquestCommand(movement_msgs::CommandToOpenCMSrv::Request &req, movement_msgs::CommandToOpenCMSrv::Response &res);
 void resquestCommand(const movement_msgs::CommandToOpenCMSrv::Request &req, movement_msgs::CommandToOpenCMSrv::Response &res)
-{
-    if(strcmp (req.opencm_command,"position_dt") == 0)
+{   
+    if (strcmp (req.opencm_command,"feedback") == 0)
+    {
+        feedbackMotor();
+        res.command_executed = true;
+    }
+    else if(strcmp (req.opencm_command,"position_dt") == 0)
     {
         command = position_dt;
         res.command_executed = true;
+        has_executed = !res.command_executed;
     }
     else if(strcmp (req.opencm_command,"shutdown_now") == 0)
     {
         command = shutdown_now;
         res.command_executed = true;
+        has_executed = !res.command_executed;
     }
     else if (strcmp (req.opencm_command,"reborn") == 0)
     {
         command = reborn;
         res.command_executed = true;
+        has_executed = !res.command_executed;
     }
     else if (strcmp (req.opencm_command,"live") == 0)
     {
         command = live;
         res.command_executed = true;
-    }
-    else if (strcmp (req.opencm_command,"feedback") == 0)
-    {
-        command = feedback;
-        res.command_executed = true;
+        has_executed = !res.command_executed;
     }
     else
     {
-        res.command_executed = false;    
+        res.command_executed = false;   
+        has_executed = !res.command_executed; 
     }
-    has_executed = !res.command_executed;
+    
 }
 
 // Workbenchs
@@ -93,7 +101,6 @@ void setup()
         nh.advertiseService(service);
         nh.spinOnce();
     }
-    setupDynamixel();
 }
 
 void loop()
@@ -114,30 +121,34 @@ void loop()
         has_executed = true;
     }
     else if(command == position_dt)
-    {
-        nh.loginfo("Entrou no position_dt");
+    {   
+        //int pingCount = 0;
+        int id;
         for (int index = 0; index < opencmMotorCount; index++)
         {
-            nh.loginfo("Capturou posicao e velocidade dos motores");
-            int id = opencmMotors[index];
+            id = opencmMotors[index];
+            //pingCount += openCmWb.ping(id);
             openCmData[index] = (int32_t)data[id];
             openCmSpeed[index] = (int32_t)vel[id];
         }
         if(opencmMotorCount > 0)
         {
-            nh.loginfo("Enviando");
             openCmWb.syncWrite(1,&openCmSpeed[0]);
             openCmWb.syncWrite(0,&openCmData[0]);
-        }   
+        }
+        /*
+        if(opencmMotorCount == pingCount && opencmMotorCount != 0)
+        {
+            openCmWb.syncWrite(1,&openCmSpeed[0]);
+            openCmWb.syncWrite(0,&openCmData[0]);
+        } 
+        else
+        {
+            setupDynamixel();
+        }*/
     }
-    /*
-    else if(command == feedback && !has_executed)
-    {
-        
-        has_executed = true;
-    }*/
-    feedbackMotor();
     nh.spinOnce();
+    delay(50);
 }
 
 // Recebe os dados de posição e velocidade para serem enviados aos motores no próximo loop
@@ -215,12 +226,18 @@ void setupDynamixel()
 }
 void scan() 
 {
-    char buffer [35];
     free(openCmData);
     free(openCmSpeed);
+    free(openCmDataFeedback);
+    free(openCmSpeedFeedback);
 
+    opencmMotorCount = 0;
+    memset(opencmMotors, 0, DOF);
+    memset(modelMotors, 0, DOF);
+    
     nh.loginfo("[OPENCM] PROCURANDO MOTORES CONECTADOS");
     nh.loginfo("");
+    char buffer[35];
         
     if(openCmWb.scan(opencmMotors,&opencmMotorCount,DOF))
     {
