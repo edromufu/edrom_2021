@@ -55,6 +55,7 @@ def detect_model(model, current_frame):
     classes, scores, boxes = model.detect(current_frame, 0.45, 0.4)
     finish_time = time.time()
     fps = 1/(finish_time-start_time)
+    
 
     #print(f"Classes: {classes}, Scores: {scores}")
     #print(f"Boxes: {boxes}")
@@ -66,8 +67,7 @@ def detect_model(model, current_frame):
 def draw_results(frame, classes, scores, boxes):
 
     # Draw the bounding boxes
-    
-    #i = scores.index(max(scores))
+
     for i in range(len(boxes)):
         [x_top, y_top, roi_width, roi_height] = boxes[i]
         p1 = (x_top, y_top)
@@ -84,11 +84,11 @@ def draw_results(frame, classes, scores, boxes):
         '''elif classes[i] == 1:
             label = "Left_goalpost"
         else:
-            label = "Right_goalpost"
-        '''
-    #cv2.putText(frame, label + " " + confidence, p3, cv2.FONT_HERSHEY_PLAIN, 1, (255,255,255), 1)
+            label = "Right_goalpost"'''
+        
+        cv2.putText(frame, label+" " + confidence, p3, cv2.FONT_HERSHEY_PLAIN, 1, (255,255,255), 1)
 
 
 def create_binary_image(net, current_frame):
 
-    return cv2.dnn.blobFromImage(current_frame, size = (1920, 1080))
+    return cv2.dnn.blobFromImage(current_frame, size = (416, 416))

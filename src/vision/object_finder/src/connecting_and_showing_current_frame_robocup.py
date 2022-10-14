@@ -9,10 +9,15 @@ from cv_bridge import CvBridge
 import running_inference_robocup as ri
 
 from vision_msgs.msg import Ball
-from vision_msgs.msg import Leftgoalpost
-from vision_msgs.msg import Rightgoalpost
+#from vision_msgs.msg import Leftgoalpost
+#from vision_msgs.msg import Rightgoalpost
 from vision_msgs.msg import Webotsmsg
 
+'''import cProfile, pstats, io
+from pstats import SortKey
+pr = cProfile.Profile()
+pr.enable()
+'''
 class Node():
 
     # Inicializando o nó
@@ -28,7 +33,7 @@ class Node():
 
         self.publisher = rospy.Publisher('/webots_natasha/vision_inference', Webotsmsg, queue_size=100)
 
-        #SE FOR NO REAL 
+        #SE FOR NO REAL
         self.get_webcam()
 
         #SE FOR NO WEBOTS
@@ -70,19 +75,18 @@ class Node():
 
         self.opencv_bridge = CvBridge()
         while True:
-            try:
-                self.current_frame = cv2.VideoCapture("/dev/video0")
-                _, self.current_frame = self.current_frame.read()
-                self.current_frame = cv2.resize(self.current_frame, (416,416))
-                #self.current_frame = cv2.blur(self.current_frame, (10,10))
 
-                key = cv2.waitKey(5)
+            self.current_frame = cv2.VideoCapture("/dev/video0")
+            _, self.current_frame = self.current_frame.read()
+            self.current_frame = cv2.resize(self.current_frame, (416,416))
+            #self.current_frame = cv2.blur(self.current_frame, (10,10))
 
-                if key == 27:      #tecla ESC fecha as janelas
-                    break
+            key = cv2.waitKey(1)
             
-            except Exception as e:
-                print(f"{e}")
+
+            if key == 27:      #tecla ESC fecha as janelas
+                break
+
 
             self.send_current_frame_to_inference()
 
@@ -92,8 +96,8 @@ class Node():
 
 
         self.classes, self.scores, self.boxes, self.fps = ri.detect_model(self.model, self.current_frame)
-        self.show_result_frame()
-        self.publish_results()
+        self.show_result_frame() # comentar
+        self.publish_results() 
 
 
     def show_result_frame(self):
@@ -130,12 +134,12 @@ class Node():
             if self.classes[i] not in self.list_of_classes_in_current_frame:
                 self.list_of_classes_in_current_frame.append(self.classes[i])
 
-                if self.classes[i]== 0:
+                if self.classes[i]== 1:
                     ball = Ball()
                     [ball.found, ball.x, ball.y, ball.roi_width, ball.roi_height] = results
                     objects_msg.ball = ball
 
-                elif self.classes[i] == 1:
+                '''elif self.classes[i] == 0:
                     leftgoalpost = Leftgoalpost()
                     [leftgoalpost.found, leftgoalpost.x, leftgoalpost.y, leftgoalpost.roi_width, leftgoalpost.roi_height] = results
                     objects_msg.leftgoalpost = leftgoalpost
@@ -143,7 +147,7 @@ class Node():
                 else:
                     rightgoalpost = Rightgoalpost()
                     [rightgoalpost.found, rightgoalpost.x, rightgoalpost.y, rightgoalpost.roi_width, rightgoalpost.roi_height] = results
-                    objects_msg.rightgoalpost = rightgoalpost
+                    objects_msg.rightgoalpost = rightgoalpost'''
             
             else:
                 self.maior_x = -1
@@ -169,7 +173,12 @@ class Node():
                 print(self.dict_of_xs)
 
         self.publisher.publish(objects_msg)
-        
-
+        '''
+        pr.disable()
+        s = io.StringIO()
+        sortby = SortKey.CUMULATIVE
+        ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+        ps.print_stats()
+        print(s.getvalue())'''
 
 no_visao = Node('visao')
