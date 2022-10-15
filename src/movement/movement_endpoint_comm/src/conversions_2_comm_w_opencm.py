@@ -26,8 +26,6 @@ class Conversion2OpenCm():
         self.current_position = list(msg.motors_position)
 
     def newPositionRequest(self, msg):
-        #response = self.client_to_request_opencm_command('feedback')
-        #self.client_to_request_opencm_command('position_dt')
 
         request_position_in_motor_position = self.convertRad2MotorPosition(msg.positions)
 

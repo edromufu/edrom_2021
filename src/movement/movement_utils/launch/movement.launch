@@ -19,9 +19,13 @@
     <!-- Webots -->
 	<include file="$(find movement_simulation)/launch/movement_simulator.launch" if="$(eval arg('simulation'))"> </include>
 
-    <!-- Códigos de teste e seus parametros passados no terminal -->
+    <!-- Códigos de teste de caminhada e seu parametro passado no terminal -->
     <arg name="walk_test" default="false" />
     <node name="walk_test_interface" pkg="movement_interface" type="walking_interface.py" output="screen" if="$(eval arg('walk_test'))">  </node>
+
+    <!-- Códigos de criação de page e seu parametro passado no terminal -->
+    <arg name="page_creation" default="false" />
+    <node name="page_creator" pkg="movement_page_creator" type="page_capture.py" output="screen" if="$(eval arg('page_creation'))">  </node>
 
     <!-- Códigos de criação de movimento -->
     <node name="walk_creator" pkg="walk_creator" type="walk_creator" output="screen" > 

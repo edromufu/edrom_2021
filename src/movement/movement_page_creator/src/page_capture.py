@@ -69,7 +69,7 @@ class PageCapture():
                                                 filter=filters)
         
         final_page_file = open(path+'.txt', 'w')
-        np.savetxt(final_page_file, self.final_page, fmt='% 4d')
+        np.savetxt(final_page_file, self.final_page, fmt='%d')
         final_page_file.close()
         self.final_page = []
 

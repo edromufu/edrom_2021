@@ -97,5 +97,16 @@
                     "walking_movements": "stop_walk"
                 }
             }
+    },
+    "pages_list":
+    {
+        "function_to_call": "PGRun",
+        "params_all_kinds":
+            {
+                "test1":
+                {
+                    "page_name": "test1"
+                }
+            }
     }
 }
