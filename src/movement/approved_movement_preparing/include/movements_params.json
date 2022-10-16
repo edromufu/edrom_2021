@@ -103,9 +103,9 @@
         "function_to_call": "PGRun",
         "params_all_kinds":
             {
-                "test1":
+                "first_pose":
                 {
-                    "page_name": "test1"
+                    "page_name": "first_pose"
                 }
             }
     }

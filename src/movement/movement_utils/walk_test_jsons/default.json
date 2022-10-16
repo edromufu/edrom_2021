@@ -1,10 +1,10 @@
 {   
     "structural_parameters":
     {
-        "distHipToKnee": 0.093,
-        "distKneeToAnkle": 0.105,
-        "distAnkleToGround": 0.032,
-        "distFeetLateral": 0.092
+        "distHipToKnee": 0.092,
+        "distKneeToAnkle": 0.172,
+        "distAnkleToGround": 0.03,
+        "distFeetLateral": 0.16
     },
     "step_parameters":
     {
