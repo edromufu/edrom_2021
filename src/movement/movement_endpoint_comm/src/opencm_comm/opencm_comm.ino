@@ -6,6 +6,7 @@
 
 #define BAUDRATE 1000000
 #define DOF 20
+#define MOTORS_CONNECTED 18
 
 ros::NodeHandle  nh;
 
@@ -23,9 +24,7 @@ enum Command {
     live, position_dt, shutdown_now, reborn, feedback
 };
 
-int32_t data[DOF] = {2048, 1050, 2048, 2200, 2048, 2048,
-                     2060, 1919, 1959, 2016, 2075, 2048, 2152, 2053, 2022, 2051, 2076, 2009,
-                     2048, 2048};
+int32_t data[DOF] = {3194, 3758, 1828, 2260, 1753, 2159, 2184, 1908, 1825, 2042, 1945, 2098, 2123, 2059, 2014, 1949, 2243, 2309, 0, 0};
 int32_t vel[DOF] = {40, 40, 40, 40, 40, 40,
                     40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40,
                     40, 40}; 
@@ -238,43 +237,47 @@ void scan()
     nh.loginfo("[OPENCM] PROCURANDO MOTORES CONECTADOS");
     nh.loginfo("");
     char buffer[35];
-        
-    if(openCmWb.scan(opencmMotors,&opencmMotorCount,DOF))
+    
+    while(opencmMotorCount != MOTORS_CONNECTED)
     {
-        nh.loginfo("[OPENCM] Procurando motores conectados via TTL");
-        for (uint8_t i = 0; i < opencmMotorCount; i++)
+        if(openCmWb.scan(opencmMotors,&opencmMotorCount,DOF))
         {
-            int id = opencmMotors[i];
-            openCmWb.jointMode(opencmMotors[i], 300, 0);
-            modelMotors[id] = openCmWb.getModelNumber(opencmMotors[i]);
+            nh.loginfo("[OPENCM] Procurando motores conectados via TTL");
+            for (uint8_t i = 0; i < opencmMotorCount; i++)
+            {
+                int id = opencmMotors[i];
+                openCmWb.jointMode(opencmMotors[i], 300, 0);
+                openCmWb.ledOn(opencmMotors[i]);
+                modelMotors[id] = openCmWb.getModelNumber(opencmMotors[i]);
 
-            sprintf (buffer, "|    Model do motor %d: %d|", opencmMotors[i], modelMotors[id]);
-            nh.loginfo(buffer);
-        }
+                sprintf (buffer, "|    Model do motor %d: %d|", opencmMotors[i], modelMotors[id]);
+                nh.loginfo(buffer);
+            }
 
-        openCmData = (int32_t*)malloc(opencmMotorCount * sizeof(int32_t));
-        openCmDataFeedback = (int32_t*)malloc(opencmMotorCount * sizeof(int32_t));
-        openCmSpeed = (int32_t*)malloc(opencmMotorCount * sizeof(int32_t));
-        openCmSpeedFeedback = (int32_t*)malloc(opencmMotorCount * sizeof(int32_t));
-        
-        if(openCmWb.getProtocolVersion() == 1.0) 
-        {
-        nh.loginfo("PROTOCOLO 1.0");
-        openCmWb.addSyncWriteHandler(opencmMotors[0],"Goal_Position");
-        openCmWb.addSyncWriteHandler(opencmMotors[0],"Moving_Speed");
-        openCmWb.addSyncWriteHandler(opencmMotors[0],"Torque_Enable");
-        openCmWb.addSyncWriteHandler(opencmMotors[0],"P_Gain");
-        }
-        else if(openCmWb.getProtocolVersion() == 2.0)
-        {
-        nh.loginfo("PROTOCOLO 2.0");
-        openCmWb.addSyncWriteHandler(opencmMotors[0],"Goal_Position");
-        openCmWb.addSyncWriteHandler(opencmMotors[0],"Profile_Velocity");
-        openCmWb.addSyncWriteHandler(opencmMotors[0],"Torque_Enable");
-        openCmWb.addSyncWriteHandler(opencmMotors[0],"Position_P_Gain");
-        }
-    } 
+            openCmData = (int32_t*)malloc(opencmMotorCount * sizeof(int32_t));
+            openCmDataFeedback = (int32_t*)malloc(opencmMotorCount * sizeof(int32_t));
+            openCmSpeed = (int32_t*)malloc(opencmMotorCount * sizeof(int32_t));
+            openCmSpeedFeedback = (int32_t*)malloc(opencmMotorCount * sizeof(int32_t));
+            
+            if(openCmWb.getProtocolVersion() == 1.0) 
+            {
+            nh.loginfo("PROTOCOLO 1.0");
+            openCmWb.addSyncWriteHandler(opencmMotors[0],"Goal_Position");
+            openCmWb.addSyncWriteHandler(opencmMotors[0],"Moving_Speed");
+            openCmWb.addSyncWriteHandler(opencmMotors[0],"Torque_Enable");
+            openCmWb.addSyncWriteHandler(opencmMotors[0],"P_Gain");
+            }
+            else if(openCmWb.getProtocolVersion() == 2.0)
+            {
+            nh.loginfo("PROTOCOLO 2.0");
+            openCmWb.addSyncWriteHandler(opencmMotors[0],"Goal_Position");
+            openCmWb.addSyncWriteHandler(opencmMotors[0],"Profile_Velocity");
+            openCmWb.addSyncWriteHandler(opencmMotors[0],"Torque_Enable");
+            openCmWb.addSyncWriteHandler(opencmMotors[0],"Position_P_Gain");
+            }
+        } 
     nh.loginfo (" _______________________________ ");
     sprintf (buffer,"|    MOTORES ENCONTRADOS: %d     |", opencmMotorCount);
     nh.logwarn(buffer);
+    }
 }
