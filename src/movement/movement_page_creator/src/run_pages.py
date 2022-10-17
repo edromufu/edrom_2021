@@ -66,6 +66,7 @@ class PageRun():
                     still_moving = True
                     print(f'Motor {index} tentando chegar na posição {self.pub_to_opencm_msg.motors_position[index]}, está em {self.current_position[index]}.')
                     break
+        print(f'________ O movimento da Page terminou _________')
             
             
 
