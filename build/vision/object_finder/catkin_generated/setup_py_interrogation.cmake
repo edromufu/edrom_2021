@@ -1,0 +1,7 @@
+set(object_finder_SETUP_PY_SETUP_MODULE "setuptools")
+set(object_finder_SETUP_PY_VERSION "0.0.1")
+set(object_finder_SETUP_PY_SCRIPTS "")
+set(object_finder_SETUP_PY_PACKAGES "src")
+set(object_finder_SETUP_PY_PACKAGE_DIRS "src")
+set(object_finder_SETUP_PY_MODULES "")
+set(object_finder_SETUP_PY_MODULE_DIRS "")

@@ -1,0 +1,2 @@
+behaviour/bhv_antigo/ballsim:behaviour/bhv_antigo/behaviour_msgs:behaviour/bhv_independent_simulator:behaviour/modularized_bhv_msgs:behaviour/sensor_observer:behaviour/states_routine:behaviour/transitions_and_states:simulacao/movement_predefined:simulacao/numerical_optimization:simulacao/webots_natasha:tools/recorder:vision/object_finder:vision/vision_msgs
+-DCATKIN_DEVEL_PREFIX=/home/edrom/edrom/devel -DCMAKE_INSTALL_PREFIX=/home/edrom/edrom/install -G Unix Makefiles

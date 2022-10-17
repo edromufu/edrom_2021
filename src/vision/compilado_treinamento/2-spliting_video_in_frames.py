@@ -35,7 +35,7 @@ for video in lista_de_videos:
 
     while(True):
         ret, frame = cap.read()        
-
+        frame=cv2.resize(frame, (416,416))
         if ret:
             if current_frame % pularFrames == 0:
                 name = pastaFrames + '/frame' + str(numero_frame) + '.jpg'

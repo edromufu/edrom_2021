@@ -1,0 +1,8 @@
+prefix=/home/edrom/edrom/install
+
+Name: webots_natasha
+Description: Description of webots_natasha
+Version: 1.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

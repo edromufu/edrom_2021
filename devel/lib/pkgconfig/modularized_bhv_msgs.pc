@@ -1,0 +1,8 @@
+prefix=/home/edrom/edrom/devel
+
+Name: modularized_bhv_msgs
+Description: Description of modularized_bhv_msgs
+Version: 0.0.0
+Cflags: -I/home/edrom/edrom/devel/include
+Libs: -L${prefix}/lib 
+Requires: message_generation std_msgs geometry_msgs dynamic_reconfigure
