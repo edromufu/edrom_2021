@@ -1,8 +1,0 @@
-prefix=/home/edrom/edrom/install
-
-Name: numerical_optimization
-Description: Description of numerical_optimization
-Version: 1.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

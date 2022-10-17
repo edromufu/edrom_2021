@@ -1,8 +1,0 @@
-prefix=/home/edrom/edrom/devel
-
-Name: mov_bridge
-Description: Description of mov_bridge
-Version: 0.0.0
-Cflags: -I/home/edrom/edrom/src/movement/mov_bridge/include
-Libs: -L${prefix}/lib -lmov_bridge
-Requires: roscpp rospy
