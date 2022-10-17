@@ -15,7 +15,7 @@ class PageRun():
         
         self.pub_to_opencm = rospy.Publisher('opencm/request_move', OpencmRequestMsg, queue_size=10)
         self.pub_to_opencm_msg = OpencmRequestMsg()
-        self.pub_to_opencm_msg.motors_velocity = [40]*20
+        self.pub_to_opencm_msg.motors_velocity = [10]*20
 
         self.client_request_response = rospy.ServiceProxy('opencm/request_command', CommandToOpenCMSrv)
 

@@ -106,6 +106,10 @@
                 "first_pose":
                 {
                     "page_name": "first_pose"
+                },
+                "kick":
+                {
+                    "page_name": "kick"
                 }
             }
     }
