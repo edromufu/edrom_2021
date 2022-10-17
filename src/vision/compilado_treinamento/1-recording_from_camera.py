@@ -2,19 +2,16 @@
 # coding=utf-8
 import os
 import cv2
-import cProfile, pstats, io
-from pstats import SortKey
-pr = cProfile.Profile()
-pr.enable()
+
 # ... do something ...
 
 ####################################################################################
 # Código para gravar vídeo a partir da câmera
 
 # Parâmetros
-videoInput = "/dev/video0" # É de onde vai pegar as imagens, "/dev/video2" é pegando por um dos usbs (o numero muda) e 0 é a webcam
-width = 640 # Largura da imagem (conferir no vídeo)
-height = 480 # Altura da imagem (Conferir no vídeo)
+videoInput = "/dev/video2" # É de onde vai pegar as imagens, "/dev/video2" é pegando por um dos usbs (o numero muda) e 0 é a webcam
+width = 416 # Largura da imagem (conferir no vídeo)
+height = 416 # Altura da imagem (Conferir no vídeo)
 pasta = "videos" # Pasta para salvar os videos
 
 ####################################################################################
@@ -42,12 +39,7 @@ while True:
     if cv2.waitKey(1) == ord("q"):
         cap.release()
         cv2.destroyAllWindows()
-        break
+        
 
 
-pr.disable()
-s = io.StringIO()
-sortby = SortKey.CUMULATIVE
-ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
-ps.print_stats()
-print(s.getvalue())
+

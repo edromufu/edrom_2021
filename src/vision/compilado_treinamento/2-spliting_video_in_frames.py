@@ -7,7 +7,7 @@ import os
 # Parâmetros
 pastaVideos = "videos" # Pasta onde videos estão salvos
 pastaFrames = "frames" # Pasta onde frames serão salvos
-pularFrames = 3 # A cada quantos frames um jpg será salvo
+pularFrames = 7 # A cada quantos frames um jpg será salvo
 
 ####################################################################################
 
