@@ -58,7 +58,9 @@ class PageRun():
 
         while(still_moving):
             still_moving = False
+            print(f'________ Chamando feedback _________')
             self.client_request_response('feedback')
+            print(f'________ Após chamada de feedback _________')
             self.rate.sleep()
 
             for index in range(20):
