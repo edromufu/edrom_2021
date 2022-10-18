@@ -103,11 +103,11 @@
         "function_to_call": "PGRun",
         "params_all_kinds":
             {
-                "first_pose":
+                "first_pose_106":
                 {
                     "page_name": "first_pose_106"
                 },
-                "kick":
+                "kick_106":
                 {
                     "page_name": "kick_106"
                 }

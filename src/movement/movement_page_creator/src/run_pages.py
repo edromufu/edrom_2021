@@ -31,12 +31,15 @@ class PageRun():
                 file_lines = file.read().split('\n')
 
             # Iterando até penúltimo elemento pois último elemento é vazio
-            for line in file_lines[:-1]:
+            if not len(file_lines) == 1:
+                file_lines = file_lines[:-1]
+            for line in file_lines:
                 row = (line.split(' '))
                 row = [int(coordinate) for coordinate in row]
 
                 self.current_page_running.append(row)
             
+            print(f'Nome da page: {msg.data}.txt')
             self.sendPageMovement()
         except Exception as e:
             print(e)
@@ -46,6 +49,7 @@ class PageRun():
             self.pub_to_opencm_msg.motors_position = pose
             self.pub_to_opencm.publish(self.pub_to_opencm_msg)
             self.checkGoalPosition()
+        print(f'________ O movimento da Page terminou _________')
         
         self.current_page_running = [] 
     
@@ -58,9 +62,7 @@ class PageRun():
 
         while(still_moving):
             still_moving = False
-            print(f'________ Chamando feedback _________')
             self.client_request_response('feedback')
-            print(f'________ Após chamada de feedback _________')
             self.rate.sleep()
 
             for index in range(20):
@@ -68,9 +70,6 @@ class PageRun():
                     still_moving = True
                     print(f'Motor {index} tentando chegar na posição {self.pub_to_opencm_msg.motors_position[index]}, está em {self.current_position[index]}.')
                     break
-        print(f'________ O movimento da Page terminou _________')
-            
-            
 
 if __name__ == "__main__":
     rospy.init_node('Page_run_node', anonymous=False)
