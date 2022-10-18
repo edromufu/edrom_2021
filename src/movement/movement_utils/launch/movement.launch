@@ -38,7 +38,8 @@
         <param name="interface" value="$(eval arg('walk_test'))" />
     </node>
 
-    <!-- Código de rodar page 
-    <node name="run_page" pkg="movement_page_creator" type="run_pages.py" output="screen" >  </node>
-    -->
+    <!-- Código de rodar page -->
+    <node name="run_page" pkg="movement_page_creator" type="run_pages.py" output="screen" >
+        <param name="current_robot" value="$(eval arg('robot_name'))" />
+    </node>
 </launch>

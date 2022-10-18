@@ -24,10 +24,11 @@ class PageRun():
         
         self.current_page_running = [] 
         self.rate = rospy.Rate(10)
+        self.current_name = rospy.get_param('run_page/current_robot')
 
     def newPageRequest(self, msg):
         try:
-            with open(os.getenv('HOME')+'/edrom/src/movement/movement_utils/pages/'+msg.data+'.txt', 'r') as file:
+            with open(os.getenv('HOME')+f'/edrom/src/movement/movement_utils/pages/{msg.data}_{self.current_name}.txt', 'r') as file:
                 file_lines = file.read().split('\n')
 
             # Iterando até penúltimo elemento pois último elemento é vazio
