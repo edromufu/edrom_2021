@@ -110,7 +110,7 @@ void setup()
         nh.spinOnce();
     }
 
-    command = "live";
+    command = live;
     has_executed = false;
 }
 
@@ -132,7 +132,7 @@ void loop()
     {
         setupDynamixel();
         has_executed = true;
-        command = "position_dt";
+        command = position_dt;
     }
     else if(command == shutdown_now && !has_executed)
     {
