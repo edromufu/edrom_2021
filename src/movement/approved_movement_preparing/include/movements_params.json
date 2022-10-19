@@ -114,6 +114,10 @@
                 "right_fall":
                 {
                     "page_name": "right_fall"
+                },
+                "left_fall":
+                {
+                    "page_name": "left_fall"
                 }
             }
     }
