@@ -145,7 +145,7 @@ void WalkCreator::walkRequest(const movement_msgs::WalkCreatorRequestMsg& msg)
     params.lateralGain = msg.lateralGain*lateral;
     params.turnGain = msg.turnGain*turn;
 
-    runWalk(params, 5.12, phase, time);
+    runWalk(params, 60, phase, time);
 }
 
 bool WalkCreator::runWalk(const Rhoban::IKWalkParameters& params, double timeLength, double& phase, double& time)
