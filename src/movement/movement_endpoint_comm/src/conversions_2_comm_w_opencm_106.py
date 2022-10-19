@@ -6,12 +6,12 @@ from movement_msgs.msg import OpencmResponseMsg, WalkingPositionsMsg, OpencmRequ
 from movement_msgs.srv import CommandToOpenCMSrv
 
 MOTOR_ROTATION_ORIENTATION = [-1,-1,1,1,1,-1,-1,1,-1,-1,-1,1]
-MOTORS_ZERO = [2060, 1919, 1959, 2016, 2075, 2048, 2152, 2053, 2022, 2051, 2076, 2009]
+MOTORS_ZERO = [2081, 2080, 2249, 2065, 2093, 2069, 2215, 2110, 2026, 2078, 2018, 2029]
 
 class Conversion2OpenCm():
 
     def __init__(self):
-        self.current_position = [2048]*6 + MOTORS_ZERO + [2048]*2
+        self.current_position = [3246, 3569, 1964, 2136, 977, 2987] + MOTORS_ZERO + [0, 0]
 
         rospy.wait_for_service('opencm/request_command')
         self.client_to_request_opencm_command = rospy.ServiceProxy('opencm/request_command', CommandToOpenCMSrv)
