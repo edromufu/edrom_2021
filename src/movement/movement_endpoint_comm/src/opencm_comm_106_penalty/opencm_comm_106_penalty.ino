@@ -25,12 +25,10 @@ enum Command {
     live, position_dt, shutdown_now, reborn, feedback
 };
 
-int32_t data[DOF] = {3235, 3692, 1890, 2293, 1000, 3006,
-                     2020, 2042, 2095, 2145, 1501, 2568, 1617, 2547, 1913, 2165, 2180, 1920,
-                     0, 0};
+int32_t data[DOF] = {0, 0, 1748, 2334, 0, 0, 1928, 2067, 1951, 2158, 1528, 2623, 2633, 1546, 1977, 89, 38, 3459, 0, 0};
 int32_t vel[DOF] = {40, 40, 40, 40, 40, 40,
                     40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40,
-                    40, 40};
+                    40, 40}; 
 bool has_executed = true;
 Command command;
 
@@ -111,6 +109,9 @@ void setup()
         nh.advertiseService(service);
         nh.spinOnce();
     }
+
+    command = live;
+    has_executed = false;
 }
 
 void loop()
@@ -131,6 +132,7 @@ void loop()
     {
         setupDynamixel();
         has_executed = true;
+        command = position_dt;
     }
     else if(command == shutdown_now && !has_executed)
     {

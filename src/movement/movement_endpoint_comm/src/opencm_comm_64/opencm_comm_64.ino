@@ -3,11 +3,10 @@
 #include <movement_msgs/OpencmRequestMsg.h>
 #include <movement_msgs/OpencmResponseMsg.h>
 #include <movement_msgs/CommandToOpenCMSrv.h>
-#include <movement_msgs/ApprovedMovementMsg.h>
 
 #define BAUDRATE 1000000
 #define DOF 20
-#define MOTORS_CONNECTED 18
+#define MOTORS_CONNECTED 14
 
 ros::NodeHandle  nh;
 
@@ -25,12 +24,10 @@ enum Command {
     live, position_dt, shutdown_now, reborn, feedback
 };
 
-int32_t data[DOF] = {3235, 3692, 1890, 2293, 1000, 3006,
-                     2020, 2042, 2095, 2145, 1501, 2568, 1617, 2547, 1913, 2165, 2180, 1920,
-                     0, 0};
-int32_t vel[DOF] = {40, 40, 40, 40, 40, 40,
-                    40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40,
-                    40, 40};
+int32_t data[DOF] = {0, 0, 1813, 2265, 0, 0, 2092, 1944, 1918, 2134, 1127, 2966, 2888, 1419, 1819, 2169, 2029, 3543, 0, 0};
+int32_t vel[DOF] = {10, 10, 10, 10, 10, 10,
+                    10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
+                    10, 10}; 
 bool has_executed = true;
 Command command;
 
@@ -87,27 +84,19 @@ DynamixelWorkbench expWb; //Procura motores via TTL na placa de expansão
 
 // ROS
 movement_msgs::OpencmResponseMsg response_msg;
-movement_msgs::ApprovedMovementMsg btns_msg;
 ros::Subscriber<movement_msgs::OpencmRequestMsg> sub("opencm/request_move", requestMovement);
 ros::ServiceServer<movement_msgs::CommandToOpenCMSrv::Request, movement_msgs::CommandToOpenCMSrv::Response> service("opencm/request_command", &resquestCommand);
 ros::Publisher pub("opencm/response", &response_msg);
-ros::Publisher pub_btns("/movement/approved_movement", &btns_msg);
-
-int button1 = 16;
-int button2 = 17;
 
 //"Main" da opencm, configura os tópicos de ros e chama função de encontrar os motores
 void setup()
 {   
-    pinMode(button1, INPUT);
-    pinMode(button2, INPUT);
     // Esperando a conexão com o computador para iniciar
     while (!nh.connected())
     {
         nh.initNode();
         nh.subscribe(sub);
         nh.advertise(pub);
-        nh.advertise(pub_btns);
         nh.advertiseService(service);
         nh.spinOnce();
     }
@@ -115,18 +104,6 @@ void setup()
 
 void loop()
 {   
-    if(digitalRead(button1)){
-        btns_msg.approved_movement = "first_pose";
-        pub_btns.publish(&btns_msg);
-        delay(500);
-    }
-
-    if(digitalRead(button2)){
-        btns_msg.approved_movement = "kick";
-        pub_btns.publish(&btns_msg);
-        delay(500);
-    }
-    
     if(command == live && !has_executed)
     {
         setupDynamixel();
