@@ -32,7 +32,9 @@ class WalkCreator
         movement_msgs::WalkingPositionsMsg positions;
         movement_msgs::WalkTestParametersSrv parameters2update;
 
-        double engineFrequency = 15.625;
+        double engineFrequency = 20;
+        double stepNumber = 12;
+        
         double phase = 0.0;
         double time = 0.0;
         

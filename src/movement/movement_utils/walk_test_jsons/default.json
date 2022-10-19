@@ -14,7 +14,7 @@
     },
     "walk_parameters":
     {
-        "freq": 1.7,
+        "freq": 1.6,
         "supportPhaseRatio": 0.0,
         "footYOffset": 0.025,
         "riseGain": 0.035,

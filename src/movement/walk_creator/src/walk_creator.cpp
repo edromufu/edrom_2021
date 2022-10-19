@@ -145,16 +145,16 @@ void WalkCreator::walkRequest(const movement_msgs::WalkCreatorRequestMsg& msg)
     params.lateralGain = msg.lateralGain*lateral;
     params.turnGain = msg.turnGain*turn;
 
-    runWalk(params, 5.12, phase, time);
+    runWalk(params, stepNumber, phase, time);
 }
 
-bool WalkCreator::runWalk(const Rhoban::IKWalkParameters& params, double timeLength, double& phase, double& time)
+bool WalkCreator::runWalk(const Rhoban::IKWalkParameters& params, double stepNumber, double& phase, double& time)
 {
-    ros::Rate loop_rate(15.625);
-    for (double t=0.0;t<=timeLength;t+=1.0/engineFrequency) {
-        time += 1.0/engineFrequency;
+    ros::Rate loop_rate(engineFrequency);
+    for (double t = 0.0;  t < stepNumber/params.freq;  t += 1.0/engineFrequency) {
+        time += 1.0/params.freq;
         bool success = Rhoban::IKWalk::walk(params, 1.0/engineFrequency, phase, outputs);
-        
+
         if (!success) {
             std::cout << time << " Inverse Kinematics error. Position not reachable." << std::endl;
 
