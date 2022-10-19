@@ -122,7 +122,7 @@ void loop()
     }
 
     if(digitalRead(button2)){
-        btns_msg.approved_movement = "kick";
+        btns_msg.approved_movement = "walk_forward";
         pub_btns.publish(&btns_msg);
         delay(500);
     }

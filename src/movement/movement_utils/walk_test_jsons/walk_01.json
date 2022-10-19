@@ -10,8 +10,7 @@
         "lateralGain": 0.02,
         "turnGain": 0.02
     },
-    "walk_parameters":
-    {
+    "walk_parameters": {
         "freq": 1.6,
         "supportPhaseRatio": 0.0,
         "footYOffset": 0.018,
