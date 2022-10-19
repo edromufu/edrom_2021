@@ -110,6 +110,10 @@
                 "kick":
                 {
                     "page_name": "kick"
+                },
+                "right_fall":
+                {
+                    "page_name": "right_fall"
                 }
             }
     }
