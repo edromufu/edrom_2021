@@ -23,6 +23,9 @@ class Node():
     # Inicializando o nó
     def __init__(self, nome_no):
 
+        self.camera = rospy.get_param('vision/camera')
+        self.output_img = rospy.get_param('vision/img_output')
+
         #Iniciando o nó e obtendo os arquivos que definem a rede neural
         rospy.init_node(nome_no, anonymous = True)
         self.net = ri.get_cnn_files()
@@ -76,7 +79,7 @@ class Node():
         self.opencv_bridge = CvBridge()
         while True:
 
-            self.current_frame = cv2.VideoCapture("/dev/video2")
+            self.current_frame = cv2.VideoCapture(f"/dev/video{self.camera}")
             _, self.current_frame = self.current_frame.read()
             self.current_frame = cv2.resize(self.current_frame, (416,416))
             #self.current_frame = cv2.blur(self.current_frame, (10,10))
@@ -96,7 +99,8 @@ class Node():
 
 
         self.classes, self.scores, self.boxes, self.fps = ri.detect_model(self.model, self.current_frame)
-        self.show_result_frame() # comentar
+        if self.output_img:
+            self.show_result_frame() # comentar
         self.publish_results() 
 
 

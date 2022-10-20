@@ -2,6 +2,7 @@
 #coding=utf-8
 
 import rospy
+import time
 #import fall_interpreter, neck_interpreter 
 import ball_interpreter
 
@@ -41,7 +42,7 @@ class RosPacker():
                                # self.pFallState,self.pHeadKickCheck,self.pPossibleHeadMovs, self.pHorMotorOutOfCenter] #?
 
         while self.pub2StateMachine.get_num_connections() != N_SUBSCRIBERS:
-            print('Aguardando a inicilizacao dos códigos')
+            time.sleep(1)
             
         self.publish2StateMachine()
     

@@ -4,8 +4,8 @@
 import rospy
 from modularized_bhv_msgs.msg import currentStateMsg, stateMachineMsg
 from movement_msgs.msg import ApprovedMovementMsg
-LEFT = 'Left'
-RIGHT = 'Right'
+LEFT = 'left_fall'
+RIGHT = 'right_fall'
 
 class DefenseRoutine():
 
@@ -15,14 +15,18 @@ class DefenseRoutine():
         rospy.Subscriber('/sensor_observer/state_machine_vars', stateMachineMsg, self.varsUpdate)
 
         self.flag = False
-        self.request= ApprovedMovementMsg()
-        self.request=None
-        self.last_decision=None
-        self.movement_request_topic = rospy.Publisher('/movement/approved_movement', ApprovedMovementMsg, queue_size=10)
 
-        while not rospy.is_shutdown():            
-            if self.last_decision != self.request:
-                self.last_decision = self.request
+        self.movement_request_topic = rospy.Publisher('/movement/approved_movement', ApprovedMovementMsg, queue_size=10)
+        self.request = ApprovedMovementMsg()
+        self.request.approved_movement = None
+
+        self.last_decision = self.request.approved_movement
+        
+        while not rospy.is_shutdown():     
+            self.createRequest()
+                   
+            if self.last_decision != self.request.approved_movement:
+                self.last_decision = self.request.approved_movement
                 self.movement_request_topic.publish(self.request)
 
     def flagUpdate(self, msg):
@@ -37,11 +41,11 @@ class DefenseRoutine():
     def createRequest(self):
         if self.flag:
             if 'Left' in self.current_ball_position:
-                self.request = LEFT
+                self.request.approved_movement = LEFT
             elif 'Right' in self.current_ball_position:
-                self.request = RIGHT
+                self.request.approved_movement = RIGHT
         else:
-            self.request = None
+            self.request.approved_movement = None
 
 
 if __name__ == '__main__':
