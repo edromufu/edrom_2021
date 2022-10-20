@@ -9,7 +9,7 @@ import ball_interpreter
 #Importacao para os topicos ROS
 from modularized_bhv_msgs.msg import stateMachineMsg #Mensagem associada ao topico utilizado para receber info dos estados da robo
 
-N_SUBSCRIBERS = 1
+N_SUBSCRIBERS = 2
 
 class RosPacker():
 

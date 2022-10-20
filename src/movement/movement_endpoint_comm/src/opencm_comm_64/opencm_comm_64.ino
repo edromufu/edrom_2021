@@ -112,20 +112,12 @@ void setup()
         nh.advertiseService(service);
         nh.spinOnce();
     }
-
-    command = live;
-    has_executed = false;
 }
 
 void loop()
 {   
-    if(btn1Pressed)
-    {   
-        btns_msg.approved_movement = "first_pose";
-        pub_btns.publish(&btns_msg);
-        btn1Pressed = false;
-    } 
-    
+
+    /*
     if(digitalRead(button1))
     {
         command = live;
@@ -133,6 +125,7 @@ void loop()
         btn1Pressed = true;
         delay(500);
     }
+    */
 
     /*
     if(digitalRead(button2)){
@@ -146,7 +139,6 @@ void loop()
     {
         setupDynamixel();
         has_executed = true;
-        command = position_dt;
     }
     else if(command == shutdown_now && !has_executed)
     {

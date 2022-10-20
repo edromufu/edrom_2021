@@ -3,29 +3,30 @@
 
 import rospy
 from modularized_bhv_msgs.msg import currentStateMsg
-from movement_msgs.msg import ApprovedMovementMsg
+from movement_msgs.msg import OpencmRequestMsg
 
 #Setando a grafia correta das requisições para movimento de caminhada
-STAND = 'first_pose'
+STAND_POS = [0,0,1823,2350,0,0,1714,1980,1876,2151,1139,2938,3178,1053,1924,2204,2245,3306,0,0]
+STAND_VEL = [10]*20
 
 class WalkingRoutine():
 
     def __init__(self):
         
-        self.movement_request_topic = rospy.Publisher('/movement/approved_movement', ApprovedMovementMsg, queue_size=10)
-        self.request = ApprovedMovementMsg()
-        self.request.approved_movement = None
+        self.movement_request_topic = rospy.Publisher('opencm/request_move', OpencmRequestMsg, queue_size=10)
+        self.request = OpencmRequestMsg()
+
+        self.request.motors_position = STAND_POS
+        self.request.motors_velocity = STAND_VEL
 
         rospy.Subscriber('/transitions_and_states/state_machine', currentStateMsg, self.flagUpdate)
 
         self.flag = False
-        self.last_decision = self.request.approved_movement
 
         while not rospy.is_shutdown():
-            self.createRequest()
 
-            if self.last_decision != self.request.approved_movement:
-                self.last_decision = self.request.approved_movement
+            if self.flag:
+                self.flag = False
                 self.movement_request_topic.publish(self.request)
     
     def flagUpdate(self, msg):
@@ -35,15 +36,7 @@ class WalkingRoutine():
             self.flag = True
         else:
             self.flag = False
-
-        
-    def createRequest(self):
-        
-        if self.flag:
-            self.request.approved_movement = STAND
-        else:
-            self.request.approved_movement = None
-
+            
 
 if __name__ == '__main__':
     rospy.init_node('Walking_node', anonymous=False)
