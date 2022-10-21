@@ -52,7 +52,7 @@ def detect_model(model, current_frame):
     #if (random.randint(1, 10) == 2):
 
     start_time = time.time()
-    classes, scores, boxes = model.detect(current_frame, 0.45, 0.4)
+    classes, scores, boxes = model.detect(current_frame, 0.85, 0.4)
     finish_time = time.time()
     fps = 1/(finish_time-start_time)
     

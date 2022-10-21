@@ -15,7 +15,7 @@ class PageRun():
         
         self.pub_to_opencm = rospy.Publisher('opencm/request_move', OpencmRequestMsg, queue_size=10)
         self.pub_to_opencm_msg = OpencmRequestMsg()
-        self.pub_to_opencm_msg.motors_velocity = [90]*6+[50]*14 
+        self.pub_to_opencm_msg.motors_velocity = [30]*6 +[70]*14
 
         self.client_request_response = rospy.ServiceProxy('opencm/request_command', CommandToOpenCMSrv)
 
@@ -23,7 +23,7 @@ class PageRun():
         rospy.Subscriber('/approved_movement_prep/run_pages', String, self.newPageRequest)
         
         self.current_page_running = [] 
-        self.rate = rospy.Rate(10)
+        self.rate = rospy.Rate(5)
         self.current_name = rospy.get_param('run_page/current_robot')
 
     def newPageRequest(self, msg):

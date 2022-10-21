@@ -174,6 +174,7 @@ void requestMovement(const movement_msgs::OpencmRequestMsg& rqt)
 {
     for(int i = 0; i < DOF; i++)
     {
+        nh.spinOnce();
         data[i] = rqt.motors_position[i];
         vel[i] = rqt.motors_velocity[i];
     }
@@ -210,6 +211,7 @@ void feedbackMotor()
 {
   for (int index = 0; index < DOF; index++)
   {
+    nh.spinOnce();
     bool resultOpencmData   = openCmWb.itemRead(index, "Present_Position", &openCmDataFeedback[index]);
     bool resultOpencmSpeed  = openCmWb.itemRead(index, "Present_Velocity", &openCmSpeedFeedback[index]);
         

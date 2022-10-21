@@ -3,21 +3,19 @@
 
 import rospy
 from modularized_bhv_msgs.msg import currentStateMsg
-from movement_msgs.msg import OpencmRequestMsg
+from movement_msgs.msg import ApprovedMovementMsg
 
 #Setando a grafia correta das requisições para movimento de caminhada
-STAND_POS = [0,0,1823,2350,0,0,1714,1980,1876,2151,1139,2938,3178,1053,1924,2204,2245,3306,0,0]
-STAND_VEL = [10]*20
+STAND = 'first_pose'
 
 class WalkingRoutine():
 
     def __init__(self):
         
-        self.movement_request_topic = rospy.Publisher('opencm/request_move', OpencmRequestMsg, queue_size=10)
-        self.request = OpencmRequestMsg()
+        self.movement_request_topic = rospy.Publisher('/movement/approved_movement', ApprovedMovementMsg, queue_size=10)
+        self.request = ApprovedMovementMsg()
 
-        self.request.motors_position = STAND_POS
-        self.request.motors_velocity = STAND_VEL
+        self.request.approved_movement = STAND
 
         rospy.Subscriber('/transitions_and_states/state_machine', currentStateMsg, self.flagUpdate)
 
