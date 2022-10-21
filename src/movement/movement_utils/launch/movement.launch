@@ -9,9 +9,9 @@
     <arg name="page_creation" default="false"/>
     <arg name="robot_name"/>
     
-    <!-- Código de descrição e recebimento de requisição do movimento 
+    <!-- Código de descrição e recebimento de requisição do movimento -->
     <node name="movement_preparing" pkg="approved_movement_preparing" type="approved_movement_prep.py" output="screen" >    </node>
-    -->
+    
 
     <!-- Códigos de comunicação com os controladores das robôs físicas
     <group if="$(eval arg('simulation') == false)">
@@ -42,9 +42,9 @@
     </node>
     -->
 
-    <!-- Código de rodar page 
+    <!-- Código de rodar page -->
     <node name="run_page" pkg="movement_page_creator" type="run_pages.py" output="screen" >
         <param name="current_robot" value="$(eval arg('robot_name'))" />
     </node>
-    -->
+    
 </launch>

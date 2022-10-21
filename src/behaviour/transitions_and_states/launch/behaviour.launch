@@ -14,6 +14,7 @@
     -->
 
     <node name="defense" pkg="states_routine" type="defense_routine.py" output="screen" >    </node>
+    <node name="stand_still" pkg="states_routine" type="stand_still_routine.py" output="screen" >    </node>
     <node name="state_machine" pkg="transitions_and_states" type="state_machine_receiver.py" output="screen" >   </node>
     
 	<!-- Webots 
@@ -29,7 +30,7 @@
         <arg name="walk_test" value="$(eval arg('walk_test'))" />
         <arg name="page_creation" value="$(eval arg('page_creation'))" />
         <arg name="robot_name" value="$(eval arg('robot_name'))" />
-    </include>
+    </include> 
 
     <!-- Visão -->
     <include file="$(find object_finder)/launch/vision.launch"> 

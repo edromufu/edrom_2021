@@ -15,7 +15,7 @@ class PageRun():
         
         self.pub_to_opencm = rospy.Publisher('opencm/request_move', OpencmRequestMsg, queue_size=10)
         self.pub_to_opencm_msg = OpencmRequestMsg()
-        self.pub_to_opencm_msg.motors_velocity = [20]*6+[20]*14 
+        self.pub_to_opencm_msg.motors_velocity = [90]*6+[50]*14 
 
         self.client_request_response = rospy.ServiceProxy('opencm/request_command', CommandToOpenCMSrv)
 
@@ -40,13 +40,13 @@ class PageRun():
 
                 self.current_page_running.append(row)
             
-            print(f'Nome da page: {msg.data}.txt')
             self.sendPageMovement()
         except Exception as e:
             print(e)
         
     def sendPageMovement(self):
         for pose in self.current_page_running:
+            print(f'Pose atual: {pose}')
             self.pub_to_opencm_msg.motors_position = pose
             self.pub_to_opencm.publish(self.pub_to_opencm_msg)
             self.checkGoalPosition()
