@@ -1,0 +1,153 @@
+CONFERIR SE ESTÁ COM OS DRIVERS MAIS RECENTES DA NVIDIA INSTALADOS (520+ RECOMENDAVEL)
+
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
+sudo mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600 - senha
+wget https://developer.download.nvidia.com/compute/cuda/11.3.0/local_installers/cuda-repo-ubuntu2004-11-3-local_11.3.0-465.19.01-1_amd64.deb
+sudo dpkg -i cuda-repo-ubuntu2004-11-3-local_11.3.0-465.19.01-1_amd64.deb
+sudo apt-key add /var/cuda-repo-ubuntu2004-11-3-local/7fa2af80.pub
+sudo apt-get update
+
+sudo apt-get -y install cuda - demora um pouco
+export PATH=/usr/local/cuda-11.3/bin${PATH:+:${PATH}}
+export LD_LIBRARY_PATH=/usr/local/cuda-11.3/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+
+systemctl status nvidia-persistenced -> se o output for (im1), pular o "sudo systemctl"
+sudo nvidia-smi -pm 1
+sudo systemctl enable nvidia-persistenced
+
+cat /proc/driver/nvidia/version
+
+CUDNN -- precisa ter uma conta no site da nvidia -> https://developer.nvidia.com/cudnn
+baixar os 3 abaixo:
+https://developer.nvidia.com/compute/machine-learning/cudnn/secure/8.2.0.53/11.3_04222021/Ubuntu20_04-x64/libcudnn8_8.2.0.53-1+cuda11.3_amd64.deb
+https://developer.nvidia.com/compute/machine-learning/cudnn/secure/8.2.0.53/11.3_04222021/Ubuntu20_04-x64/libcudnn8-dev_8.2.0.53-1+cuda11.3_amd64.deb
+https://developer.nvidia.com/compute/machine-learning/cudnn/secure/8.2.0.53/11.3_04222021/Ubuntu20_04-x64/libcudnn8-samples_8.2.0.53-1+cuda11.3_amd64.deb
+
+entrar na pasta em q os pacotes foram instalados (ex: $ cd Downloads) e instalar usando:
+sudo dpkg -i  libcudnn8_8.2.0.53-1+cuda11.3_amd64.deb
+sudo dpkg -i libcudnn8-dev_8.2.0.53-1+cuda11.3_amd64.deb
+sudo dpkg -i libcudnn8-samples_8.2.0.53-1+cuda11.3_amd64.deb
+
+testar se o cuDNN esta comunicando com os drivers da nvidia
+nvidia-smi
+
+caso nao estiver 
+sudo mokutil --disable-validation          -- passnvidiaword1
+(criar uma senha, reiniciar e tentar nidia-smi dnv)
+
+caso nao der certo dnv, provavelmente nao tem os drivers instalados, abrir "Programas e atualizações" -> drivers adicionais -> NVIDIA Corporation e selecionar o driver mais recente QUE NAO ESEJA *OPEN KERNEL* 
+
+se der certo vai retornar algo do tipo
+(output_nvidia-smi)
+
+PARA TESTAR SE DEU CERTO O CUDNN:
+cp -r /usr/src/cudnn_samples_v8/ $HOME
+cd $HOME/cudnn_samples_v8/mnistCUDNN/              ------TALVEZ NEM COLOCAR ESSE PASSO PQ ERRO
+make
+./mnistCUDNN -- o meu deu errado
+
+
+ -----------------------------2 TUTO---------------------------
+
+Step 1 ja foi feito no link anterior
+
+INSTALAR DEPENDENCIAS DO OPENCV E DNN GPU 
+$ cd
+$ sudo apt-get update
+$ sudo apt-get upgrade
+$ sudo apt-get install build-essential cmake unzip pkg-config
+$ sudo apt-get install libopenblas-dev libatlas-base-dev liblapack-dev gfortran
+$ sudo apt-get install gcc-7 g++-7 -y
+$ sudo ln -s /usr/bin/gcc-7 /usr/bin/gcc
+$ sudo ln -s /usr/bin/g++-7 /usr/bin/g++
+$ sudo ln -s /usr/bin/gcc-7 /usr/bin/cc
+$ sudo ln -s /usr/bin/g++-7 /usr/bin/c++
+$ sudo apt-get install libjpeg-dev libpng-dev libtiff-dev
+$ sudo apt-get install libavcodec-dev libavformat-dev libswscale-dev
+$ sudo apt-get install libv4l-dev libxvidcore-dev libx264-dev
+$ sudo apt-get install libgtk-3-dev
+$ sudo apt-get install libatlas-base-dev gfortran
+$ sudo apt-get install python3-dev
+
+baixando openCV configurado para rodar com nvidia gpu
+$ cd ~
+$ wget -O opencv.zip https://github.com/opencv/opencv/archive/4.6.0.zip
+$ wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/4.6.0.zip
+$ unzip opencv.zip
+$ unzip opencv_contrib.zip
+$ mv opencv-4.6.0 opencv
+$ mv opencv_contrib-4.6.0 opencv_contrib
+
+configurando ambiente virtual do python
+$ wget https://bootstrap.pypa.io/get-pip.py    }instalação
+$ sudo python3 get-pip.py                      }do pip
+
+$ sudo pip install virtualenv virtualenvwrapper}instalação 
+$ sudo rm -rf ~/get-pip.py ~/.cache/pip        }do virtualenv (amb virtual)
+
+abre o arquivo ~/.bashrc (dar ctrl+H na pasta pessoal) e no final colocar
+# virtualenv and virtualenvwrapper
+export WORKON_HOME=$HOME/.virtualenvs
+export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+source /usr/local/bin/virtualenvwrapper.sh
+salvar o arquivoe dar reload no ~/.bashrc no terminal:
+$ source ~/.bashrc
+
+CRIANDO AMBIENTE VIRTUAL DO PYTHON
+$ mkvirtualenv opencv_cuda -p python3
+
+(agora tudo será feito nesse ambiente virtual, se por acaso sair de alguma forma, basta dar o comando: $ workon opencv_cuda)
+
+INSTALANDO NUMPY NO AMBIENTE VIRTUAL
+$ pip install numpy
+
+DETERMINANDO A VERSAO DE ARQUTETURA DO CUDA
+usar o comando "$ nvidia-smi" se nao souber qual a arquiterura da sua placa de video
+entrar no site "https://developer.nvidia.com/cuda-gpus" encontrar sua placa e ver qual versao (Compute capability) está relacionada a ela. Salvar esse numero q vai usar dps
+(foto cuda_arch)
+
+CONFIGURANDO OPENCV COM SUPORTE PRA GPU NVIDIA
+entrar no ambiente virtual se nao estiver mais ($ workon opencv_cuda)
+$ cd ~/opencv
+$ mkdir build    
+$ cd build
+OBS: CUIDADO AO DAR O COMANDO ABAIXO, EM "-D CUDA_ARCH_BIN=7.0 \" SUBSTITUIR 7.0 PELA VERSAO COMPATIVEL COM A SUA PLACA DESCOBERTA NOS PASSOS ANTERIORES
+$ cmake -D CMAKE_BUILD_TYPE=RELEASE \
+	-D CMAKE_INSTALL_PREFIX=/usr/local \
+	-D INSTALL_PYTHON_EXAMPLES=ON \
+	-D INSTALL_C_EXAMPLES=OFF \
+	-D OPENCV_ENABLE_NONFREE=ON \
+	-D WITH_CUDA=ON \
+	-D WITH_CUDNN=ON \
+	-D OPENCV_DNN_CUDA=ON \
+	-D ENABLE_FAST_MATH=1 \
+	-D CUDA_FAST_MATH=1 \
+	-D CUDA_ARCH_BIN=7.0 \
+	-D WITH_CUBLAS=1 \
+	-D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
+	-D HAVE_opencv_python3=ON \
+	-D PYTHON_EXECUTABLE=~/.virtualenvs/opencv_cuda/bin/python \
+	-D BUILD_EXAMPLES=ON ..
+	
+caso o NVIDIA CUDA e cuDNN tiverem com NO na frente (cuda_cudnn_NO.png):
+$ sudo apt install nvidia-cuda-toolkit
+	
+COMPILANDO OPENCV COM SUPORTE PARA DNN GPU
+$ make -j8 (OBS: substituir o 8 pela quantidade de núcleos que tiver seu computador)
+
+INSTALANDO OPENCV COM SUPORTE PARA DNN GPU
+$ sudo make install
+$ sudo ldconfig
+
+$ ls -l /usr/local/lib/python3.8/site-packages/cv2/python-3.8                                               }
+$ cd ~/.virtualenvs/opencv_cuda/lib/python3.8/site-packages/                                                }  conferir se é essa versao do python
+$ ln -s /usr/local/lib/python3.8/site-packages/cv2/python-3.8/cv2.cpython-38-x86_64-linux-gnu.so cv2.so     }
+conferir os paths do comando acima
+
+
+ACABOU!!!!!!
+
+
+
+
+
